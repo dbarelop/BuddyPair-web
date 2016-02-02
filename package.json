@@ -1,0 +1,14 @@
+{
+  "name": "BuddyPair-web",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "error-handler": "^1.4.3",
+    "express": "^4.13.4",
+    "jade": "^1.11.0",
+    "method-override": "^2.3.5",
+    "morgan": "^1.6.1",
+    "mysql": "^2.10.2"
+  }
+}

@@ -1,0 +1,4 @@
+p There are {{peerList.length}} peer students:
+ul
+    li(ng-repeat='p in peerList')
+        a(href='/peer/{{p.id}}') {{p.name}} {{p.surname}}
