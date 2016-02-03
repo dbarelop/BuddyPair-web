@@ -6,22 +6,19 @@ angular.module('myApp', ['myApp.controllers', 'ngRoute']).
   config(function ($routeProvider, $locationProvider) {
     $routeProvider.
       when('/erasmusList', {
-        templateUrl: 'erasmusList',
+        templateUrl: '/partials/erasmusList',
         controller: 'ErasmusCtrl'
       }).
       when('/erasmus/:id', {
-        //templateUrl: 'erasmus',
-        // TODO: temporary workaround. templateUrl can't find the template file and causes infinite recursion
-        template: '<p>{{erasmus.name}} {{erasmus.surname}}</p>',
+        templateUrl: '/partials/erasmusProfile',
         controller: 'ErasmusCtrl'
       }).
       when('/peerList', {
-        templateUrl: 'peerList',
+        templateUrl: '/partials/peerList',
         controller: 'PeerCtrl'
       }).
       when('/peer/:id', {
-        //templateUrl: 'peer',
-        template: '<p>{{peer.name}} {{peer.surname}}</p>',
+        templateUrl: '/partials/peerProfile',
         controller: 'PeerCtrl'
       }).
       otherwise({

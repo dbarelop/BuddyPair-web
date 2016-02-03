@@ -33,10 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // serve index and view partials
 app.get('/', routes.index);
-app.get('/erasmusList', routes.erasmusList);
-app.get('/erasmus/:id', routes.erasmus);
-app.get('/peerList', routes.peerList);
-app.get('/peer/:id', routes.peer);
+app.get('/partials/:name', routes.partials);
 
 // JSON API
 app.get('/api/name', api.name);
