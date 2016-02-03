@@ -12,10 +12,21 @@ var mysql = require('mysql');
 var config = require('./config');
 var connection = mysql.createConnection(config.database);
 connection.connect(function(err) {
-  if (!err)
-    console.log('Connected to database');
+  if (err)
+    console.log('Error connecting to database: ', err);
+});
+connection.on('error', function(err) {
+  console.log('Database error: ', err);
+  if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+    // Reconnect if server closes the connection
+    connection = mysql.createConnection(config.database);
+    connection.connect(function(err) {
+      if (err)
+        console.log('Error connecting to database: ', err);
+    });
+  }
   else
-    console.log('Error connecting to database...');
+    throw err;
 });
 
 exports.erasmusList = function(req, res) {
@@ -25,9 +36,8 @@ exports.erasmusList = function(req, res) {
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id';
   connection.query(query, function(err, rows) {
-    //connection.end();
     if (err)
-      console.log('Error running query \'' + query + '\'');
+      console.log('Error running query \'' + query + '\': ', err);
     else
       res.json(rows);
   });
@@ -41,9 +51,8 @@ exports.erasmus = function(req, res) {
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'WHERE s.id = ?';
   connection.query(query, req.params.id, function(err, rows) {
-    //connection.end();
     if (err)
-      console.log('Error running query \'' + query + '\'');
+      console.log('Error running query \'' + query + '\': ', err);
     else
       res.json(rows);
   });
@@ -56,9 +65,8 @@ exports.peerList = function(req, res) {
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id';
   connection.query(query, function(err, rows) {
-    //connection.end();
     if (err)
-      console.log('Error running query \'' + query + '\'');
+      console.log('Error running query \'' + query + '\': ', err);
     else
       res.json(rows);
   });
@@ -72,9 +80,8 @@ exports.peer = function(req, res) {
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'WHERE s.id = ?';
   connection.query(query, req.params.id, function(err, rows) {
-    //connection.end();
     if (err)
-      console.log('Error running query \'' + query + '\'');
+      console.log('Error running query \'' + query + '\': ', err);
     else
       res.json(rows);
   });
