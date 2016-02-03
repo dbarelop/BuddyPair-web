@@ -11,17 +11,17 @@ angular.module('myApp.controllers', []).
   controller('ErasmusCtrl', function($scope, $routeParams, $http) {
     if ($routeParams.id)
       $http.get('/api/erasmus/' + $routeParams.id).then(function(data) {
-        $scope.erasmus = data.data;
+        $scope.erasmus = data.data[0];
       });
     else
       $http.get('/api/erasmusList').then(function(data) {
         $scope.erasmusList = data.data;
       });
-  }).
+}).
   controller('PeerCtrl', function($scope, $routeParams, $http) {
     if ($routeParams.id)
       $http.get('/api/peer/' + $routeParams.id).then(function(data) {
-        $scope.peer = data.data;
+        $scope.peer = data.data[0];
       });
     else
       $http.get('/api/peerList').then(function(data) {

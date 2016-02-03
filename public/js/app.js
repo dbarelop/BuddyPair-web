@@ -10,7 +10,9 @@ angular.module('myApp', ['myApp.controllers', 'ngRoute']).
         controller: 'ErasmusCtrl'
       }).
       when('/erasmus/:id', {
-        templateUrl: 'erasmus',
+        //templateUrl: 'erasmus',
+        // TODO: temporary workaround. templateUrl can't find the template file and causes infinite recursion
+        template: '<p>{{erasmus.name}} {{erasmus.surname}}</p>',
         controller: 'ErasmusCtrl'
       }).
       when('/peerList', {
@@ -18,7 +20,8 @@ angular.module('myApp', ['myApp.controllers', 'ngRoute']).
         controller: 'PeerCtrl'
       }).
       when('/peer/:id', {
-        templateUrl: 'peer',
+        //templateUrl: 'peer',
+        template: '<p>{{peer.name}} {{peer.surname}}</p>',
         controller: 'PeerCtrl'
       }).
       otherwise({
