@@ -10,24 +10,25 @@ exports.name = function (req, res) {
 
 var mysql = require('mysql');
 var config = require('./config');
-var connection = mysql.createConnection(config.database);
-connection.connect(function(err) {
-  if (err)
-    console.log('Error connecting to database: ', err);
-});
-connection.on('error', function(err) {
-  console.log('Database error: ', err);
-  if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-    // Reconnect if server closes the connection
-    connection = mysql.createConnection(config.database);
-    connection.connect(function(err) {
-      if (err)
-        console.log('Error connecting to database: ', err);
-    });
-  }
-  else
-    throw err;
-});
+var connection;
+
+function handleDisconnect() {
+  connection = mysql.createConnection(config.database);
+  connection.connect(function (err) {
+    if (err)
+      console.log('Error connecting to database: ', err);
+  });
+  connection.on('error', function (err) {
+    console.log('Database error: ', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST')
+      // Reconnect if server closes the connection
+      handleDisconnect();
+    else
+      throw err;
+  });
+}
+
+handleDisconnect();
 
 exports.erasmusList = function(req, res) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
