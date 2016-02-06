@@ -2,12 +2,6 @@
  * Serve JSON to our AngularJS client
  */
 
-exports.name = function (req, res) {
-  res.json({
-    name: 'Bob'
-  });
-};
-
 var mysql = require('mysql');
 var config = require('./config');
 var connection;

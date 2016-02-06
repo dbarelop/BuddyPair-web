@@ -36,18 +36,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 
+// satellizer authentication
+app.post('/auth/google', auth.googleAuth);
+
 // JSON API
-app.get('/api/name', api.name);
+app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
 app.get('/api/erasmusList', api.erasmusList);
 app.get('/api/erasmus/:id', api.erasmus);
 app.get('/api/erasmus/:erasmus_id/assignedPeer', api.assignedPeer);
 app.get('/api/peerList', api.peerList);
 app.get('/api/peer/:id', api.peer);
 app.get('/api/peer/:peer_id/assignedErasmus', api.assignedErasmus);
-
-// satellizer authentication
-app.post('/auth/google', auth.googleAuth);
-app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
