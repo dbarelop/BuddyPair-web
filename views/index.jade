@@ -2,7 +2,12 @@ extends layout
 
 block body
   div(ng-controller='AppCtrl')
-    h2 Hello {{name}}
+    div(ng-if='!isAuthenticated()')
+      h2 Please login
+      button(ng-click="authenticate('google')") Authenticate with Google
+    div(ng-if='isAuthenticated()')
+      h2 Hello, {{user.displayName}}
+      button(ng-if='isAuthenticated()', ng-click='logout()') Logout
     ul.menu
       li
         a(href='erasmusList') erasmus
@@ -18,3 +23,4 @@ block body
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.js')
   script(src='js/app.js')
   script(src='js/controllers.js')
+  script(src='https://cdn.jsdelivr.net/satellizer/0.13.4/satellizer.min.js')

@@ -10,7 +10,8 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   http = require('http'),
-  path = require('path');
+  path = require('path'),
+  auth = require('./auth/auth');
 
 var app = module.exports = express();
 
@@ -43,6 +44,10 @@ app.get('/api/erasmus/:erasmus_id/assignedPeer', api.assignedPeer);
 app.get('/api/peerList', api.peerList);
 app.get('/api/peer/:id', api.peer);
 app.get('/api/peer/:peer_id/assignedErasmus', api.assignedErasmus);
+
+// satellizer authentication
+app.post('/auth/google', auth.googleAuth);
+app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);

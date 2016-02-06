@@ -2,8 +2,8 @@
 
 // Declare app level module which depends on filters, and services
 
-angular.module('myApp', ['myApp.controllers', 'ngRoute']).
-  config(function ($routeProvider, $locationProvider) {
+angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer']).
+  config(function ($routeProvider, $locationProvider, $authProvider) {
     $routeProvider.
       when('/erasmusList', {
         templateUrl: '/partials/erasmusList',
@@ -26,4 +26,8 @@ angular.module('myApp', ['myApp.controllers', 'ngRoute']).
       });
 
     $locationProvider.html5Mode(true);
+  
+    $authProvider.google({
+      clientId: '83414652329-fajrap1l590te27mjc8jec8q393okmfv.apps.googleusercontent.com'
+    });
   });

@@ -3,10 +3,32 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-  controller('AppCtrl', function ($scope, $http) {
-    $http.get('/api/name').then(function(data) {
-      $scope.name = data.data.name;
+  controller('AppCtrl', function($scope, $http, $auth) {
+    $http.get('/api/me').then(function(data) {
+      $scope.user = data.data;
     });
+    $scope.authenticate = function(provider) {
+      $auth.authenticate(provider).then(function() {
+        console.log('Succesfully signed in with ' + provider);
+      }).
+      catch(function(err) {
+        if (err.error) {
+          console.log(err.error);
+        } else if (err.data) {
+          console.log(err.data.message, err.status);
+        } else {
+          console.log(err);
+        }
+      });
+    };
+    $scope.isAuthenticated = function() {
+      return $auth.isAuthenticated();
+    };
+    $scope.logout = function() {
+      $auth.logout().then(function() {
+        console.log('Logged out');
+      });
+    };
   }).
   controller('ErasmusCtrl', function($scope, $routeParams, $http) {
     if ($routeParams.id)
@@ -20,7 +42,7 @@ angular.module('myApp.controllers', []).
       $http.get('/api/erasmusList').then(function(data) {
         $scope.erasmusList = data.data;
       });
-}).
+  }).
   controller('PeerCtrl', function($scope, $routeParams, $http) {
     if ($routeParams.id)
       $http.get('/api/peer/' + $routeParams.id).then(function(data) {
