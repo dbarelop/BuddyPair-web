@@ -41,12 +41,12 @@ app.post('/auth/google', auth.googleAuth);
 
 // JSON API
 app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
-app.get('/api/erasmusList', api.erasmusList);
-app.get('/api/erasmus/:id', api.erasmus);
-app.get('/api/erasmus/:erasmus_id/assignedPeer', api.assignedPeer);
-app.get('/api/peerList', api.peerList);
-app.get('/api/peer/:id', api.peer);
-app.get('/api/peer/:peer_id/assignedErasmus', api.assignedErasmus);
+app.get('/api/erasmusList', auth.ensureAuthenticated, api.erasmusList);
+app.get('/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
+app.get('/api/erasmus/:erasmus_id/assignedPeer', auth.ensureAuthenticated, api.assignedPeer);
+app.get('/api/peerList', auth.ensureAuthenticated, api.peerList);
+app.get('/api/peer/:id', auth.ensureAuthenticated, api.peer);
+app.get('/api/peer/:peer_id/assignedErasmus', auth.ensureAuthenticated, api.assignedErasmus);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
