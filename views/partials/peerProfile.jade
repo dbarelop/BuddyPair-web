@@ -36,3 +36,7 @@ ul
   li(ng-if='peer.notes !== ""')
     b Notes: 
     | {{peer.notes}}
+h3 Assigned Erasmus
+ul
+  li(ng-repeat='e in assignedErasmus')
+    a(href='/erasmus/{{e.erasmus_id}}') {{e.name}} {{e.surname}}

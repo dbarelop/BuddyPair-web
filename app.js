@@ -39,8 +39,10 @@ app.get('/partials/:name', routes.partials);
 app.get('/api/name', api.name);
 app.get('/api/erasmusList', api.erasmusList);
 app.get('/api/erasmus/:id', api.erasmus);
+app.get('/api/erasmus/:erasmus_id/assignedPeer', api.assignedPeer);
 app.get('/api/peerList', api.peerList);
 app.get('/api/peer/:id', api.peer);
+app.get('/api/peer/:peer_id/assignedErasmus', api.assignedErasmus);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
