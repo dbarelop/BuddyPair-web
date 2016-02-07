@@ -7,14 +7,15 @@ block body
       button(ng-click="authenticate('google')") Authenticate with Google
     div(ng-if='isAuthenticated()')
       h2 Hello, {{user.displayName}}
-      button(ng-if='isAuthenticated()', ng-click='logout()') Logout
-    ul.menu
-      li
-        a(href='erasmusList') erasmus
-      li
-        a(href='peerList') tutores
+      button(ng-click='logout()') Logout
+      
+      ul.menu
+        li
+          a(href='erasmusList') erasmus
+        li
+          a(href='peerList') tutores
 
-    div(ng-view)
+      div(ng-view)
 
     div
       | AEGEE-Zaragoza's Buddy Pair web client
