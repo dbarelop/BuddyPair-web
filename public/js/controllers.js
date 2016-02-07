@@ -30,6 +30,11 @@ angular.module('myApp.controllers', []).
       });
     };
   }).
+  controller('ProfileCtrl', function($scope, $http) {
+    $http.get('/api/me').then(function(data) {
+      $scope.user = data.data;
+    });
+  }).
   controller('ErasmusCtrl', function($scope, $routeParams, $http) {
     if ($routeParams.id)
       $http.get('/api/erasmus/' + $routeParams.id).then(function(data) {

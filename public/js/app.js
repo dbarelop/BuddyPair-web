@@ -5,6 +5,10 @@
 angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer']).
   config(function ($routeProvider, $locationProvider, $authProvider) {
     $routeProvider.
+      when('/profile', {
+        templateUrl: '/partials/profile',
+        controller: 'ProfileCtrl'
+      }).
       when('/erasmusList', {
         templateUrl: '/partials/erasmusList',
         controller: 'ErasmusCtrl'
