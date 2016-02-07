@@ -6,7 +6,7 @@ block body
       h2 Please login
       button(ng-click="authenticate('google')") Authenticate with Google
     div(ng-if='isAuthenticated()')
-      h2 Hello, {{user.displayName}}
+      h2 Hello, {{user.name}}
       button(ng-click='logout()') Logout
       
       ul.menu

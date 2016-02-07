@@ -1,3 +1,17 @@
-h2 {{user.displayName}}
+h2 {{user.name}}
 
 img(src='{{user.picture}}')
+
+ul
+  li
+    b First name: 
+    | {{user.given_name}}
+  li
+    b Last name: 
+    | {{user.family_name}}
+  li
+    b Google+ profile: 
+    a(href='{{user.profile}}') {{user.profile}}
+  li
+    b Email: 
+    | {{user.email}}
