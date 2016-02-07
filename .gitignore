@@ -4,6 +4,9 @@
 # Authentication configuration file
 /auth/config.js
 
+# SSL private key and certificate
+/sslcert
+
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
 

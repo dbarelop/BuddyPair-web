@@ -10,6 +10,8 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   http = require('http'),
+  https = require('https'),
+  fs = require('fs'),
   path = require('path'),
   auth = require('./auth/auth');
 
@@ -21,6 +23,7 @@ var app = module.exports = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
+app.set('sport', process.env.SPORT || 3443);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(morgan('dev'));
@@ -57,4 +60,14 @@ app.get('*', routes.index);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
+});
+
+var privateKey = fs.readFileSync('./sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
+var credentials = { 
+  key: privateKey, 
+  cert: certificate
+};
+https.createServer(credentials, app).listen(app.get('sport'), function() {
+  console.log('Secure Express server listening on port ' + app.get('sport'));
 });
