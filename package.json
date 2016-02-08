@@ -2,6 +2,9 @@
   "name": "BuddyPair-web",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "start": "app.js"
+  },
   "dependencies": {
     "body-parser": "^1.14.2",
     "error-handler": "^1.0.0",

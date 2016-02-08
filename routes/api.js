@@ -3,11 +3,16 @@
  */
 
 var mysql = require('mysql');
-var config = require('./config');
 var connection;
 
 function handleDisconnect() {
-  connection = mysql.createConnection(config.database);
+  database = {
+    host: process.env.DATABASE_HOST || require('./config').database.host,
+    user: process.env.DATABASE_USER || require('./config').database.user,
+    password: process.env.DATABASE_PASSWORD || require('./config').database.password,
+    database: process.env.DATABASE_NAME || require('./config').database.database
+  };
+  connection = mysql.createConnection(database);
   connection.connect(function (err) {
     if (err)
       console.log('Error connecting to database: ', err);

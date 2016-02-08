@@ -1,8 +1,10 @@
 
-var config = require('./config'),
-  jwt = require('jwt-simple'),
+var jwt = require('jwt-simple'),
   request = require('request'),
   moment = require('moment');
+
+var TOKEN_SECRET = process.env.TOKEN_SECRET || require('./config').auth.TOKEN_SECRET;
+var GOOGLE_SECRET = process.env.GOOGLE_SECRET || require('./config').auth.GOOGLE_SECRET;
 
 /*
  |--------------------------------------------------------------------------
@@ -15,7 +17,7 @@ function createJWT(profile) {
     iat: moment().unix(),
     exp: moment().add(14, 'days').unix()
   };
-  return jwt.encode(payload, config.auth.TOKEN_SECRET);
+  return jwt.encode(payload, TOKEN_SECRET);
 }
 
 /*
@@ -29,7 +31,7 @@ exports.googleAuth = function(req, res) {
   var params = {
     code: req.body.code,
     client_id: req.body.clientId,
-    client_secret: config.auth.GOOGLE_SECRET,
+    client_secret: GOOGLE_SECRET,
     redirect_uri: req.body.redirectUri,
     grant_type: 'authorization_code'
   };
@@ -64,7 +66,7 @@ exports.ensureAuthenticated = function(req, res, next) {
 
   var payload = null;
   try {
-    payload = jwt.decode(token, config.auth.TOKEN_SECRET);
+    payload = jwt.decode(token, TOKEN_SECRET);
   }
   catch (err) {
     return res.status(401).send({ message: err.message });
