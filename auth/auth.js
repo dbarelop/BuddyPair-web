@@ -5,6 +5,7 @@ var jwt = require('jwt-simple'),
 
 var TOKEN_SECRET = process.env.TOKEN_SECRET || require('./config').auth.TOKEN_SECRET;
 var GOOGLE_SECRET = process.env.GOOGLE_SECRET || require('./config').auth.GOOGLE_SECRET;
+var ALLOWED_USERS = process.env.ALLOWED_USERS.split(',') || require('./config').auth.ALLOWED_USERS;
 
 /*
  |--------------------------------------------------------------------------
@@ -75,8 +76,14 @@ exports.ensureAuthenticated = function(req, res, next) {
   if (payload.exp <= moment().unix()) {
     return res.status(401).send({ message: 'Token has expired' });
   }
-  req.profile = payload.sub;
-  next();
+  
+  // TODO: improve access control (based on email)
+  if (ALLOWED_USERS.indexOf(payload.sub.email) > -1) {
+    req.profile = payload.sub;
+    next();
+  } else {
+    return res.status(403).send({ message: 'You don\'t have permission to access the application' });
+  }
 };
 
 exports.findUser = function(req, res) {
