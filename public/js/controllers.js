@@ -4,12 +4,15 @@
 
 angular.module('myApp.controllers', []).
   controller('AppCtrl', function($scope, $http, $auth) {
-    $http.get('/api/me').then(function(data) {
+    $http.get('/api/me').then(function (data) {
       $scope.user = data.data;
     });
     $scope.authenticate = function(provider) {
       $auth.authenticate(provider).then(function() {
         console.log('Succesfully signed in with ' + provider);
+        $http.get('/api/me').then(function (data) {
+          $scope.user = data.data;
+        });
       }).
       catch(function(err) {
         if (err.error) {
@@ -31,7 +34,7 @@ angular.module('myApp.controllers', []).
     };
   }).
   controller('ProfileCtrl', function($scope, $http) {
-    $http.get('/api/me').then(function(data) {
+    $http.get('/api/me').then(function (data) {
       $scope.user = data.data;
     });
   }).
