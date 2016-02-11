@@ -7,26 +7,32 @@ angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer']).
     $routeProvider.
       when('/profile', {
         templateUrl: '/partials/profile',
-        controller: 'ProfileCtrl'
+        controller: 'ProfileCtrl',
+        activetab: 'profile'
       }).
       when('/erasmusList', {
         templateUrl: '/partials/erasmusList',
-        controller: 'ErasmusCtrl'
+        controller: 'ErasmusCtrl',
+        activetab: 'erasmusList'
       }).
       when('/erasmus/:id', {
         templateUrl: '/partials/erasmusProfile',
-        controller: 'ErasmusCtrl'
+        controller: 'ErasmusCtrl',
+        activetab: 'erasmusList'
       }).
       when('/peerList', {
         templateUrl: '/partials/peerList',
-        controller: 'PeerCtrl'
+        controller: 'PeerCtrl',
+        activetab: 'peerList'
       }).
       when('/peer/:id', {
         templateUrl: '/partials/peerProfile',
-        controller: 'PeerCtrl'
+        controller: 'PeerCtrl',
+        activetab: 'peerList'
       }).
       otherwise({
-        redirectTo: '/'
+        redirectTo: '/',
+        activetab: 'index'
       });
 
     $locationProvider.html5Mode(true);

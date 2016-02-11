@@ -3,7 +3,8 @@
 /* Controllers */
 
 angular.module('myApp.controllers', []).
-  controller('AppCtrl', function($scope, $http, $auth) {
+  controller('AppCtrl', function($scope, $route, $http, $auth) {
+    $scope.$route = $route;
     $http.get('/api/me').then(function (data) {
       $scope.user = data.data;
     });
@@ -33,12 +34,14 @@ angular.module('myApp.controllers', []).
       });
     };
   }).
-  controller('ProfileCtrl', function($scope, $http) {
+  controller('ProfileCtrl', function($scope, $route, $http) {
+    $scope.$route = $route;
     $http.get('/api/me').then(function (data) {
       $scope.user = data.data;
     });
   }).
-  controller('ErasmusCtrl', function($scope, $routeParams, $http) {
+  controller('ErasmusCtrl', function($scope, $route, $routeParams, $http) {
+    $scope.$route = $route;
     if ($routeParams.id)
       $http.get('/api/erasmus/' + $routeParams.id).then(function(data) {
         $scope.erasmus = data.data[0];
@@ -51,7 +54,8 @@ angular.module('myApp.controllers', []).
         $scope.erasmusList = data.data;
       });
   }).
-  controller('PeerCtrl', function($scope, $routeParams, $http) {
+  controller('PeerCtrl', function($scope, $route, $routeParams, $http) {
+    $scope.$route = $route;
     if ($routeParams.id)
       $http.get('/api/peer/' + $routeParams.id).then(function(data) {
         $scope.peer = data.data[0];

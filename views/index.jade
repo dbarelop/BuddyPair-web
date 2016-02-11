@@ -4,26 +4,22 @@ block body
   div(ng-controller='AppCtrl')
     div(ng-if='!isAuthenticated()')
       h2 Please login
-      button(ng-click="authenticate('google')") Authenticate with Google
+      button(ng-click="authenticate('google')").btn Authenticate with Google
     div(ng-if='isAuthenticated()')
       h2 Hello, {{user.name}}
-      button(ng-click='logout()') Logout
+      button(ng-click='logout()').btn Logout
       
-      ul.menu
-        li
+      ul.nav.nav-pills
+        li(ng-class='{active: $route.current.activetab == "index"}')
+          a(href='index') home
+        li(ng-class='{active: $route.current.activetab == "erasmusList"}')
           a(href='erasmusList') erasmus
-        li
+        li(ng-class='{active: $route.current.activetab == "peerList"}')
           a(href='peerList') tutores
-        li
+        li(ng-class='{active: $route.current.activetab == "profile"}')
           a(href='profile') mi perfil
 
       div(ng-view)
 
     div
       | AEGEE-Zaragoza's Buddy Pair web client
-
-  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.js')
-  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.js')
-  script(src='js/app.js')
-  script(src='js/controllers.js')
-  script(src='https://cdn.jsdelivr.net/satellizer/0.13.4/satellizer.min.js')
