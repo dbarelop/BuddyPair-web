@@ -1,4 +1,7 @@
-h3 There are currently {{erasmusList.length}} Erasmus students in the system:
-div.panel.panel-default
-  ul.list-group
-    a(ng-repeat='e in erasmusList' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
+div(ng-if='erasmusList.length !== ""')
+  h3 There are currently {{erasmusList.length}} Erasmus students in the system:
+  div.panel.panel-default
+    ul.list-group
+      a(ng-repeat='e in erasmusList' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
+div(ng-if='erasmusList.length == ""')
+  img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

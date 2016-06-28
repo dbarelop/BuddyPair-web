@@ -1,4 +1,7 @@
-h3 There are currently {{peerList.length}} peer students in the system:
-div.panel.panel-default
-  ul.list-group
-    a(ng-repeat='p in peerList' href='/peer/{{p.peer_id}}').list-group-item {{p.name}} {{p.surname}}
+div(ng-if='erasmusList.length !== ""')
+  h3 There are currently {{peerList.length}} peer students in the system:
+  div.panel.panel-default
+    ul.list-group
+      a(ng-repeat='p in peerList' href='/peer/{{p.peer_id}}').list-group-item {{p.name}} {{p.surname}}
+div(ng-if='erasmusList.length == ""')
+  img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
