@@ -1,4 +1,4 @@
-p There are {{peerList.length}} peer students:
-ul
-  li(ng-repeat='p in peerList')
-    a(href='/peer/{{p.peer_id}}') {{p.name}} {{p.surname}}
+h3 There are currently {{peerList.length}} peer students in the system:
+div.panel.panel-default
+  ul.list-group
+    a(ng-repeat='p in peerList' href='/peer/{{p.peer_id}}').list-group-item {{p.name}} {{p.surname}}

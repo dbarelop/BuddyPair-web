@@ -1,23 +1,23 @@
 extends layout
 
 block body
-  div(ng-controller='AppCtrl')
+  div(ng-controller='AppCtrl').col-md-8
     div(ng-if='!isAuthenticated()')
       h2 Please login
-      button(ng-click="authenticate('google')").btn Authenticate with Google
+      button(ng-click="authenticate('google')").btn.btn-default Authenticate with Google
     div(ng-if='isAuthenticated()')
       h2 Hello, {{user.name}}
-      button(ng-click='logout()').btn Logout
+      button(ng-click='logout()').btn.btn-default.pull-right Logout
       
-      ul.nav.nav-pills
+      ul.nav.nav-tabs
         li(ng-class='{active: $route.current.activetab == "index"}')
           a(href='index') home
         li(ng-class='{active: $route.current.activetab == "erasmusList"}')
           a(href='erasmusList') erasmus
         li(ng-class='{active: $route.current.activetab == "peerList"}')
-          a(href='peerList') tutores
+          a(href='peerList') peers
         li(ng-class='{active: $route.current.activetab == "profile"}')
-          a(href='profile') mi perfil
+          a(href='profile') my profile
 
       div(ng-view)
 
