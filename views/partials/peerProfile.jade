@@ -1,49 +1,52 @@
-h2 {{peer.name}} {{peer.surname}}
-div.panel.panel-default
-  div.panel-heading
-    h4 Personal information
-  div.panel-body
-    ul
-      li(ng-if='peer.gender !== ""')
-        b Gender: 
-        | {{peer.gender}}
-      li(ng-if='peer.birthdate !== ""')
-        b Birthdate: 
-        | {{peer.birthdate}}
-      li(ng-if='peer.nacionality !== ""')
-        b Nacionality: 
-        | {{peer.nacionality}}
-      li(ng-if='peer.email !== ""')
-        b Email: 
-        | {{peer.email}}
-      li(ng-if='peer.phone !== ""')
-        b Phone: 
-        | {{peer.phone}}
-      li(ng-if='peer.studies_name !== ""')
-        b Studies: 
-        | {{peer.studies_name}}
-      li(ng-if='peer.faculty_name !== ""')
-        b Faculty: 
-        | {{peer.faculty_name}}
-div.panel.panel-default
-  div.panel-heading
-    h4 Buddy Pair information
-  div.panel-body
-    ul
-      li(ng-if='peer.register_date !== ""')
-        b Register date: 
-        | {{peer.register_date}}
-      li(ng-if='peer.gender_preference !== null')
-        b Gender preference: 
-        | {{peer.gender_preference}}
-      li(ng-if='peer.erasmus_limit !== ""')
-        b Erasmus limit: 
-        | {{peer.erasmus_limit}}
-      li(ng-if='peer.notes !== ""')
-        b Notes: 
-        | {{peer.notes}}
-div.panel.panel-default
-  div.panel-heading
-    h4 Assigned Erasmus
-  ul.list-group
-    a(ng-repeat='e in assignedErasmus' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
+div(ng-if='peer !== null')
+  h2 {{peer.name}} {{peer.surname}}
+  div.panel.panel-default
+    div.panel-heading
+      h4 Personal information
+    div.panel-body
+      ul
+        li(ng-if='peer.gender !== ""')
+          b Gender: 
+          | {{peer.gender}}
+        li(ng-if='peer.birthdate !== ""')
+          b Birthdate: 
+          | {{peer.birthdate}}
+        li(ng-if='peer.nacionality !== ""')
+          b Nacionality: 
+          | {{peer.nacionality}}
+        li(ng-if='peer.email !== ""')
+          b Email: 
+          | {{peer.email}}
+        li(ng-if='peer.phone !== ""')
+          b Phone: 
+          | {{peer.phone}}
+        li(ng-if='peer.studies_name !== ""')
+          b Studies: 
+          | {{peer.studies_name}}
+        li(ng-if='peer.faculty_name !== ""')
+          b Faculty: 
+          | {{peer.faculty_name}}
+  div.panel.panel-default
+    div.panel-heading
+      h4 Buddy Pair information
+    div.panel-body
+      ul
+        li(ng-if='peer.register_date !== ""')
+          b Register date: 
+          | {{peer.register_date}}
+        li(ng-if='peer.gender_preference !== null')
+          b Gender preference: 
+          | {{peer.gender_preference}}
+        li(ng-if='peer.erasmus_limit !== ""')
+          b Erasmus limit: 
+          | {{peer.erasmus_limit}}
+        li(ng-if='peer.notes !== ""')
+          b Notes: 
+          | {{peer.notes}}
+  div.panel.panel-default
+    div.panel-heading
+      h4 Assigned Erasmus
+    ul.list-group
+      a(ng-repeat='e in assignedErasmus' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
+div(ng-if='peer == null').text-center
+  img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
