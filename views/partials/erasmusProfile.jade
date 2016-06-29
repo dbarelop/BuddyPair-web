@@ -7,7 +7,7 @@ div(ng-if='erasmus !== null')
       ul
         li(ng-if='erasmus.gender !== ""')
           b Gender: 
-          | {{erasmus.gender}}
+          | {{erasmus.gender ? "male" : "female"}}
         li(ng-if='erasmus.birthdate !== ""')
           b Birthdate: 
           | {{erasmus.birthdate}}

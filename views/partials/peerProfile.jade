@@ -7,7 +7,7 @@ div(ng-if='peer !== null')
       ul
         li(ng-if='peer.gender !== ""')
           b Gender: 
-          | {{peer.gender}}
+          | {{peer.gender ? "male" : "female"}}
         li(ng-if='peer.birthdate !== ""')
           b Birthdate: 
           | {{peer.birthdate}}

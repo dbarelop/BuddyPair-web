@@ -10,7 +10,8 @@ function handleDisconnect() {
     host: process.env.DATABASE_HOST || require('./config').database.host,
     user: process.env.DATABASE_USER || require('./config').database.user,
     password: process.env.DATABASE_PASSWORD || require('./config').database.password,
-    database: process.env.DATABASE_NAME || require('./config').database.database
+    database: process.env.DATABASE_NAME || require('./config').database.database,
+    dateStrings: true
   };
   connection = mysql.createConnection(database);
   connection.connect(function (err) {
