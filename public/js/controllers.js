@@ -42,7 +42,9 @@ angular.module('myApp.controllers', []).
   }).
   controller('ErasmusCtrl', function($scope, $route, $routeParams, $http) {
     $scope.$route = $route;
-    $scope.filters = {};
+    $scope.filters = {
+      withPeer: 'all'
+    };
     $scope.filter_erasmus = function(e) {
       var filters = $scope.filters;
       var nameFilter = !filters.name || (e.name + " " + e.surname).toLowerCase().indexOf(filters.name.toLowerCase()) > -1;
@@ -67,6 +69,34 @@ angular.module('myApp.controllers', []).
   }).
   controller('PeerCtrl', function($scope, $route, $routeParams, $http) {
     $scope.$route = $route;
+    $scope.filters = {
+      numErasmus: {
+        zero: true,
+        one: true,
+        two: true,
+        three: true
+      }
+    };
+    $scope.filter_peers = function(p) {
+      var filters = $scope.filters;
+      var nameFilter = !filters.name || (p.name + " " + p.surname).toLowerCase().indexOf(filters.name.toLowerCase()) > -1;
+      var assignedErasmusFilter = false;
+      switch (p.num_erasmus) {
+        case 0:
+          assignedErasmusFilter = filters.numErasmus.zero;
+          break;
+        case 1:
+          assignedErasmusFilter = filters.numErasmus.one;
+          break;
+        case 2:
+          assignedErasmusFilter = filters.numErasmus.two;
+          break;
+        case 3:
+          assignedErasmusFilter = filters.numErasmus.three;
+          break;
+      };
+      return nameFilter && assignedErasmusFilter;
+    };
     if ($routeParams.id) {
       $scope.peer = null;
       $http.get('/api/peer/' + $routeParams.id).then(function (data) {
