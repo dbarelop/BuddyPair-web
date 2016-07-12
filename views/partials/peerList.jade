@@ -1,7 +1,18 @@
 div(ng-if='peerList !== null')
   h3 There are currently {{peerList.length}} peer students in the system:
-  div.panel.panel-default
-    ul.list-group
-      a(ng-repeat='p in peerList' href='/peer/{{p.peer_id}}').list-group-item {{p.name}} {{p.surname}}
+  div.row
+    div.col-md-8
+      div.panel.panel-default
+        ul.list-group
+          a(ng-repeat='p in peerList' href='/peer/{{p.peer_id}}').list-group-item {{p.name}} {{p.surname}}
+    div.col-md-4
+      div.panel.panel-default
+        div.panel-heading
+          h4 Actions
+        div.panel-body
+          // TODO: implement
+          a(href='/unimplemented').list-group-item Match
+          a(href='/unimplemented').list-group-item Manage peers
+          a(href='/unimplemented').list-group-item Add peer
 div(ng-if='peerList == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
