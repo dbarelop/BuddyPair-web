@@ -1,7 +1,27 @@
 div(ng-if='erasmusList !== null')
   h3 There are currently {{erasmusList.length}} Erasmus students in the system:
   div.panel.panel-default
+    div.panel-heading
+      h4 Filters
+    form.panel-body
+      div.input-group
+        span.input-group-addon Name:
+        input(type='text' ng-model='filters.name').form-control
+      br
+      div.input-group
+        span.input-group-addon Only with peer:
+        div.form-control
+          label.radio-inline
+            input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='all')
+            | All
+          label.radio-inline
+            input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='y')
+            | Yes
+          label.radio-inline
+            input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='n')
+            | No
+  div.panel.panel-default
     ul.list-group
-      a(ng-repeat='e in erasmusList' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
+      a(ng-repeat='e in erasmusList.filter(filter_erasmus)' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
 div(ng-if='erasmusList == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

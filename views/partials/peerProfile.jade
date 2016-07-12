@@ -47,6 +47,6 @@ div(ng-if='peer !== null')
     div.panel-heading
       h4 Assigned Erasmus
     ul.list-group
-      a(ng-repeat='e in assignedErasmus' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
+      a(ng-repeat='e in peer.assignedErasmus' href='/erasmus/{{e.erasmus_id}}').list-group-item {{e.name}} {{e.surname}}
 div(ng-if='peer == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
