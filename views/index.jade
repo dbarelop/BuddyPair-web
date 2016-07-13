@@ -1,25 +1,39 @@
 extends layout
 
 block body
-  div(ng-controller='AppCtrl').col-md-8
-    div(ng-if='!isAuthenticated()')
-      h2 Please login
-      button(ng-click="authenticate('google')").btn.btn-default Authenticate with Google
-    div(ng-if='isAuthenticated()')
-      h2 Hello, {{user.name}}
-      button(ng-click='logout()').btn.btn-default.pull-right Logout
-      
-      ul.nav.nav-tabs
-        li(ng-class='{active: $route.current.activetab == "index"}')
-          a(href='index') home
-        li(ng-class='{active: $route.current.activetab == "erasmusList"}')
-          a(href='erasmusList') erasmus
-        li(ng-class='{active: $route.current.activetab == "peerList"}')
-          a(href='peerList') peers
-        li(ng-class='{active: $route.current.activetab == "profile"}')
-          a(href='profile') my profile
+  div(ng-controller='AppCtrl')
+    nav.navbar.navbar-inverse.navbar-fixed-top
+      div.container
+        div.navbar-header
+          button(type='button' data-toggle='collapse' data-target='.navbar-collapse').navbar-toggle
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a(href='/').navbar-brand AEGEE-Zaragoza's Buddy Pair
+        div(ng-if='!isAuthenticated()').navbar-collapse.collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              div.btn-nav
+                button(ng-click="authenticate('google')").btn.btn-primary.btn-small.navbar-btn Login with Google
+        div(ng-if='isAuthenticated()').navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li(ng-class='{active: $route.current.activetab == "index"}')
+              a(href='index') Home
+            li(ng-class='{active: $route.current.activetab == "erasmusList"}')
+              a(href='erasmusList') Erasmus
+            li(ng-class='{active: $route.current.activetab == "peerList"}')
+              a(href='peerList') Peers
+          ul.nav.navbar-nav.navbar-right
+            li(ng-class='{active: $route.current.activetab == "profile"}')
+              a(href='profile') My profile
+            li
+              div.btn-nav
+                button(ng-click='logout()').btn.btn-primary.btn-small.navbar-btn Logout
 
-      div(ng-view)
+    main(ng-if='isAuthenticated()' ng-view).container
 
-    div
-      | AEGEE-Zaragoza's Buddy Pair web client
+  footer.navbar.navbar-inverse.navbar-fixed-bottom
+    div.container
+      p.navbar-text Developed by #[a(href='https://github.com/dbarelop') Daniel Barea] for #[a(href='http://aegee-zaragoza.org') AEGEE-Zaragoza]
