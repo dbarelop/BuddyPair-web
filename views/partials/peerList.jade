@@ -25,7 +25,7 @@ div(ng-if='peerList !== null')
                 | 2
               label.checkbox-inline
                 input(type='checkbox' ng-model='filters.numErasmus.three' value='')
-                | 3
+                | 3 or more
       div.panel.panel-default
         ul.list-group
           a(ng-repeat='p in peerList.filter(filter_peers)' href='/peer/{{p.peer_id}}').list-group-item {{p.name}} {{p.surname}} ({{p.num_erasmus}} Erasmus)

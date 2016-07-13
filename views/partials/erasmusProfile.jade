@@ -45,7 +45,7 @@ div(ng-if='erasmus !== null')
             li(ng-if='erasmus.notes !== ""')
               b Notes: 
               | {{erasmus.notes}}
-      div(ng-if='erasmus.assignedPeer').panel.panel-default
+      div(ng-if='erasmus.assignedPeer != null').panel.panel-default
         div.panel-heading
           h4 Assigned peer
         div.list-group
@@ -56,9 +56,27 @@ div(ng-if='erasmus !== null')
           h4 Actions
         div.panel-body
           ul.list-group
-            // TODO: impelment
-            a(href='/unimplemented').list-group-item {{erasmus.assignedPeer !== "" ? "Change assigned peer" : "Assign a new peer"}}
+            a(href='#' data-toggle='modal' data-target='#assignPeerDialog').list-group-item {{erasmus.assignedPeer !== "" ? "Change assigned peer" : "Assign a new peer"}}
+            // TODO: implement
             a(href='/unimplemented').list-group-item.list-group-item-warning Edit
             a(href='/erasmusList' ng-click='deleteErasmus()').list-group-item.list-group-item-danger Delete
+    div(id='assignPeerDialog').modal.fade
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button(type='button' data-dismiss='modal' aria-label='Close').close
+              span(aria-hidden='true') &times;
+            h4.modal-title Assign a new peer to {{erasmus.name}} {{erasmus.surname}}
+          div.modal-body
+            div(ng-if='availablePeers != null').panel.panel-default
+              ul.list-group
+                a(href='#' ng-click='setSelectedPeer(null)' ng-class="{'active': selectedPeer == null}").list-group-item Nobody
+                a(href='#' ng-repeat='p in availablePeers' ng-click='setSelectedPeer(p)' ng-class="{'active': p.peer_id == selectedPeer.peer_id}").list-group-item {{p.name}} {{p.surname}} ({{p.num_erasmus}} Erasmus)
+            div(ng-if='availablePeers == null').text-center
+              img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
+            div.modal-footer
+              button(type='button' data-dismiss='modal').btn.btn-default Close
+              button(type='button' ng-click='updateAssignedPeer()' data-dismiss='modal').btn.btn-primary Save
+
 div(ng-if='erasmus == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

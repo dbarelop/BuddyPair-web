@@ -172,7 +172,11 @@ exports.addPeer = function(req) {
  * @param req.params.peer_id the peer id
  */
 exports.addAssignment = function(req) {
-  // TODO: implement
+  var query = 'INSERT INTO BUDDY_PAIR(erasmus, peer) VALUES (?, ?)';
+  connection.query(query, [req.params.erasmus_id, req.params.peer_id], function(err) {
+    if (err)
+      console.log('Error running insertion \'' + query + '\': ', err);
+  });
 };
 
 /* MODIFICATIONS */
