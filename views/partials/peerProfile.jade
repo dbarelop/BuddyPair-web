@@ -56,10 +56,24 @@ div(ng-if='peer !== null')
           h4 Actions
         div.panel-body
           ul.list-group
-            // TODO: implement
-            a(href='/unimplemented').list-group-item Assign a new Erasmus
-            a(ng-if='peer.assignedErasmus.length > 0' href='/unimplemented').list-group-item Modify assigned Erasmus
+            a(href='#' data-toggle='modal' data-target='#assignErasmusDialog').list-group-item Modify assigned Erasmus
             a(href='/unimplemented').list-group-item.list-group-item-warning Edit
             a(href='/peerList' ng-click='deletePeer()').list-group-item.list-group-item-danger Delete
+    div(id='assignErasmusDialog').modal.fade
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button(type='button' data-dismiss='modal' aria-label='Close').close
+              span(aria-hidden='true') &times;
+            h4.modal-title Modified Erasmus assigned to {{peer.name}} {{peer.surname}}
+          div.modal-body
+            div(ng-if='availableErasmus != null').panel.panel-default
+              ul.list-group
+                a(href='#' ng-repeat='e in availableErasmus' ng-click='addSelectedErasmus(e)' ng-class="{'active': selectedErasmus.contains(e)}").list-group-item {{e.name}} {{e.surname}}
+            div(ng-if='availableErasmus == null').text-center
+              img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
+            div.modal-footer
+              button(type='button' data-dismiss='modal').btn.btn-default Close
+              button(type='button' ng-click='updateAssignedPeer()' data-dismiss='modal').btn.btn-primary Save
 div(ng-if='peer == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

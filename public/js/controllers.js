@@ -46,7 +46,7 @@ angular.module('myApp.controllers', []).
       withPeer: 'all'
     };
     if ($routeParams.id) {
-      // Get the erasmus information from the API
+      // Get the Erasmus' information from the API
       $scope.erasmus = {};
       $scope.erasmus.assignedPeer = null;
       $http.get('/api/erasmus/' + $routeParams.id).then(function (data) {
@@ -56,7 +56,7 @@ angular.module('myApp.controllers', []).
           $scope.selectedPeer = $scope.erasmus.assignedPeer;
         });
       });
-      // Setup the peer selection action
+      // Setup the peer assignment action
       $scope.setSelectedPeer = function(peer) {
         $scope.selectedPeer = peer;
       };
@@ -67,18 +67,28 @@ angular.module('myApp.controllers', []).
         $scope.selectedPeer = $scope.erasmus.assignedPeer;
       });
       $scope.availablePeers = null;
-      $http.get('/api/peerList').then(function (data) {
+      $http.get('/api/peerList').then(function(data) {
         $scope.availablePeers = data.data;
       });
       $scope.updateAssignedPeer = function() {
         // TODO: check for errors in API calls...
-        if ($scope.erasmus.assignedPeer) 
+        if (!$scope.selectedPeer && $scope.erasmus.assignedPeer) {
+          // If there's no selected peer and the Erasmus previously had one, delete it
+          $scope.erasmus.assignedPeer.num_erasmus--;
           $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/removeAssignedPeer');
+        } else if ($scope.selectedPeer && !$scope.erasmus.assignedPeer) {
+          // If there is a new selected peer and the Erasmus didn't have one, add it
+          $scope.selectedPeer.num_erasmus++;
+          $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/assignPeer/' + $scope.selectedPeer.peer_id);
+        } else if ($scope.erasmus.assignedPeer && $scope.erasmus.assignedPeer.peer_id != $scope.selectedPeer.peer_id) {
+          // If the Erasmus had an assigned peer and it's not the same as the selected one, replace it
+          $scope.selectedPeer.num_erasmus++;
+          $scope.erasmus.assignedPeer.num_erasmus--;
+          $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/removeAssignedPeer', function() {
+            $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/assignPeer/' + $scope.selectedPeer.peer_id);
+          });
+        }
         $scope.erasmus.assignedPeer = $scope.selectedPeer;
-        if ($scope.erasmus.assignedPeer) {
-          $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/assignPeer/' + $scope.erasmus.assignedPeer.peer_id);
-          $scope.erasmus.assignedPeer.num_erasmus++;
-        } 
       };
       // Setup the Erasmus deletion action
       $scope.deleteErasmus = function() {
@@ -105,13 +115,35 @@ angular.module('myApp.controllers', []).
   controller('PeerCtrl', function($scope, $route, $routeParams, $http) {
     $scope.$route = $route;
     if ($routeParams.id) {
-      $scope.peer = null;
+      // Get the peer's information from the API
+      $scope.peer = {};
       $http.get('/api/peer/' + $routeParams.id).then(function (data) {
         $scope.peer = data.data[0];
         $http.get('/api/peer/' + $routeParams.id + '/assignedErasmus').then(function (data) {
           $scope.peer.assignedErasmus = data.data;
+          $scope.selectedErasmus = $scope.peer.assignedErasmus;
         });
       });
+      // Setup the Erasmus assignment action
+      $scope.addSelectedErasmus = function(erasmus) {
+        $scope.selectedErasmus.push(erasmus);
+      };
+      // TODO: not working!
+      var dialog = $('#assignErasmusDialog');
+      dialog.on('hide.bs.modal', function() {
+        alert('modal hiding!');
+        $scope.selectedErasmus = $scope.peer.assignedErasmus;
+      });
+      $scope.availableErasmus = null;
+      $http.get('/api/erasmusList').then(function(data) {
+        $scope.availableErasmus = data.data.filter(function(e) {
+          return !e.has_peer;
+        });
+      });
+      $scope.updateAssignedErasmus = function() {
+        // TODO: implement
+      };
+      // Setup the peer deletion action
       $scope.deletePeer = function() {
         if (confirm('Do you want to delete ' + $scope.peer.name + ' ' + $scope.peer.surname + '\'s profile?\n' +
             '(The assigned Erasmus, if any, won\'t be deleted)'))
