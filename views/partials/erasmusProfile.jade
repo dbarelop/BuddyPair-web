@@ -1,63 +1,63 @@
 div(ng-if='erasmus !== null')
   h2 {{erasmus.name}} {{erasmus.surname}}
   div.row
-      div.col-md-8
-          div.panel.panel-default
-            div.panel-heading
-              h4 Personal information
-            div.panel-body
-              ul
-                li(ng-if='erasmus.gender !== ""')
-                  b Gender: 
-                  | {{erasmus.gender ? "male" : "female"}}
-                li(ng-if='erasmus.birthdate !== ""')
-                  b Birthdate: 
-                  | {{erasmus.birthdate}}
-                li(ng-if='erasmus.nacionality !== ""')
-                  b Nacionality: 
-                  | {{erasmus.nacionality}}
-                li(ng-if='erasmus.email !== ""')
-                  b Email: 
-                  | {{erasmus.email}}
-                li(ng-if='erasmus.phone !== ""')
-                  b Phone: 
-                  | {{erasmus.phone}}
-                li(ng-if='erasmus.studies_name !== ""')
-                  b Studies: 
-                  | {{erasmus.studies_name}}
-                li(ng-if='erasmus.faculty_name !== ""')
-                  b Faculty: 
-                  | {{erasmus.faculty_name}}
-          div.panel.panel-default
-            div.panel-heading
-              h4 Buddy Pair information
-            div.panel-body
-              ul
-                li(ng-if='erasmus.register_date !== ""')
-                  b Register date: 
-                  | {{erasmus.register_date}}
-                li(ng-if='erasmus.gender_preference !== null')
-                  b Gender preference: 
-                  | {{erasmus.gender_preference}}
-                li(ng-if='erasmus.arrival_date !== ""')
-                  b Arrival date: 
-                  | {{erasmus.arrival_date}}
-                li(ng-if='erasmus.notes !== ""')
-                  b Notes: 
-                  | {{erasmus.notes}}
-          div(ng-if='erasmus.assignedPeer').panel.panel-default
-            div.panel-heading
-              h4 Assigned peer
-            div.list-group
-              a(href='/peer/{{erasmus.assignedPeer.peer_id}}').list-group-item {{erasmus.assignedPeer.name}} {{erasmus.assignedPeer.surname}}
-        div.col-md-4
-            div.panel.panel-default
-                div.panel-heading
-                    h4 Actions
-                div.panel-body
-                    ul.list-group
-                        a(href='/unimplemented').list-group-item {{erasmus.assignedPeer !== "" ? "Change assigned peer" : "Assign a new peer"}}
-                        // TODO: implement; show alert and redirect if the user accepts
-                        a(href='/erasmus/{{erasmus.erasmus_id}}/delete').list-group-item.list-group-item-danger Delete
+    div.col-md-8
+      div.panel.panel-default
+        div.panel-heading
+          h4 Personal information
+        div.panel-body
+          ul
+            li(ng-if='erasmus.gender !== ""')
+              b Gender: 
+              | {{erasmus.gender ? "male" : "female"}}
+            li(ng-if='erasmus.birthdate !== ""')
+              b Birthdate: 
+              | {{erasmus.birthdate}}
+            li(ng-if='erasmus.nacionality !== ""')
+              b Nacionality: 
+              | {{erasmus.nacionality}}
+            li(ng-if='erasmus.email !== ""')
+              b Email: 
+              | {{erasmus.email}}
+            li(ng-if='erasmus.phone !== ""')
+              b Phone: 
+              | {{erasmus.phone}}
+            li(ng-if='erasmus.studies_name !== ""')
+              b Studies: 
+              | {{erasmus.studies_name}}
+            li(ng-if='erasmus.faculty_name !== ""')
+              b Faculty: 
+              | {{erasmus.faculty_name}}
+      div.panel.panel-default
+        div.panel-heading
+          h4 Buddy Pair information
+        div.panel-body
+          ul
+            li(ng-if='erasmus.register_date !== ""')
+              b Register date: 
+              | {{erasmus.register_date}}
+            li(ng-if='erasmus.gender_preference !== null')
+              b Gender preference: 
+              | {{erasmus.gender_preference}}
+            li(ng-if='erasmus.arrival_date !== ""')
+              b Arrival date: 
+              | {{erasmus.arrival_date}}
+            li(ng-if='erasmus.notes !== ""')
+              b Notes: 
+              | {{erasmus.notes}}
+      div(ng-if='erasmus.assignedPeer').panel.panel-default
+        div.panel-heading
+          h4 Assigned peer
+        div.list-group
+          a(href='/peer/{{erasmus.assignedPeer.peer_id}}').list-group-item {{erasmus.assignedPeer.name}} {{erasmus.assignedPeer.surname}}
+    div.col-md-4
+      div.panel.panel-default
+        div.panel-heading
+          h4 Actions
+        div.panel-body
+          ul.list-group
+            a(href='/unimplemented').list-group-item {{erasmus.assignedPeer !== "" ? "Change assigned peer" : "Assign a new peer"}}
+            // TODO: implement; show alert and redirect if the user accepts
+            a(href='/erasmus/{{erasmus.erasmus_id}}/delete').list-group-item.list-group-item-danger Delete
 div(ng-if='erasmus == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
