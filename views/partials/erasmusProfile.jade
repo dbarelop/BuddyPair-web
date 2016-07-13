@@ -59,7 +59,6 @@ div(ng-if='erasmus !== null')
             // TODO: impelment
             a(href='/unimplemented').list-group-item {{erasmus.assignedPeer !== "" ? "Change assigned peer" : "Assign a new peer"}}
             a(href='/unimplemented').list-group-item.list-group-item-warning Edit
-            // TODO: implement; show alert and redirect if the user accepts
-            a(href='/erasmus/{{erasmus.erasmus_id}}/delete').list-group-item.list-group-item-danger Delete
+            a(href='/erasmusList' ng-click='deleteErasmus()').list-group-item.list-group-item-danger Delete
 div(ng-if='erasmus == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

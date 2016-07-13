@@ -45,13 +45,6 @@ angular.module('myApp.controllers', []).
     $scope.filters = {
       withPeer: 'all'
     };
-    $scope.filter_erasmus = function(e) {
-      var filters = $scope.filters;
-      var nameFilter = !filters.name || (e.name + " " + e.surname).toLowerCase().indexOf(filters.name.toLowerCase()) > -1;
-      var assignedPeerFilter = !filters.withPeer || (filters.withPeer == 'all') || 
-        (filters.withPeer == 'y' && e.has_peer) || (filters.withPeer == 'n' && !e.has_peer);
-      return nameFilter && assignedPeerFilter;
-    };
     if ($routeParams.id) {
       $scope.erasmus = null;
       $http.get('/api/erasmus/' + $routeParams.id).then(function (data) {
@@ -60,7 +53,21 @@ angular.module('myApp.controllers', []).
           $scope.erasmus.assignedPeer = data.data[0];
         });
       });
+      $scope.deleteErasmus = function() {
+        if (confirm('Do you want to delete ' + $scope.erasmus.name + ' ' + $scope.erasmus.surname + '\'s profile?\n' +
+            '(The assigned peer, if any, won\'t be deleted)'))
+          $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/delete').then(function(data) {
+            $scope.erasmus = null;
+          });
+      };
     } else {
+      $scope.filter_erasmus = function(e) {
+        var filters = $scope.filters;
+        var nameFilter = !filters.name || (e.name + " " + e.surname).toLowerCase().indexOf(filters.name.toLowerCase()) > -1;
+        var assignedPeerFilter = !filters.withPeer || (filters.withPeer == 'all') ||
+          (filters.withPeer == 'y' && e.has_peer) || (filters.withPeer == 'n' && !e.has_peer);
+        return nameFilter && assignedPeerFilter;
+      };
       $scope.erasmusList = null;
       $http.get('/api/erasmusList').then(function (data) {
         $scope.erasmusList = data.data;
@@ -69,34 +76,6 @@ angular.module('myApp.controllers', []).
   }).
   controller('PeerCtrl', function($scope, $route, $routeParams, $http) {
     $scope.$route = $route;
-    $scope.filters = {
-      numErasmus: {
-        zero: true,
-        one: true,
-        two: true,
-        three: true
-      }
-    };
-    $scope.filter_peers = function(p) {
-      var filters = $scope.filters;
-      var nameFilter = !filters.name || (p.name + " " + p.surname).toLowerCase().indexOf(filters.name.toLowerCase()) > -1;
-      var assignedErasmusFilter = false;
-      switch (p.num_erasmus) {
-        case 0:
-          assignedErasmusFilter = filters.numErasmus.zero;
-          break;
-        case 1:
-          assignedErasmusFilter = filters.numErasmus.one;
-          break;
-        case 2:
-          assignedErasmusFilter = filters.numErasmus.two;
-          break;
-        case 3:
-          assignedErasmusFilter = filters.numErasmus.three;
-          break;
-      };
-      return nameFilter && assignedErasmusFilter;
-    };
     if ($routeParams.id) {
       $scope.peer = null;
       $http.get('/api/peer/' + $routeParams.id).then(function (data) {
@@ -105,7 +84,42 @@ angular.module('myApp.controllers', []).
           $scope.peer.assignedErasmus = data.data;
         });
       });
+      $scope.deletePeer = function() {
+        if (confirm('Do you want to delete ' + $scope.peer.name + ' ' + $scope.peer.surname + '\'s profile?\n' +
+            '(The assigned Erasmus, if any, won\'t be deleted)'))
+          $http.get('/api/peer/' + $scope.peer.peer_id + '/delete').then(function(data) {
+            $scope.peer = null;
+          });
+      };
     } else {
+      $scope.filters = {
+        numErasmus: {
+          zero: true,
+          one: true,
+          two: true,
+          three: true
+        }
+      };
+      $scope.filter_peers = function(p) {
+        var filters = $scope.filters;
+        var nameFilter = !filters.name || (p.name + " " + p.surname).toLowerCase().indexOf(filters.name.toLowerCase()) > -1;
+        var assignedErasmusFilter = false;
+        switch (p.num_erasmus) {
+          case 0:
+            assignedErasmusFilter = filters.numErasmus.zero;
+            break;
+          case 1:
+            assignedErasmusFilter = filters.numErasmus.one;
+            break;
+          case 2:
+            assignedErasmusFilter = filters.numErasmus.two;
+            break;
+          case 3:
+            assignedErasmusFilter = filters.numErasmus.three;
+            break;
+        };
+        return nameFilter && assignedErasmusFilter;
+      };
       $scope.peerList = null;
       $http.get('/api/peerList').then(function (data) {
         $scope.peerList = data.data;
