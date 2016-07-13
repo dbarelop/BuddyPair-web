@@ -36,7 +36,8 @@ handleDisconnect();
  * Fetches the list of Erasmus students (without data from assigned peers)
  */
 exports.erasmusList = function(req, res) {
-  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
+  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
+    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
     'FROM ERASMUS e ' +
     'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
@@ -54,7 +55,8 @@ exports.erasmusList = function(req, res) {
  * @param req.params.id the Erasmus id
  */
 exports.erasmus = function(req, res) {
-  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
+  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
+    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
     'FROM ERASMUS e ' +
     'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
@@ -72,7 +74,8 @@ exports.erasmus = function(req, res) {
  * Fetches the list of peer students (without data from assigned Erasmus)
  */
 exports.peerList = function(req, res) {
-  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.* ' +
+  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
+    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
@@ -90,7 +93,8 @@ exports.peerList = function(req, res) {
  * @param req.params.id the peer id
  */
 exports.peer = function(req, res) {
-  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.* ' +
+  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
+    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
