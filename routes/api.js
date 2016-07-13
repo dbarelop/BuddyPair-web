@@ -30,6 +30,11 @@ function handleDisconnect() {
 
 handleDisconnect();
 
+/* QUERIES */
+
+/**
+ * Fetches the list of Erasmus students (without data from assigned peers)
+ */
 exports.erasmusList = function(req, res) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
     'FROM ERASMUS e ' +
@@ -44,6 +49,10 @@ exports.erasmusList = function(req, res) {
   });
 };
 
+/**
+ * Fetches the information of a given Erasmus student (without data from assigned peer)
+ * @param req.params.id the Erasmus id
+ */
 exports.erasmus = function(req, res) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
     'FROM ERASMUS e ' +
@@ -59,6 +68,9 @@ exports.erasmus = function(req, res) {
   });
 };
 
+/**
+ * Fetches the list of peer students (without data from assigned Erasmus)
+ */
 exports.peerList = function(req, res) {
   var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.* ' +
     'FROM PEER p ' +
@@ -73,6 +85,10 @@ exports.peerList = function(req, res) {
   });
 };
 
+/**
+ * Fetches the information of a given peer student (without data from assigned Erasmus)
+ * @param req.params.id the peer id
+ */
 exports.peer = function(req, res) {
   var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.* ' +
     'FROM PEER p ' +
@@ -88,6 +104,10 @@ exports.peer = function(req, res) {
   });
 };
 
+/**
+ * Fetches the information of all the Erasmus assigned to a given peer student
+ * @param req.params.peer_id the peer id
+ */
 exports.assignedErasmus = function(req, res) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
     'FROM ERASMUS e ' +
@@ -104,6 +124,10 @@ exports.assignedErasmus = function(req, res) {
   });
 };
 
+/**
+ * Fetches the information of the peer student assigned to a given Erasmus
+ * @param req.params.erasmus_id the Erasmus id
+ */
 exports.assignedPeer = function(req, res) {
   var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.* ' +
     'FROM PEER p ' +
@@ -117,5 +141,100 @@ exports.assignedPeer = function(req, res) {
       console.log('Error running query \'' + query + '\': ', err);
     else
       res.json(rows);
+  });
+};
+
+/* INSERTIONS */
+
+/**
+ * Adds an Erasmus to the database
+ * @param req.params.erasmus the Erasmus' information
+ */
+exports.addErasmus = function(req) {
+  // TODO: implement
+};
+
+/**
+ * Adds a peer student to the database
+ * @param req.params.peer the peer's information
+ */
+exports.addPeer = function(req) {
+  // TODO: implement
+};
+
+/**
+ * Assigns a given Erasmus to a given peer student
+ * @param req.params.erasmus_id the Erasmus id
+ * @param req.params.peer_id the peer id
+ */
+exports.addAssignment = function(req) {
+  // TODO: implement
+};
+
+/* MODIFICATIONS */
+
+/**
+ * Updates an Erasmus with the new information (the id can't change)
+ * @param req.params.erasmus the Erasmus' information
+ */
+exports.updateErasmus = function(req) {
+  // TODO: implement
+};
+
+/**
+ * Updates a peer student with the new information (the id can't change)
+ * @param res.params.peer the peer's information
+ */
+exports.updatePeer = function(res) {
+  // TODO: implement
+};
+
+/* DELETIONS */
+
+/**
+ * Deletes an Erasmus record from the database
+ * @param req.params.id the Erasmus id
+ */
+exports.deleteErasmus = function(req) {
+  var query = 'DELETE FROM ERASMUS WHERE id = ?';
+  connection.query(query, req.params.id, function(err) {
+    if (err)
+      console.log('Error running query \'' + query + '\': ', err);
+  });
+};
+
+/**
+ * Deletes a peer record from the database
+ * @param req.params.id the peer id
+ */
+exports.deletePeer = function(req) {
+  var query = 'DELETE FROM PEER WHERE id = ?';
+  connection.query(query, req.params.id, function(err) {
+    if (err)
+      console.log('Error running query \'' + query + '\': ', err);
+  });
+};
+
+/**
+ * Removes the assigned peer from a given Erasmus
+ * @param req.params.id the Erasmus id
+ */
+exports.unassignErasmus = function(req) {
+  var query = 'DELETE FROM BUDDY_PAIR WHERE erasmus = ?';
+  connection.query(query, req.params.id, function(err) {
+    if (err)
+      console.log('Error running query \'' + query + '\': ', err);
+  });
+};
+
+/**
+ * Removes the assigned Erasmus (one or more) from a given peer
+ * @param req.params.id the peer id
+ */
+exports.unassignPeer = function(req) {
+  var query = 'DELETE FROM BUDDY_PAIR WHERE peer = ?';
+  connection.query(query, req.params.id, function(err) {
+    if (err)
+      console.log('Error running query \'' + query + '\': ', err);
   });
 };
