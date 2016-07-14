@@ -26,6 +26,7 @@ div(ng-if='peerList !== null')
             | 3
   div.panel.panel-default
     ul.list-group
-      a(ng-repeat='p in peerList.filter(filter_peers)' href='/peer/{{p.peer_id}}').list-group-item {{p.name}} {{p.surname}} ({{p.num_erasmus}} Erasmus)
+      a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3}").list-group-item {{p.name}} {{p.surname}}
+        | ({{p.num_erasmus}} Erasmus)
 div(ng-if='peerList == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
