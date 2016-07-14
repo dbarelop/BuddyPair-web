@@ -65,15 +65,15 @@ div(ng-if='peer !== null')
           div.modal-header
             button(type='button' data-dismiss='modal' aria-label='Close').close
               span(aria-hidden='true') &times;
-            h4.modal-title Modified Erasmus assigned to {{peer.name}} {{peer.surname}}
+            h4.modal-title Modify Erasmus assigned to {{peer.name}} {{peer.surname}}
           div.modal-body
             div(ng-if='availableErasmus != null').panel.panel-default
               ul.list-group
-                a(href='#' ng-repeat='e in availableErasmus' ng-click='addSelectedErasmus(e)' ng-class="{'active': selectedErasmus.contains(e)}").list-group-item {{e.name}} {{e.surname}}
+                a(href='#' ng-repeat='e in availableErasmus' ng-click='addSelectedErasmus(e)' ng-class="{'active': selectionContains(e) }").list-group-item {{e.name}} {{e.surname}}
             div(ng-if='availableErasmus == null').text-center
               img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
             div.modal-footer
               button(type='button' data-dismiss='modal').btn.btn-default Close
-              button(type='button' ng-click='updateAssignedPeer()' data-dismiss='modal').btn.btn-primary Save
+              button(type='button' ng-click='updateAssignedErasmus()' data-dismiss='modal').btn.btn-primary Save
 div(ng-if='peer == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

@@ -80,8 +80,8 @@ angular.module('myApp.controllers', []).
           // If there is a new selected peer and the Erasmus didn't have one, add it
           $scope.selectedPeer.num_erasmus++;
           $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/assignPeer/' + $scope.selectedPeer.peer_id);
-        } else if ($scope.erasmus.assignedPeer && $scope.erasmus.assignedPeer.peer_id != $scope.selectedPeer.peer_id) {
-          // If the Erasmus had an assigned peer and it's not the same as the selected one, replace it
+        } else if ($scope.selectedPeer && $scope.erasmus.assignedPeer && $scope.erasmus.assignedPeer.peer_id != $scope.selectedPeer.peer_id) {
+          // If there is a new selected peer, the Erasmus had already an assigned peer and it's not the same as the selected one, replace it
           $scope.selectedPeer.num_erasmus++;
           $scope.erasmus.assignedPeer.num_erasmus--;
           $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/removeAssignedPeer', function() {
@@ -121,27 +121,84 @@ angular.module('myApp.controllers', []).
         $scope.peer = data.data[0];
         $http.get('/api/peer/' + $routeParams.id + '/assignedErasmus').then(function (data) {
           $scope.peer.assignedErasmus = data.data;
-          $scope.selectedErasmus = $scope.peer.assignedErasmus;
+          $scope.selectedErasmus = [];
+          $scope.peer.assignedErasmus.forEach(function(e) {
+            $scope.selectedErasmus.push(e);
+          });
+          $http.get('/api/erasmusList').then(function(data) {
+            $scope.availableErasmus = data.data.filter(function(e1) {
+              var is_assigned = false;
+              $scope.peer.assignedErasmus.forEach(function(e2) {
+                is_assigned |= e1.erasmus_id == e2.erasmus_id;
+              });
+              return !e1.has_peer || is_assigned;
+            });
+          });
         });
       });
       // Setup the Erasmus assignment action
+      $scope.selectionContains = function(erasmus) {
+        var contained = false;
+        $scope.selectedErasmus.forEach(function(e) {
+          contained |= erasmus.erasmus_id == e.erasmus_id;
+        });
+        return contained;
+      };
       $scope.addSelectedErasmus = function(erasmus) {
-        $scope.selectedErasmus.push(erasmus);
+        if (!$scope.selectionContains(erasmus)) {
+          erasmus.has_peer = true;
+          $scope.selectedErasmus.push(erasmus);
+        } else {
+          // Toggle selection
+          erasmus.has_peer = false;
+          for (var i = 0; i < $scope.selectedErasmus.length; i++)
+            if ($scope.selectedErasmus[i].erasmus_id == erasmus.erasmus_id)
+              $scope.selectedErasmus.splice(i, 1);
+        }
       };
       // TODO: not working!
       var dialog = $('#assignErasmusDialog');
       dialog.on('hide.bs.modal', function() {
         alert('modal hiding!');
-        $scope.selectedErasmus = $scope.peer.assignedErasmus;
-      });
-      $scope.availableErasmus = null;
-      $http.get('/api/erasmusList').then(function(data) {
-        $scope.availableErasmus = data.data.filter(function(e) {
-          return !e.has_peer;
+        $scope.selectedErasmus = [];
+        $scope.peer.assignedErasmus.forEach(function(e) {
+          $scope.selectedErasmus.push(e);
         });
       });
+      $scope.availableErasmus = null;
       $scope.updateAssignedErasmus = function() {
-        // TODO: implement
+        // TODO: check for errors in API calls...
+        if ($scope.selectedErasmus.length == 0 && $scope.peer.assignedErasmus != 0) {
+          // If there aren't any Erasmus selected and the peer previously had any, delete them
+          $http.get('/api/peer/' + $scope.peer.peer_id + '/removeAllAssignedErasmus');
+        } else if ($scope.selectedErasmus.length != 0 && $scope.peer.assignedErasmus == 0) {
+          // If there is at least one Erasmus selected and the peer didn't have any assigned, add them
+          $scope.selectedErasmus.forEach(function(e) {
+            $http.get('/api/peer/' + $scope.peer.peer_id + '/assignErasmus/' + e.erasmus_id);
+          });
+        } else if ($scope.selectedErasmus.length > 0 && $scope.peer.assignedErasmus.length > 0) {
+          // If there is at least one Erasmus selected and the peer already has one or more assigned...
+          $scope.peer.assignedErasmus.forEach(function(e1) {
+            // ... delete the ones that are not selected
+            var remove = true;
+            $scope.selectedErasmus.forEach(function(e2) {
+              remove &= e1.erasmus_id != e2.erasmus_id;
+            });
+            if (remove)
+              $http.get('/api/peer/' + $scope.peer.peer_id + '/removeAssignedErasmus/' + e1.erasmus_id);
+          });
+          $scope.selectedErasmus.forEach(function(e1) {
+            // ... add the ones that are selected but not already assigned
+            var add = true;
+            $scope.peer.assignedErasmus.forEach(function(e2) {
+              add &= e1.erasmus_id != e2.erasmus_id;
+            });
+            if (add)
+              $http.get('/api/peer/' + $scope.peer.peer_id + '/assignErasmus/' + e1.erasmus_id);
+          });
+        }
+        $scope.peer.num_erasmus = $scope.selectedErasmus.length;
+        $scope.peer.assignedErasmus = $scope.selectedErasmus;
       };
       // Setup the peer deletion action
       $scope.deletePeer = function() {

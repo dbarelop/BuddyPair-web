@@ -225,11 +225,24 @@ exports.deletePeer = function(req) {
 
 /**
  * Removes the assigned peer from a given Erasmus
- * @param req.params.id the Erasmus id
+ * @param req.params.erasmus_id the Erasmus id
  */
-exports.unassignErasmus = function(req) {
+exports.removeAssignedPeer = function(req) {
   var query = 'DELETE FROM BUDDY_PAIR WHERE erasmus = ?';
-  connection.query(query, req.params.id, function(err) {
+  connection.query(query, req.params.erasmus_id, function(err) {
+    if (err)
+      console.log('Error running query \'' + query + '\': ', err);
+  });
+};
+
+/**
+ * Removes a given assigned Erasmus from a given peer
+ * @param req.params.erasmus_id the Erasmus id
+ * @param req.params.peer_id the peer id
+ */
+exports.removeAssignedErasmus = function(req) {
+  var query = 'DELETE FROM BUDDY_PAIR WHERE erasmus = ? AND peer = ?';
+  connection.query(query, [req.params.erasmus_id, req.params.peer_id], function(err) {
     if (err)
       console.log('Error running query \'' + query + '\': ', err);
   });
@@ -237,11 +250,11 @@ exports.unassignErasmus = function(req) {
 
 /**
  * Removes the assigned Erasmus (one or more) from a given peer
- * @param req.params.id the peer id
+ * @param req.params.peer_id the peer id
  */
-exports.unassignPeer = function(req) {
+exports.removeAllAssignedErasmus = function(req) {
   var query = 'DELETE FROM BUDDY_PAIR WHERE peer = ?';
-  connection.query(query, req.params.id, function(err) {
+  connection.query(query, req.params.peer_id, function(err) {
     if (err)
       console.log('Error running query \'' + query + '\': ', err);
   });
