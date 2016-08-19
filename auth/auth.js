@@ -5,7 +5,7 @@ var jwt = require('jwt-simple'),
 
 var TOKEN_SECRET = process.env.TOKEN_SECRET || require('./config').auth.TOKEN_SECRET;
 var GOOGLE_SECRET = process.env.GOOGLE_SECRET || require('./config').auth.GOOGLE_SECRET;
-var ALLOWED_USERS = process.env.ALLOWED_USERS.split(',') || require('./config').auth.ALLOWED_USERS;
+var ALLOWED_USERS = process.env.ALLOWED_USERS ? process.env.ALLOWED_USERS.split(',') : require('./config').auth.ALLOWED_USERS;
 
 /*
  |--------------------------------------------------------------------------
