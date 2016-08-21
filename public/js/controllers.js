@@ -34,6 +34,45 @@ angular.module('myApp.controllers', []).
       });
     };
   }).
+  controller('StatsCtrl', function($scope, $route, $http) {
+    $scope.$route = $route;
+    $scope.numRegistered = {
+      data: [[0], [0]],
+      labels: ['2016'],
+      series: ['Erasmus', 'Peers'],
+      // FIXME: not working?
+      options: {
+        scaleOverride: true,
+        scaleStartValue: 0,
+        scaleStepWidth: 1,
+        scaleSteps: 30
+      }
+    };
+    $scope.genderErasmus = {
+      data: [0, 0],
+      labels: ['Male', 'Female']
+    };
+    $scope.genderPeers = {
+      data: [0, 0],
+      labels: ['Male', 'Female']
+    };
+    $http.get('/api/erasmus/count').then(function (data) {
+      $scope.male_erasmus = data.data[0].male_erasmus;
+      $scope.female_erasmus = data.data[0].female_erasmus;
+      $scope.num_erasmus = $scope.male_erasmus + $scope.female_erasmus;
+      $scope.numRegistered.data[0][0] = $scope.num_erasmus;
+      $scope.genderErasmus.data[0] = $scope.male_erasmus;
+      $scope.genderErasmus.data[1] = $scope.female_erasmus;
+    });
+    $http.get('/api/peer/count').then(function (data) {
+      $scope.male_peers = data.data[0].male_peers;
+      $scope.female_peers = data.data[0].female_peers;
+      $scope.num_peers = $scope.male_peers + $scope.female_peers;
+      $scope.numRegistered.data[1][0] = $scope.num_peers;
+      $scope.genderPeers.data[0] = $scope.male_peers;
+      $scope.genderPeers.data[1] = $scope.female_peers;
+    });
+  }).
   controller('ProfileCtrl', function($scope, $route, $http) {
     $scope.$route = $route;
     $http.get('/api/me').then(function (data) {
@@ -94,7 +133,7 @@ angular.module('myApp.controllers', []).
         case 3:
           assignedErasmusFilter = filters.numErasmus.three;
           break;
-      };
+      }
       return nameFilter && assignedErasmusFilter;
     };
     if ($routeParams.id) {

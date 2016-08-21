@@ -45,9 +45,11 @@ app.post('/auth/google', auth.googleAuth);
 // JSON API
 app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
 app.get('/api/erasmusList', auth.ensureAuthenticated, api.erasmusList);
+app.get('/api/erasmus/count', api.erasmusCount);
 app.get('/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.get('/api/erasmus/:erasmus_id/assignedPeer', auth.ensureAuthenticated, api.assignedPeer);
 app.get('/api/peerList', auth.ensureAuthenticated, api.peerList);
+app.get('/api/peer/count', api.peerCount);
 app.get('/api/peer/:id', auth.ensureAuthenticated, api.peer);
 app.get('/api/peer/:peer_id/assignedErasmus', auth.ensureAuthenticated, api.assignedErasmus);
 

@@ -45,6 +45,18 @@ exports.erasmusList = function(req, res) {
   });
 };
 
+exports.erasmusCount = function(req, res) {
+  var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_erasmus, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_erasmus ' +
+    'FROM ERASMUS e ' + 
+    'INNER JOIN STUDENT s ON e.erasmus = s.id';
+  connection.query(query, function(err, rows) {
+    if (err)
+      console.log('Error running query \'' + query + '\': ', err);
+    else
+      res.json(rows);
+  })
+};
+
 exports.erasmus = function(req, res) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
@@ -74,6 +86,18 @@ exports.peerList = function(req, res) {
     else
       res.json(rows);
   });
+};
+
+exports.peerCount = function(req, res) {
+  var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_peers, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_peers ' +
+    'FROM PEER p ' +
+    'INNER JOIN STUDENT s ON p.peer = s.id';
+  connection.query(query, function(err, rows) {
+    if (err)
+      console.log('Error running query \'' + query + '\': ', err);
+    else
+      res.json(rows);
+  })
 };
 
 exports.peer = function(req, res) {

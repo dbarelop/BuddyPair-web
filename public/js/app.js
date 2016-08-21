@@ -2,7 +2,7 @@
 
 // Declare app level module which depends on filters, and services
 
-angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer']).
+angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer', 'chart.js']).
   config(function ($routeProvider, $locationProvider, $authProvider) {
     $routeProvider.
       when('/profile', {
@@ -31,6 +31,8 @@ angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer']).
         activetab: 'peerList'
       }).
       otherwise({
+        templateUrl: '/partials/stats',
+        controller: 'StatsCtrl',
         redirectTo: '/',
         activetab: 'index'
       });

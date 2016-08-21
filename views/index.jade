@@ -33,6 +33,8 @@ block body
                 button(ng-click='logout()').btn.btn-primary.btn-small.navbar-btn Logout
 
     main(ng-if='isAuthenticated()' ng-view).container
+    main(ng-if='!isAuthenticated()').container
+      h3 Login to start using the application
 
   footer.navbar.navbar-inverse.navbar-fixed-bottom
     div.container
