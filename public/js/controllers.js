@@ -40,12 +40,19 @@ angular.module('myApp.controllers', []).
       data: [[0], [0]],
       labels: ['2016'],
       series: ['Erasmus', 'Peers'],
-      // FIXME: not working?
+      // FIXME: fix scale
       options: {
-        scaleOverride: true,
-        scaleStartValue: 0,
-        scaleStepWidth: 1,
-        scaleSteps: 30
+        legend: {
+          display: true
+        },
+        scales: {
+          yAxes: [{
+            display: true,
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
       }
     };
     $scope.genderErasmus = {
