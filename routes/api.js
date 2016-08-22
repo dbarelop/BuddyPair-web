@@ -36,7 +36,8 @@ exports.erasmusList = function(req, res) {
     'FROM ERASMUS e ' +
     'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id';
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'ORDER BY e.register_date ASC';
   connection.query(query, function(err, rows) {
     if (err)
       console.log('Error running query \'' + query + '\': ', err);
@@ -79,7 +80,8 @@ exports.peerList = function(req, res) {
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id';
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'ORDER BY p.register_date ASC';
   connection.query(query, function(err, rows) {
     if (err)
       console.log('Error running query \'' + query + '\': ', err);
