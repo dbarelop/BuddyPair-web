@@ -40,7 +40,6 @@ angular.module('myApp.controllers', []).
       data: [[0], [0]],
       labels: ['2016'],
       series: ['Erasmus', 'Peers'],
-      // FIXME: fix scale
       options: {
         legend: {
           display: true
