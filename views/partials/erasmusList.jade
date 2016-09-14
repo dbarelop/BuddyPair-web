@@ -1,3 +1,7 @@
+div(ng-show='error').alert.alert-danger.fade.in
+  a(href='#' data-dismiss='alert').close &times;
+  strong Error!
+  |  {{error}}
 div(ng-if='erasmusList !== null')
   h3 There are currently {{erasmusList.length}} Erasmus students in the system:
   div.panel.panel-default

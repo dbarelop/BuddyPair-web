@@ -39,10 +39,12 @@ exports.erasmusList = function(req, res) {
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'ORDER BY e.register_date ASC';
   connection.query(query, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   });
 };
 
@@ -51,10 +53,12 @@ exports.erasmusCount = function(req, res) {
     'FROM ERASMUS e ' + 
     'INNER JOIN STUDENT s ON e.erasmus = s.id';
   connection.query(query, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   })
 };
 
@@ -67,10 +71,12 @@ exports.erasmus = function(req, res) {
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'WHERE e.id = ?';
   connection.query(query, req.params.id, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   });
 };
 
@@ -83,10 +89,12 @@ exports.peerList = function(req, res) {
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'ORDER BY p.register_date ASC';
   connection.query(query, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   });
 };
 
@@ -95,10 +103,12 @@ exports.peerCount = function(req, res) {
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id';
   connection.query(query, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   })
 };
 
@@ -111,10 +121,12 @@ exports.peer = function(req, res) {
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'WHERE p.id = ?';
   connection.query(query, req.params.id, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   });
 };
 
@@ -127,10 +139,12 @@ exports.assignedErasmus = function(req, res) {
     'INNER JOIN BUDDY_PAIR bp ON e.id = bp.erasmus ' +
     'WHERE bp.peer = ?';
   connection.query(query, req.params.peer_id, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else 
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   });
 };
 
@@ -143,9 +157,11 @@ exports.assignedPeer = function(req, res) {
     'INNER JOIN BUDDY_PAIR bp ON p.id = bp.peer ' +
     'WHERE bp.erasmus = ?';
   connection.query(query, req.params.erasmus_id, function(err, rows) {
-    if (err)
+    if (err) {
       console.log('Error running query \'' + query + '\': ', err);
-    else
+      res.status(503).send(err);
+    } else {
       res.json(rows);
+    }
   });
 };

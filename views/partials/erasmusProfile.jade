@@ -1,3 +1,7 @@
+div(ng-show='error').alert.alert-danger.fade.in
+  a(href='#' data-dismiss='alert').close &times;
+  strong Error!
+  |  {{error}}
 div(ng-if='erasmus !== null')
   h2 {{erasmus.name}} {{erasmus.surname}}
   div.panel.panel-default

@@ -35,6 +35,9 @@ angular.module('myApp.controllers', []).
     };
   }).
   controller('StatsCtrl', function($scope, $route, $http) {
+    var handleErrors = function (data) {
+      $scope.error = data.data.code;
+    };
     $scope.$route = $route;
     $scope.numRegistered = {
       data: [[0], [0]],
@@ -69,6 +72,8 @@ angular.module('myApp.controllers', []).
       $scope.numRegistered.data[0][0] = $scope.num_erasmus;
       $scope.genderErasmus.data[0] = $scope.male_erasmus;
       $scope.genderErasmus.data[1] = $scope.female_erasmus;
+    }, function (data) {
+      $scope.error = data.data.code;
     });
     $http.get('/api/peer/count').then(function (data) {
       $scope.male_peers = data.data[0].male_peers;
@@ -77,6 +82,8 @@ angular.module('myApp.controllers', []).
       $scope.numRegistered.data[1][0] = $scope.num_peers;
       $scope.genderPeers.data[0] = $scope.male_peers;
       $scope.genderPeers.data[1] = $scope.female_peers;
+    }, function (data) {
+      $scope.error = data.data.code;
     });
   }).
   controller('ProfileCtrl', function($scope, $route, $http) {
@@ -86,6 +93,9 @@ angular.module('myApp.controllers', []).
     });
   }).
   controller('ErasmusCtrl', function($scope, $route, $routeParams, $http) {
+    var handleErrors = function (data) {
+      $scope.error = data.data.code;
+    };
     $scope.$route = $route;
     $scope.filters = {
       withPeer: 'all'
@@ -103,16 +113,25 @@ angular.module('myApp.controllers', []).
         $scope.erasmus = data.data[0];
         $http.get('/api/erasmus/' + $routeParams.id + '/assignedPeer').then(function (data) {
           $scope.erasmus.assignedPeer = data.data[0];
+        }, function (data) {
+          $scope.error = data.data.code;
         });
+      }, function (data) {
+        $scope.error = data.data.code;
       });
     } else {
       $scope.erasmusList = null;
       $http.get('/api/erasmusList').then(function (data) {
         $scope.erasmusList = data.data;
+      }, function (data) {
+        $scope.error = data.data.code;
       });
     }
   }).
   controller('PeerCtrl', function($scope, $route, $routeParams, $http) {
+    var handleErrors = function (data) {
+      $scope.error = data.data.code;
+    };
     $scope.$route = $route;
     $scope.filters = {
       numErasmus: {
@@ -148,12 +167,16 @@ angular.module('myApp.controllers', []).
         $scope.peer = data.data[0];
         $http.get('/api/peer/' + $routeParams.id + '/assignedErasmus').then(function (data) {
           $scope.peer.assignedErasmus = data.data;
+        }, function (data) {
+          $scope.error = data.data.code;
         });
       });
     } else {
       $scope.peerList = null;
       $http.get('/api/peerList').then(function (data) {
         $scope.peerList = data.data;
+      }, function (data) {
+        $scope.error = data.data.code;
       });
     }
   });
