@@ -15,12 +15,12 @@ div
           b Registered peer students:
           | {{num_peers}}
       div
-        div(ng-if='numRegisteredChart').col-md-4
+        div(ng-if='numRegistered').col-md-4
           label(for='numRegisteredChart') Number of registered Erasmus and peers
           canvas(id='numRegisteredChart' chart-data='numRegistered.data' chart-labels='numRegistered.labels' chart-series='numRegistered.series' chart-options='numRegistered.options').chart-bar
-        div(ng-if='erasmusGenderChart').col-md-4
+        div(ng-if='genderErasmus').col-md-4
           label(for='erasmusGenderChart') Erasmus gender
           canvas(id='erasmusGenderChart' chart-data='genderErasmus.data' chart-labels='genderErasmus.labels').chart-pie
-        div(ng-if='peersGenderChart').col-md-4
+        div(ng-if='genderPeers').col-md-4
           label(for='peersGenderChart') Peers gender
           canvas(id='peersGenderChart' chart-data='genderPeers.data' chart-labels='genderPeers.labels').chart-pie
