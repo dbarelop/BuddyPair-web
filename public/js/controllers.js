@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
+angular.module('BuddyPairApp.controllers', ['chart.js']).
   controller('AppCtrl', function($scope, $route, $http, $auth) {
     $scope.$route = $route;
     $http.get('/api/me').then(function (data) {
@@ -34,7 +34,7 @@ angular.module('myApp.controllers', []).
       });
     };
   }).
-  controller('StatsCtrl', function($scope, $route, $http) {
+  controller('StatsCtrl', function($scope, $route, $http, ErasmusService) {
     var handleErrors = function (data) {
       $scope.error = data.data.code;
     };
@@ -65,15 +65,15 @@ angular.module('myApp.controllers', []).
       data: [0, 0],
       labels: ['Male', 'Female']
     };
-    $http.get('/api/erasmus/count').then(function (data) {
-      $scope.male_erasmus = data.data[0].male_erasmus;
-      $scope.female_erasmus = data.data[0].female_erasmus;
+    ErasmusService.getCount().then(function (data) {
+      $scope.male_erasmus = data[0].male_erasmus;
+      $scope.female_erasmus = data[0].female_erasmus;
       $scope.num_erasmus = $scope.male_erasmus + $scope.female_erasmus;
       $scope.numRegistered.data[0][0] = $scope.num_erasmus;
       $scope.genderErasmus.data[0] = $scope.male_erasmus;
       $scope.genderErasmus.data[1] = $scope.female_erasmus;
-    }, function (data) {
-      $scope.error = data.data.code;
+    }, function (err) {
+      $scope.error = err;
     });
     $http.get('/api/peers/count').then(function (data) {
       $scope.male_peers = data.data[0].male_peers;
@@ -92,7 +92,7 @@ angular.module('myApp.controllers', []).
       $scope.user = data.data;
     });
   }).
-  controller('ErasmusCtrl', function($scope, $route, $routeParams, $http) {
+  controller('ErasmusCtrl', function($scope, $route, $routeParams, $http, ErasmusService) {
     var handleErrors = function (data) {
       $scope.error = data.data.code;
     };
@@ -104,16 +104,11 @@ angular.module('myApp.controllers', []).
       // Get the Erasmus' information from the API
       $scope.erasmus = {};
       $scope.erasmus.assignedPeer = null;
-      $http.get('/api/erasmus/' + $routeParams.id).then(function (data) {
-        $scope.erasmus = data.data[0];
-        $http.get('/api/erasmus/' + $routeParams.id + '/assignedPeer').then(function (data) {
-          $scope.erasmus.assignedPeer = data.data[0];
-          $scope.selectedPeer = $scope.erasmus.assignedPeer;
-        }, function (data) {
-          $scope.error = data.data.code;
-        });
-      }, function (data) {
-        $scope.error = data.data.code;
+      ErasmusService.getById($routeParams.id).then(function(erasmus) {
+        $scope.erasmus = erasmus;
+        $scope.selectedPeer = erasmus.assignedPeer;
+      }, function (err) {
+          $scope.error = err.data.code;
       });
       // Setup the peer assignment action
       $scope.setSelectedPeer = function(peer) {
@@ -126,7 +121,7 @@ angular.module('myApp.controllers', []).
         $scope.selectedPeer = $scope.erasmus.assignedPeer;
       });
       $scope.availablePeers = null;
-      $http.get('/api/peerList').then(function(data) {
+      $http.get('/api/peers').then(function(data) {
         $scope.availablePeers = data.data;
       });
       $scope.updateAssignedPeer = function() {
@@ -152,10 +147,11 @@ angular.module('myApp.controllers', []).
       // Setup the Erasmus deletion action
       $scope.deleteErasmus = function() {
         if (confirm('Do you want to delete ' + $scope.erasmus.name + ' ' + $scope.erasmus.surname + '\'s profile?\n' +
-            '(The assigned peer, if any, won\'t be deleted)'))
-          $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/delete').then(function(data) {
-            $scope.erasmus = null;
-          });
+            '(The assigned peer, if any, won\'t be deleted)')) {
+            ErasmusService.deleteErasmus($scope.erasmus.erasmus_id).then(function () {
+                $scope.erasmus = null;
+            });
+        }
       };
     } else {
       $scope.filter_erasmus = function(e) {
@@ -165,11 +161,11 @@ angular.module('myApp.controllers', []).
           (filters.withPeer == 'y' && e.has_peer) || (filters.withPeer == 'n' && !e.has_peer);
         return nameFilter && assignedPeerFilter;
       };
-      $scope.erasmusList = null;
-      $http.get('/api/erasmus').then(function (data) {
-        $scope.erasmusList = data.data;
-      }, function (data) {
-        $scope.error = data.data.code;
+
+      ErasmusService.getList().then(function(data) {
+        $scope.erasmusList = data;
+      }, function(err) {
+        $scope.error = err;
       });
     }
   }).
@@ -189,7 +185,7 @@ angular.module('myApp.controllers', []).
           $scope.peer.assignedErasmus.forEach(function(e) {
             $scope.selectedErasmus.push(e);
           });
-          $http.get('/api/erasmusList').then(function(data) {
+          $http.get('/api/erasmus').then(function(data) {
             $scope.availableErasmus = data.data.filter(function(e1) {
               var is_assigned = false;
               $scope.peer.assignedErasmus.forEach(function(e2) {

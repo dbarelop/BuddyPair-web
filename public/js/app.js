@@ -2,7 +2,7 @@
 
 // Declare app level module which depends on filters, and services
 
-angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer', 'chart.js']).
+angular.module('BuddyPairApp', ['BuddyPairApp.controllers', 'BuddyPairApp.services', 'ngRoute', 'satellizer']).
   config(function ($routeProvider, $locationProvider, $authProvider) {
     $routeProvider.
       when('/profile', {
@@ -43,3 +43,6 @@ angular.module('myApp', ['myApp.controllers', 'ngRoute', 'satellizer', 'chart.js
       clientId: '83414652329-fajrap1l590te27mjc8jec8q393okmfv.apps.googleusercontent.com'
     });
   });
+
+angular.module('BuddyPairApp.controllers', []);
+angular.module('BuddyPairApp.services', []);
