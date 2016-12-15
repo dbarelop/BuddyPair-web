@@ -58,11 +58,11 @@ angular.module('BuddyPairApp.controllers')
                 // TODO: check for errors in API calls...
                 if ($scope.selectedErasmus.length == 0 && $scope.peer.assignedErasmus != 0) {
                     // If there aren't any Erasmus selected and the peer previously had any, delete them
-                    $http.get('/api/peer/' + $scope.peer.peer_id + '/removeAllAssignedErasmus');
+                    PeerService.removeAllAssignedErasmus($scope.peer.peer_id);
                 } else if ($scope.selectedErasmus.length != 0 && $scope.peer.assignedErasmus == 0) {
                     // If there is at least one Erasmus selected and the peer didn't have any assigned, add them
                     $scope.selectedErasmus.forEach(function(e) {
-                        $http.get('/api/peer/' + $scope.peer.peer_id + '/assignErasmus/' + e.erasmus_id);
+                        PeerService.addAssignedErasmus($scope.peer.peer_id, e.erasmus_id);
                     });
                 } else if ($scope.selectedErasmus.length > 0 && $scope.peer.assignedErasmus.length > 0) {
                     // If there is at least one Erasmus selected and the peer already has one or more assigned...
@@ -72,8 +72,9 @@ angular.module('BuddyPairApp.controllers')
                         $scope.selectedErasmus.forEach(function(e2) {
                             remove &= e1.erasmus_id != e2.erasmus_id;
                         });
-                        if (remove)
-                            $http.get('/api/peer/' + $scope.peer.peer_id + '/removeAssignedErasmus/' + e1.erasmus_id);
+                        if (remove) {
+                            PeerService.removeAssignedErasmus($scope.peer.peer_id, e1.erasmus_id);
+                        }
                     });
                     $scope.selectedErasmus.forEach(function(e1) {
                         // ... add the ones that are selected but not already assigned
@@ -81,8 +82,9 @@ angular.module('BuddyPairApp.controllers')
                         $scope.peer.assignedErasmus.forEach(function(e2) {
                             add &= e1.erasmus_id != e2.erasmus_id;
                         });
-                        if (add)
-                            $http.get('/api/peer/' + $scope.peer.peer_id + '/assignErasmus/' + e1.erasmus_id);
+                        if (add) {
+                            PeerService.addAssignedErasmus($scope.peer.peer_id, e1.erasmus_id);
+                        }
                     });
                 }
                 $scope.peer.num_erasmus = $scope.selectedErasmus.length;
@@ -120,10 +122,10 @@ angular.module('BuddyPairApp.controllers')
                 return nameFilter && assignedErasmusFilter;
             };
             $scope.peerList = null;
-            $http.get('/api/peers').then(function (data) {
-                $scope.peerList = data.data;
-            }, function (data) {
-                $scope.error = data.data.code;
+            PeerService.getList().then(function (peerList) {
+                $scope.peerList = peerList;
+            }, function (err) {
+                $scope.error = err;
             });
         }
     }]);

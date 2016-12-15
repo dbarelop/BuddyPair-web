@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('BuddyPairApp.controllers')
-    .controller('ErasmusCtrl', ['$scope', '$route', '$routeParams', '$http', 'ErasmusService', function($scope, $route, $routeParams, $http, ErasmusService) {
+    .controller('ErasmusCtrl', ['$scope', '$route', '$routeParams', '$http', 'ErasmusService', 'PeerService', function($scope, $route, $routeParams, $http, ErasmusService, PeerService) {
         var handleErrors = function (data) {
             $scope.error = data.data.code;
         };
@@ -30,26 +30,22 @@ angular.module('BuddyPairApp.controllers')
                 $scope.selectedPeer = $scope.erasmus.assignedPeer;
             });
             $scope.availablePeers = null;
-            $http.get('/api/peers').then(function(data) {
-                $scope.availablePeers = data.data;
-            });
+            PeerService.getList().then(function(peers) { $scope.availablePeers = peers; });
             $scope.updateAssignedPeer = function() {
                 // TODO: check for errors in API calls...
                 if (!$scope.selectedPeer && $scope.erasmus.assignedPeer) {
                     // If there's no selected peer and the Erasmus previously had one, delete it
                     $scope.erasmus.assignedPeer.num_erasmus--;
-                    $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/removeAssignedPeer');
+                    ErasmusService.removeAssignedPeer($scope.erasmus.erasmus_id);
                 } else if ($scope.selectedPeer && !$scope.erasmus.assignedPeer) {
                     // If there is a new selected peer and the Erasmus didn't have one, add it
                     $scope.selectedPeer.num_erasmus++;
-                    $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/assignPeer/' + $scope.selectedPeer.peer_id);
+                    ErasmusService.setAssignedPeer($scope.erasmus.erasmus_id, $scope.selectedPeer.peer_id);
                 } else if ($scope.selectedPeer && $scope.erasmus.assignedPeer && $scope.erasmus.assignedPeer.peer_id != $scope.selectedPeer.peer_id) {
                     // If there is a new selected peer, the Erasmus had already an assigned peer and it's not the same as the selected one, replace it
                     $scope.selectedPeer.num_erasmus++;
                     $scope.erasmus.assignedPeer.num_erasmus--;
-                    $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/removeAssignedPeer', function() {
-                        $http.get('/api/erasmus/' + $scope.erasmus.erasmus_id + '/assignPeer/' + $scope.selectedPeer.peer_id);
-                    });
+                    ErasmusService.setAssignedPeer($scope.erasmus.erasmus_id, $scope.selectedPeer.peer_id);
                 }
                 $scope.erasmus.assignedPeer = $scope.selectedPeer;
             };

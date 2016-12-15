@@ -210,12 +210,26 @@ exports.addPeer = function(req) {
 
 /**
  * Assigns a given Erasmus to a given peer student
- * @param req.params.erasmus_id the Erasmus id
+ * @param req.body.erasmus_id the Erasmus id
  * @param req.params.peer_id the peer id
+ * OR
+ * @param req.params.erasmus_id the Erasmus id
+ * @param req.body.peer_id the peer id
  */
 exports.addAssignment = function(req) {
   var query = 'INSERT INTO BUDDY_PAIR(erasmus, peer) VALUES (?, ?)';
-  connection.query(query, [req.params.erasmus_id, req.params.peer_id], function(err) {
+  var erasmus_id, peer_id;
+  // TODO: parse arguments from req outside the API?
+  if (req.body.erasmus_id && req.params.peer_id) {
+    erasmus_id = req.body.erasmus_id;
+    peer_id = req.params.peer_id;
+  } else if (req.params.erasmus_id && req.body.peer_id) {
+    erasmus_id = req.params.erasmus_id;
+    peer_id = req.body.peer_id;
+    exports.removeAssignedPeer(req);
+  }
+  var params = [erasmus_id, peer_id];
+  connection.query(query, params, function(err) {
     if (err)
       console.log('Error running insertion \'' + query + '\': ', err);
   });

@@ -45,21 +45,25 @@ app.post('/auth/google', auth.googleAuth);
 
 // JSON API
 app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
+
 app.get('/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
 app.get('/api/erasmus/count', api.erasmusCount);
+
 app.get('/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.delete('/api/erasmus/:id', auth.ensureAuthenticated, api.deleteErasmus);
-app.get('/api/erasmus/:erasmus_id/assignedPeer', auth.ensureAuthenticated, api.assignedPeer);
-app.get('/api/erasmus/:erasmus_id/assignPeer/:peer_id', auth.ensureAuthenticated, api.addAssignment);
-app.get('/api/erasmus/:erasmus_id/removeAssignedPeer', auth.ensureAuthenticated, api.removeAssignedPeer);
+app.get('/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.assignedPeer);
+app.put('/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.addAssignment);
+app.delete('/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.removeAssignedPeer);
+
 app.get('/api/peers', auth.ensureAuthenticated, api.peerList);
 app.get('/api/peers/count', api.peerCount);
+
 app.get('/api/peer/:id', auth.ensureAuthenticated, api.peer);
 app.delete('/api/peer/:id', auth.ensureAuthenticated, api.deletePeer);
-app.get('/api/peer/:peer_id/assignedErasmus', auth.ensureAuthenticated, api.assignedErasmus);
-app.get('/api/peer/:peer_id/assignErasmus/:erasmus_id', auth.ensureAuthenticated, api.addAssignment);
-app.get('/api/peer/:peer_id/removeAssignedErasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);
-app.get('/api/peer/:peer_id/removeAllAssignedErasmus', auth.ensureAuthenticated, api.removeAllAssignedErasmus);
+app.get('/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.assignedErasmus);
+app.put('/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.addAssignment);
+app.delete('/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.removeAllAssignedErasmus);
+app.delete('/api/peer/:peer_id/assigned_erasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
