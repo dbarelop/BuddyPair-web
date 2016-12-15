@@ -75,7 +75,7 @@ angular.module('myApp.controllers', []).
     }, function (data) {
       $scope.error = data.data.code;
     });
-    $http.get('/api/peer/count').then(function (data) {
+    $http.get('/api/peers/count').then(function (data) {
       $scope.male_peers = data.data[0].male_peers;
       $scope.female_peers = data.data[0].female_peers;
       $scope.num_peers = $scope.male_peers + $scope.female_peers;
@@ -121,7 +121,7 @@ angular.module('myApp.controllers', []).
       });
     } else {
       $scope.erasmusList = null;
-      $http.get('/api/erasmusList').then(function (data) {
+      $http.get('/api/erasmus').then(function (data) {
         $scope.erasmusList = data.data;
       }, function (data) {
         $scope.error = data.data.code;
@@ -173,7 +173,7 @@ angular.module('myApp.controllers', []).
       });
     } else {
       $scope.peerList = null;
-      $http.get('/api/peerList').then(function (data) {
+      $http.get('/api/peers').then(function (data) {
         $scope.peerList = data.data;
       }, function (data) {
         $scope.error = data.data.code;

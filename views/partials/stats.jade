@@ -9,10 +9,10 @@ div
     div.panel-body
       ul
         li(ng-if='num_erasmus')
-          b Registered Erasmus students:
+          b Registered Erasmus students:#{' '}
           | {{num_erasmus}}
         li(ng-if='num_peers')
-          b Registered peer students:
+          b Registered peer students:#{' '}
           | {{num_peers}}
       div
         div(ng-if='numRegistered').col-md-4
