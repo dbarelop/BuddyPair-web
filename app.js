@@ -55,7 +55,7 @@ app.get('/api/erasmus/:erasmus_id/removeAssignedPeer', auth.ensureAuthenticated,
 app.get('/api/peers', auth.ensureAuthenticated, api.peerList);
 app.get('/api/peers/count', api.peerCount);
 app.get('/api/peer/:id', auth.ensureAuthenticated, api.peer);
-app.get('/api/peer/:id/delete', auth.ensureAuthenticated, api.deletePeer);
+app.delete('/api/peer/:id', auth.ensureAuthenticated, api.deletePeer);
 app.get('/api/peer/:peer_id/assignedErasmus', auth.ensureAuthenticated, api.assignedErasmus);
 app.get('/api/peer/:peer_id/assignErasmus/:erasmus_id', auth.ensureAuthenticated, api.addAssignment);
 app.get('/api/peer/:peer_id/removeAssignedErasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);

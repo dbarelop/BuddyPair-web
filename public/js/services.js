@@ -24,7 +24,7 @@ angular.module('BuddyPairApp.services')
             var deferred = $q.defer();
             $http.get('/api/erasmus/count')
                 .success(function(data) {
-                    deferred.resolve(data);
+                    deferred.resolve(data[0]);
                 }).error(function(msg, code) {
                     deferred.reject({
                         code: code,
@@ -73,6 +73,81 @@ angular.module('BuddyPairApp.services')
                     });
                     console.log(msg);
                 });
+            return deferred.promise;
+        };
+
+        return service;
+    }).service('PeerService', function($q, $http) {
+        var service = {};
+
+        service.getList = function() {
+            var deferred = $q.defer();
+            $http.get('/api/peers')
+                .success(function(data) {
+                    deferred.resolve(data);
+                }).error(function(msg, code) {
+                deferred.reject({
+                    code: code,
+                    message: msg
+                });
+                console.log(msg);
+            });
+            return deferred.promise;
+        };
+
+        service.getCount = function() {
+            var deferred = $q.defer();
+            $http.get('/api/peers/count')
+                .success(function(data) {
+                    deferred.resolve(data[0]);
+                }).error(function(msg, code) {
+                deferred.reject({
+                    code: code,
+                    message: msg
+                });
+                console.log(msg);
+            });
+            return deferred.promise;
+        };
+
+        service.getById = function(id) {
+            var deferred = $q.defer();
+            $http.get('/api/peer/' + id)
+                .success(function(data) {
+                    var peer = data[0];
+                    $http.get('/api/peer/' + id + '/assignedErasmus')
+                        .success(function(data) {
+                            peer.assignedErasmus = data;
+                            deferred.resolve(peer);
+                        }).error(function(msg, code) {
+                        deferred.reject({
+                            code: code,
+                            message: msg
+                        });
+                        console.log(msg);
+                    });
+                }).error(function(msg, code) {
+                deferred.reject({
+                    code: code,
+                    message: msg
+                });
+                console.log(msg);
+            });
+            return deferred.promise;
+        };
+
+        service.deleteById = function(id) {
+            var deferred = $q.defer();
+            $http.delete('/api/peer/' + id)
+                .success(function() {
+                    deferred.resolve();
+                }).error(function(msg, code) {
+                deferred.reject({
+                    code: code,
+                    message: msg
+                });
+                console.log(msg);
+            });
             return deferred.promise;
         };
 

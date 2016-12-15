@@ -2,35 +2,35 @@
 
 // Declare app level module which depends on filters, and services
 
-angular.module('BuddyPairApp', ['BuddyPairApp.controllers', 'BuddyPairApp.services', 'ngRoute', 'satellizer']).
+angular.module('BuddyPairApp', ['BuddyPairApp.controllers', 'BuddyPairApp.services', 'ngRoute', 'satellizer', 'chart.js']).
   config(function ($routeProvider, $locationProvider, $authProvider) {
-    $routeProvider.
-      when('/profile', {
+    $routeProvider
+      .when('/profile', {
         templateUrl: '/partials/profile',
         controller: 'ProfileCtrl',
         activetab: 'profile'
-      }).
-      when('/erasmusList', {
+      })
+      .when('/erasmusList', {
         templateUrl: '/partials/erasmusList',
         controller: 'ErasmusCtrl',
         activetab: 'erasmusList'
-      }).
-      when('/erasmus/:id', {
+      })
+      .when('/erasmus/:id', {
         templateUrl: '/partials/erasmusProfile',
         controller: 'ErasmusCtrl',
         activetab: 'erasmusList'
-      }).
-      when('/peerList', {
+      })
+      .when('/peerList', {
         templateUrl: '/partials/peerList',
         controller: 'PeerCtrl',
         activetab: 'peerList'
-      }).
-      when('/peer/:id', {
+      })
+      .when('/peer/:id', {
         templateUrl: '/partials/peerProfile',
         controller: 'PeerCtrl',
         activetab: 'peerList'
-      }).
-      otherwise({
+      })
+      .otherwise({
         templateUrl: '/partials/stats',
         controller: 'StatsCtrl',
         redirectTo: '/',
