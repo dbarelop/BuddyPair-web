@@ -4,29 +4,40 @@ div(ng-show='error').alert.alert-danger.fade.in
   |  {{error}}
 div(ng-if='erasmusList !== null')
   h3 There are currently {{erasmusList.length}} Erasmus students in the system:
-  div.panel.panel-default
-    div.panel-heading
-      h4 Filters
-    form.panel-body
-      div.input-group
-        span.input-group-addon Name:
-        input(type='text' ng-model='filters.name').form-control
-      br
-      div.input-group
-        span.input-group-addon Only with peer:
-        div.form-control
-          label.radio-inline
-            input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='all')
-            | All
-          label.radio-inline
-            input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='y')
-            | Yes
-          label.radio-inline
-            input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='n')
-            | No
-  div.panel.panel-default
-    ul.list-group
-      a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer}").list-group-item {{e.name}} {{e.surname}}
-        | {{e.has_peer ? '' : ' (no assigned peer)'}}
+  div.row
+    div.col-md-8
+      div.panel.panel-default
+        div.panel-heading
+          h4 Filters
+        form.panel-body
+          div.input-group
+            span.input-group-addon Name:
+            input(type='text' ng-model='filters.name').form-control
+          br
+          div.input-group
+            span.input-group-addon Only with peer:
+            div.form-control
+              label.radio-inline
+                input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='all')
+                | All
+              label.radio-inline
+                input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='y')
+                | Yes
+              label.radio-inline
+                input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='n')
+                | No
+      div.panel.panel-default
+        ul.list-group
+          a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer}").list-group-item {{e.name}} {{e.surname}}
+              | {{e.has_peer ? '' : ' (no assigned peer)'}}
+    div.col-md-4
+      div.panel.panel-default
+        div.panel-heading
+          h4 Actions
+        div.panel-body
+          // TODO: implement
+          a(href='/unimplemented').list-group-item Match
+          a(href='/unimplemented').list-group-item Manage Erasmus
+          a(href='/unimplemented').list-group-item Add Erasmus
 div(ng-if='erasmusList == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
