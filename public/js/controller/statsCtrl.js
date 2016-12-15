@@ -2,9 +2,6 @@
 
 angular.module('BuddyPairApp.controllers')
     .controller('StatsCtrl', ['$scope', '$route', '$http', 'ErasmusService', 'PeerService', function($scope, $route, $http, ErasmusService, PeerService) {
-        var handleErrors = function (data) {
-            $scope.error = data.data.code;
-        };
         $scope.$route = $route;
         $scope.numRegistered = {
             data: [[0], [0]],
@@ -40,7 +37,7 @@ angular.module('BuddyPairApp.controllers')
             $scope.genderErasmus.data[0] = $scope.male_erasmus;
             $scope.genderErasmus.data[1] = $scope.female_erasmus;
         }, function (err) {
-            $scope.error = err;
+            $scope.error = err.message.code;
         });
         PeerService.getCount().then(function (count) {
             $scope.male_peers = count.male_peers;
@@ -50,6 +47,6 @@ angular.module('BuddyPairApp.controllers')
             $scope.genderPeers.data[0] = $scope.male_peers;
             $scope.genderPeers.data[1] = $scope.female_peers;
         }, function (err) {
-            $scope.error = err;
+            $scope.error = err.message.code;
         });
     }]);

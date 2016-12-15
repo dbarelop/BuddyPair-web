@@ -2,9 +2,6 @@
 
 angular.module('BuddyPairApp.controllers')
     .controller('ErasmusCtrl', ['$scope', '$route', '$routeParams', '$http', 'ErasmusService', 'PeerService', function($scope, $route, $routeParams, $http, ErasmusService, PeerService) {
-        var handleErrors = function (data) {
-            $scope.error = data.data.code;
-        };
         $scope.$route = $route;
         $scope.filters = {
             withPeer: 'all'
@@ -17,7 +14,7 @@ angular.module('BuddyPairApp.controllers')
                 $scope.erasmus = erasmus;
                 $scope.selectedPeer = erasmus.assignedPeer;
             }, function (err) {
-                $scope.error = err.data.code;
+                $scope.error = err.message.code;
             });
             // Setup the peer assignment action
             $scope.setSelectedPeer = function(peer) {
@@ -70,7 +67,7 @@ angular.module('BuddyPairApp.controllers')
             ErasmusService.getList().then(function(data) {
                 $scope.erasmusList = data;
             }, function(err) {
-                $scope.error = err;
+                $scope.error = err.message.code;
             });
         }
     }]);

@@ -6,21 +6,21 @@ div
   div.panel.panel-default
     div.panel-heading
       h4 Statistics
-    div.panel-body
+    div(ng-if='!error').panel-body
       ul
-        li(ng-if='num_erasmus')
+        li
           b Registered Erasmus students:#{' '}
           | {{num_erasmus}}
-        li(ng-if='num_peers')
+        li
           b Registered peer students:#{' '}
           | {{num_peers}}
       div
-        div(ng-if='numRegistered').col-md-4
+        div.col-md-4
           label(for='numRegisteredChart') Number of registered Erasmus and peers
           canvas(id='numRegisteredChart' chart-data='numRegistered.data' chart-labels='numRegistered.labels' chart-series='numRegistered.series' chart-options='numRegistered.options').chart-bar
-        div(ng-if='genderErasmus').col-md-4
+        div.col-md-4
           label(for='erasmusGenderChart') Erasmus gender
           canvas(id='erasmusGenderChart' chart-data='genderErasmus.data' chart-labels='genderErasmus.labels').chart-pie
-        div(ng-if='genderPeers').col-md-4
+        div.col-md-4
           label(for='peersGenderChart') Peers gender
           canvas(id='peersGenderChart' chart-data='genderPeers.data' chart-labels='genderPeers.labels').chart-pie

@@ -2,9 +2,6 @@
 
 angular.module('BuddyPairApp.controllers')
     .controller('PeerCtrl', ['$scope', '$route', '$routeParams', '$http', 'PeerService', 'ErasmusService', function($scope, $route, $routeParams, $http, PeerService, ErasmusService) {
-        var handleErrors = function (data) {
-            $scope.error = data.data.code;
-        };
         $scope.$route = $route;
         if ($routeParams.id) {
             // Get the peer's information from the API
@@ -22,7 +19,7 @@ angular.module('BuddyPairApp.controllers')
                     });
                 });
             }, function(err) {
-                $scope.error = err;
+                $scope.error = err.message.code;
             });
             // Setup the Erasmus assignment action
             $scope.selectionContains = function(erasmus) {
@@ -125,7 +122,7 @@ angular.module('BuddyPairApp.controllers')
             PeerService.getList().then(function (peerList) {
                 $scope.peerList = peerList;
             }, function (err) {
-                $scope.error = err;
+                $scope.error = err.message.code;
             });
         }
     }]);
