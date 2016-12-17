@@ -49,7 +49,7 @@ angular.module('BuddyPairApp.controllers')
             $scope.deleteErasmus = function() {
                 if (confirm('Do you want to delete ' + $scope.erasmus.name + ' ' + $scope.erasmus.surname + '\'s profile?\n' +
                         '(The assigned peer, if any, won\'t be deleted)')) {
-                    ErasmusService.deleteErasmus($scope.erasmus.erasmus_id).then(function () {
+                    ErasmusService.deleteById($scope.erasmus.erasmus_id).then(function () {
                         $scope.erasmus = null;
                     });
                 }

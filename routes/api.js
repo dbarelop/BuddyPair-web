@@ -32,10 +32,7 @@ handleDisconnect();
 
 /* QUERIES */
 
-/**
- * Fetches the list of Erasmus students (without data from assigned peers)
- */
-exports.erasmusList = function(req, res) {
+function getErasmusList(cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
     'FROM ERASMUS e ' +
@@ -43,35 +40,17 @@ exports.erasmusList = function(req, res) {
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'ORDER BY e.register_date ASC';
-  connection.query(query, function(err, rows) {
-    if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
-      res.status(503).send(err);
-    } else {
-      res.json(rows);
-    }
-  });
-};
+  connection.query(query, cb);
+}
 
-exports.erasmusCount = function(req, res) {
+function getErasmusCount(cb) {
   var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_erasmus, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_erasmus ' +
     'FROM ERASMUS e ' +
     'INNER JOIN STUDENT s ON e.erasmus = s.id';
-  connection.query(query, function(err, rows) {
-    if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
-      res.status(503).send(err);
-    } else {
-      res.json(rows);
-    }
-  })
-};
+  connection.query(query, cb);
+}
 
-/**
- * Fetches the information of a given Erasmus student (without data from assigned peer)
- * @param req.params.id the Erasmus id
- */
-exports.erasmus = function(req, res) {
+function getErasmus(erasmus_id, cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
     'FROM ERASMUS e ' +
@@ -79,12 +58,97 @@ exports.erasmus = function(req, res) {
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'WHERE e.id = ?';
-  connection.query(query, req.params.id, function(err, rows) {
+  connection.query(query, erasmus_id, cb);
+}
+
+function getPeerList(cb) {
+  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
+    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
+    'FROM PEER p ' +
+    'INNER JOIN STUDENT s ON p.peer = s.id ' +
+    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'ORDER BY p.register_date ASC';
+  connection.query(query, cb);
+}
+
+function getPeerCount(cb) {
+  var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_peers, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_peers ' +
+    'FROM PEER p ' +
+    'INNER JOIN STUDENT s ON p.peer = s.id';
+  connection.query(query, cb);
+}
+
+function getPeer(peer_id, cb) {
+  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
+    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
+    'FROM PEER p ' +
+    'INNER JOIN STUDENT s ON p.peer = s.id ' +
+    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'WHERE p.id = ?';
+  connection.query(query, peer_id, cb);
+}
+
+function getAssignedErasmus(peer_id, cb) {
+  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
+    'FROM ERASMUS e ' +
+    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
+    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'INNER JOIN BUDDY_PAIR bp ON e.id = bp.erasmus ' +
+    'WHERE bp.peer = ?';
+  connection.query(query, peer_id, cb);
+}
+
+function getAssignedPeer(erasmus_id, cb) {
+  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.* ' +
+    'FROM PEER p ' +
+    'INNER JOIN STUDENT s ON p.peer = s.id ' +
+    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'INNER JOIN BUDDY_PAIR bp ON p.id = bp.peer ' +
+    'WHERE bp.erasmus = ?';
+  connection.query(query, erasmus_id, cb);
+}
+
+/**
+ * Fetches the list of Erasmus students (without data from assigned peers)
+ */
+exports.erasmusList = function(req, res) {
+  getErasmusList(function(err, list) {
     if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
       res.status(503).send(err);
     } else {
-      res.json(rows);
+      res.json(list);
+    }
+  });
+};
+
+/**
+ * Fetches the number of Erasmus
+ */
+exports.erasmusCount = function(req, res) {
+  getErasmusCount(function(err, count) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(count);
+    }
+  });
+};
+
+/**
+ * Fetches the information of a given Erasmus student (without data from assigned peer)
+ * @param req.params.id the Erasmus id
+ */
+exports.erasmus = function(req, res) {
+  var erasmus_id = req.params.id;
+  getErasmus(erasmus_id, function(err, erasmus) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(erasmus);
     }
   });
 };
@@ -93,35 +157,26 @@ exports.erasmus = function(req, res) {
  * Fetches the list of peer students (without data from assigned Erasmus)
  */
 exports.peerList = function(req, res) {
-  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
-    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
-    'FROM PEER p ' +
-    'INNER JOIN STUDENT s ON p.peer = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'ORDER BY p.register_date ASC';
-  connection.query(query, function(err, rows) {
+  getPeerList(function(err, list) {
     if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
       res.status(503).send(err);
     } else {
-      res.json(rows);
+      res.json(list);
     }
   });
 };
 
+/**
+ * Fetches the number of peer students
+ */
 exports.peerCount = function(req, res) {
-  var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_peers, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_peers ' +
-    'FROM PEER p ' +
-    'INNER JOIN STUDENT s ON p.peer = s.id';
-  connection.query(query, function(err, rows) {
+  getPeerCount(function(err, count) {
     if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
       res.status(503).send(err);
     } else {
-      res.json(rows);
+      res.json(count);
     }
-  })
+  });
 };
 
 /**
@@ -129,19 +184,12 @@ exports.peerCount = function(req, res) {
  * @param req.params.id the peer id
  */
 exports.peer = function(req, res) {
-  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
-    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
-    'FROM PEER p ' +
-    'INNER JOIN STUDENT s ON p.peer = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'WHERE p.id = ?';
-  connection.query(query, req.params.id, function(err, rows) {
+  var peer_id = req.params.id;
+  getPeer(peer_id, function(err, peer) {
     if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
       res.status(503).send(err);
     } else {
-      res.json(rows);
+      res.json(peer);
     }
   });
 };
@@ -151,19 +199,12 @@ exports.peer = function(req, res) {
  * @param req.params.peer_id the peer id
  */
 exports.assignedErasmus = function(req, res) {
-  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.* ' +
-    'FROM ERASMUS e ' +
-    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'INNER JOIN BUDDY_PAIR bp ON e.id = bp.erasmus ' +
-    'WHERE bp.peer = ?';
-  connection.query(query, req.params.peer_id, function(err, rows) {
+  var peer_id = req.params.peer_id;
+  getAssignedErasmus(peer_id, function(err, erasmus) {
     if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
       res.status(503).send(err);
     } else {
-      res.json(rows);
+      res.json(erasmus);
     }
   });
 };
@@ -173,19 +214,12 @@ exports.assignedErasmus = function(req, res) {
  * @param req.params.erasmus_id the Erasmus id
  */
 exports.assignedPeer = function(req, res) {
-  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.* ' +
-    'FROM PEER p ' +
-    'INNER JOIN STUDENT s ON p.peer = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'INNER JOIN BUDDY_PAIR bp ON p.id = bp.peer ' +
-    'WHERE bp.erasmus = ?';
-  connection.query(query, req.params.erasmus_id, function(err, rows) {
+  var erasmus_id = req.params.erasmus_id;
+  getAssignedPeer(erasmus_id, function(err, peer) {
     if (err) {
-      console.log('Error running query \'' + query + '\': ', err);
       res.status(503).send(err);
     } else {
-      res.json(rows);
+      res.json(peer);
     }
   });
 };
@@ -236,6 +270,11 @@ function insertErasmus(erasmus, cb, errcb) {
   });
 }
 
+function insertMatch(erasmus_id, peer_id, cb) {
+  var query = 'INSERT INTO BUDDY_PAIR(erasmus, peer) VALUES (?, ?)';
+  connection.query(query, [erasmus_id, peer_id], cb);
+}
+
 /**
  * Adds an Erasmus to the database
  * @param req.body.erasmus the Erasmus' information
@@ -258,7 +297,7 @@ exports.addErasmus = function(req, res) {
  * Adds a peer student to the database
  * @param req.body.peer the peer's information
  */
-exports.addPeer = function(req) {
+exports.addPeer = function(req, res) {
   // TODO: implement
 };
 
@@ -270,22 +309,22 @@ exports.addPeer = function(req) {
  * @param req.params.erasmus_id the Erasmus id
  * @param req.body.peer_id the peer id
  */
-exports.addAssignment = function(req) {
-  var query = 'INSERT INTO BUDDY_PAIR(erasmus, peer) VALUES (?, ?)';
+exports.addAssignment = function(req, res) {
   var erasmus_id, peer_id;
-  // TODO: parse arguments from req outside the API?
   if (req.body.erasmus_id && req.params.peer_id) {
     erasmus_id = req.body.erasmus_id;
     peer_id = req.params.peer_id;
   } else if (req.params.erasmus_id && req.body.peer_id) {
     erasmus_id = req.params.erasmus_id;
     peer_id = req.body.peer_id;
-    exports.removeAssignedPeer(req);
+    deleteAssignedPeer(erasmus_id);
   }
-  var params = [erasmus_id, peer_id];
-  connection.query(query, params, function(err) {
-    if (err)
-      console.log('Error running insertion \'' + query + '\': ', err);
+  insertMatch(erasmus_id, peer_id, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.status(200);
+    }
   });
 };
 
@@ -309,15 +348,43 @@ exports.updatePeer = function(res) {
 
 /* DELETIONS */
 
+function deleteErasmus(erasmus_id, cb) {
+  var query = 'DELETE FROM ERASMUS WHERE id = ?';
+  connection.query(query, erasmus_id, cb);
+}
+
+function deletePeer(peer_id, cb) {
+  var query = 'DELETE FROM PEER WHERE id = ?';
+  connection.query(query, peer_id, cb);
+}
+
+function deleteAssignedPeer(erasmus_id, cb) {
+  var query = 'DELETE FROM BUDDY_PAIR WHERE erasmus = ?';
+  connection.query(query, erasmus_id, cb);
+}
+
+function deleteAssignedErasmus(peer_id, erasmus_id, cb) {
+  var query = 'DELETE FROM BUDDY_PAIR WHERE erasmus = ? AND peer = ?';
+  connection.query(query, [erasmus_id, peer_id], cb);
+}
+
+function deleteAllAssginedErasmus(peer_id, cb) {
+  var query = 'DELETE FROM BUDDY_PAIR WHERE peer = ?';
+  connection.query(query, peer_id, cb);
+}
+
 /**
  * Deletes an Erasmus record from the database
  * @param req.params.id the Erasmus id
  */
-exports.deleteErasmus = function(req) {
-  var query = 'DELETE FROM ERASMUS WHERE id = ?';
-  connection.query(query, req.params.id, function(err) {
-    if (err)
-      console.log('Error running query \'' + query + '\': ', err);
+exports.deleteErasmus = function(req, res) {
+  var erasmus_id = req.params.id;
+  deleteErasmus(erasmus_id, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.status(200);
+    }
   });
 };
 
@@ -325,11 +392,14 @@ exports.deleteErasmus = function(req) {
  * Deletes a peer record from the database
  * @param req.params.id the peer id
  */
-exports.deletePeer = function(req) {
-  var query = 'DELETE FROM PEER WHERE id = ?';
-  connection.query(query, req.params.id, function(err) {
-    if (err)
-      console.log('Error running query \'' + query + '\': ', err);
+exports.deletePeer = function(req, res) {
+  var peer_id = req.params.id;
+  deletePeer(peer_id, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.status(200);
+    }
   });
 };
 
@@ -337,24 +407,31 @@ exports.deletePeer = function(req) {
  * Removes the assigned peer from a given Erasmus
  * @param req.params.erasmus_id the Erasmus id
  */
-exports.removeAssignedPeer = function(req) {
-  var query = 'DELETE FROM BUDDY_PAIR WHERE erasmus = ?';
-  connection.query(query, req.params.erasmus_id, function(err) {
-    if (err)
-      console.log('Error running query \'' + query + '\': ', err);
+exports.removeAssignedPeer = function(req, res) {
+  var erasmus_id = req.params.erasmus_id;
+  deleteAssignedPeer(erasmus_id, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.status(200);
+    }
   });
 };
 
 /**
  * Removes a given assigned Erasmus from a given peer
- * @param req.params.erasmus_id the Erasmus id
  * @param req.params.peer_id the peer id
+ * @param req.params.erasmus_id the Erasmus id
  */
-exports.removeAssignedErasmus = function(req) {
-  var query = 'DELETE FROM BUDDY_PAIR WHERE erasmus = ? AND peer = ?';
-  connection.query(query, [req.params.erasmus_id, req.params.peer_id], function(err) {
-    if (err)
-      console.log('Error running query \'' + query + '\': ', err);
+exports.removeAssignedErasmus = function(req, res) {
+  var peer_id = req.params.peer_id;
+  var erasmus_id = req.params.erasmus_id;
+  deleteAssignedErasmus(peer_id, erasmus_id, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.status(200);
+    }
   });
 };
 
@@ -362,10 +439,13 @@ exports.removeAssignedErasmus = function(req) {
  * Removes the assigned Erasmus (one or more) from a given peer
  * @param req.params.peer_id the peer id
  */
-exports.removeAllAssignedErasmus = function(req) {
-  var query = 'DELETE FROM BUDDY_PAIR WHERE peer = ?';
-  connection.query(query, req.params.peer_id, function(err) {
-    if (err)
-      console.log('Error running query \'' + query + '\': ', err);
+exports.removeAllAssignedErasmus = function(req, res) {
+  var peer_id = req.params.peer_id;
+  deleteAllAssginedErasmus(peer_id, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.status(200);
+    }
   });
 };

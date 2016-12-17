@@ -48,7 +48,7 @@ app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
 
 app.get('/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
 app.get('/api/erasmus/count', api.erasmusCount);
-app.put('/api/erasmus', api.addErasmus);
+app.put('/api/erasmus', auth.ensureAuthenticated, api.addErasmus);
 
 app.get('/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.delete('/api/erasmus/:id', auth.ensureAuthenticated, api.deleteErasmus);
