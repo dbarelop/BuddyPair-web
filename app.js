@@ -58,6 +58,7 @@ app.delete('/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, a
 
 app.get('/api/peers', auth.ensureAuthenticated, api.peerList);
 app.get('/api/peers/count', api.peerCount);
+app.put('/api/peers', auth.ensureAuthenticated, api.addPeer);
 
 app.get('/api/peer/:id', auth.ensureAuthenticated, api.peer);
 app.delete('/api/peer/:id', auth.ensureAuthenticated, api.deletePeer);

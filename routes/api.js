@@ -226,46 +226,68 @@ exports.assignedPeer = function(req, res) {
 
 /* INSERTIONS */
 
-function insertStudent(student, cb, errcb) {
+function insertStudent(student, cb) {
   var query = 'INSERT INTO STUDENT (name, surname, gender, birthdate, nacionality, email, phone, studies, faculty) ' +
     'VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM STUDIES WHERE name = ?), (SELECT id FROM FACULTY WHERE NAME = ?))';
-  var q1 = connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality, student.email, student.phone, student.studies_name, student.faculty_name], function(err, result) {
+  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality, student.email, student.phone, student.studies_name, student.faculty_name], function(err, result) {
     if (err && err.sqlState == '23000') {
       // If the student already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM STUDENT WHERE email = ?';
-      var q2 = connection.query(query2, [student.email], function(err, rows) {
+      connection.query(query2, [student.email], function(err, rows) {
         if (err) {
-          errcb(err, q2);
+          cb(err);
         } else {
-          cb(rows[0].id);
+          cb(err, rows[0].id);
         }
       });
     } else if (err) {
-      errcb(err, q1);
+      cb(err);
     } else {
-      cb(result.insertId);
+      cb(err, result.insertId);
     }
   });
 }
 
-function insertErasmus(erasmus, cb, errcb) {
+function insertErasmus(erasmus, cb) {
   var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, arrival_date, notes) ' +
     'VALUES (?, ?, ?, ?, ?)';
-  var q1 = connection.query(query, [erasmus.register_date, erasmus.student_id, erasmus.gender_preference, erasmus.arrival_date, erasmus.notes], function(err, result) {
-    if (err && err.sqlState == "23000") {
+  connection.query(query, [erasmus.register_date, erasmus.student_id, erasmus.gender_preference, erasmus.arrival_date, erasmus.notes], function(err, result) {
+    if (err && err.sqlState == '23000') {
       // If the Erasmus already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM ERASMUS WHERE erasmus = ?';
-      var q2 = connection.query(query2, [erasmus.student_id], function(err, rows) {
+      connection.query(query2, erasmus.student_id, function(err, rows) {
         if (err || rows.length == 0) {
-          errcb(err, q2);
+          cb(err);
         } else {
-          cb(rows[0].id);
+          cb(err, rows[0].id);
         }
       });
     } else if (err) {
-      errcb(err, q1);
+      cb(err);
     } else {
-      cb(result.insertId);
+      cb(err, result.insertId);
+    }
+  });
+}
+
+function insertPeer(peer, cb) {
+  var query = 'INSERT INTO PEER (register_date, peer, gender_preference, erasmus_limit, notes) ' +
+    'VALUES (?, ?, ?, ?, ?)';
+  connection.query(query, [peer.register_date, peer.student_id, peer.gender_preference, peer.erasmus_limit, peer.notes], function(err, result) {
+    if (err && err.sqlState == '23000') {
+      // If the peer already exists, fetch their ID and pass it to the callback function
+        var query2 = 'SELECT id FROM PEER WHERE peer = ?';
+        connection.query(query2, peer.student_id, function(err, rows) {
+          if (err || rows.length == 0) {
+            cb(err);
+          } else {
+            cb(err, rows[0].id);
+          }
+        });
+    } else if (err) {
+      cb(err);
+    } else {
+      cb(err, result.insertId);
     }
   });
 }
@@ -280,17 +302,21 @@ function insertMatch(erasmus_id, peer_id, cb) {
  * @param req.body.erasmus the Erasmus' information
  */
 exports.addErasmus = function(req, res) {
-  var handleError = function(err, query) {
-    console.log('Error running query \'' + query.sql + '\': ', err);
-    res.status(503).send(err);
-  };
   var erasmus = JSON.parse(req.body.erasmus);
-  insertStudent(erasmus, function(student_id) {
-    erasmus.student_id = student_id;
-    insertErasmus(erasmus, function(erasmus_id) {
-      res.json({ erasmus_id: erasmus_id });
-    }, handleError);
-  }, handleError);
+  insertStudent(erasmus, function(err, student_id) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      erasmus.student_id = student_id;
+      insertErasmus(erasmus, function(err, erasmus_id) {
+        if (err) {
+          res.status(503).send(err);
+        } else {
+          res.json({ erasmus_id: erasmus_id });
+        }
+      });
+    }
+  });
 };
 
 /**
@@ -298,7 +324,21 @@ exports.addErasmus = function(req, res) {
  * @param req.body.peer the peer's information
  */
 exports.addPeer = function(req, res) {
-  // TODO: implement
+  var peer = JSON.parse(req.body.peer);
+  insertStudent(peer, function(err, student_id) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      peer.student_id = student_id;
+      insertPeer(peer, function(err, peer_id) {
+        if (err) {
+          res.status(503).send(err);
+        } else {
+          res.json({ peer_id: peer_id });
+        }
+      });
+    }
+  });
 };
 
 /**
