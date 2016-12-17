@@ -192,17 +192,71 @@ exports.assignedPeer = function(req, res) {
 
 /* INSERTIONS */
 
+function insertStudent(student, cb, errcb) {
+  var query = 'INSERT INTO STUDENT (name, surname, gender, birthdate, nacionality, email, phone, studies, faculty) ' +
+    'VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM STUDIES WHERE name = ?), (SELECT id FROM FACULTY WHERE NAME = ?))';
+  var q1 = connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality, student.email, student.phone, student.studies_name, student.faculty_name], function(err, result) {
+    if (err && err.sqlState == '23000') {
+      // If the student already exists, fetch their ID and pass it to the callback function
+      var query2 = 'SELECT id FROM STUDENT WHERE email = ?';
+      var q2 = connection.query(query2, [student.email], function(err, rows) {
+        if (err) {
+          errcb(err, q2);
+        } else {
+          cb(rows[0].id);
+        }
+      });
+    } else if (err) {
+      errcb(err, q1);
+    } else {
+      cb(result.insertId);
+    }
+  });
+}
+
+function insertErasmus(erasmus, cb, errcb) {
+  var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, arrival_date, notes) ' +
+    'VALUES (?, ?, ?, ?, ?)';
+  var q1 = connection.query(query, [erasmus.register_date, erasmus.student_id, erasmus.gender_preference, erasmus.arrival_date, erasmus.notes], function(err, result) {
+    if (err && err.sqlState == "23000") {
+      // If the Erasmus already exists, fetch their ID and pass it to the callback function
+      var query2 = 'SELECT id FROM ERASMUS WHERE erasmus = ?';
+      var q2 = connection.query(query2, [erasmus.student_id], function(err, rows) {
+        if (err || rows.length == 0) {
+          errcb(err, q2);
+        } else {
+          cb(rows[0].id);
+        }
+      });
+    } else if (err) {
+      errcb(err, q1);
+    } else {
+      cb(result.insertId);
+    }
+  });
+}
+
 /**
  * Adds an Erasmus to the database
- * @param req.params.erasmus the Erasmus' information
+ * @param req.body.erasmus the Erasmus' information
  */
-exports.addErasmus = function(req) {
-  // TODO: implement
+exports.addErasmus = function(req, res) {
+  var handleError = function(err, query) {
+    console.log('Error running query \'' + query.sql + '\': ', err);
+    res.status(503).send(err);
+  };
+  var erasmus = JSON.parse(req.body.erasmus);
+  insertStudent(erasmus, function(student_id) {
+    erasmus.student_id = student_id;
+    insertErasmus(erasmus, function(erasmus_id) {
+      res.json({ erasmus_id: erasmus_id });
+    }, handleError);
+  }, handleError);
 };
 
 /**
  * Adds a peer student to the database
- * @param req.params.peer the peer's information
+ * @param req.body.peer the peer's information
  */
 exports.addPeer = function(req) {
   // TODO: implement

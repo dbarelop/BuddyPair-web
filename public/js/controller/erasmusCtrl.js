@@ -29,7 +29,6 @@ angular.module('BuddyPairApp.controllers')
             $scope.availablePeers = null;
             PeerService.getList().then(function(peers) { $scope.availablePeers = peers; });
             $scope.updateAssignedPeer = function() {
-                // TODO: check for errors in API calls...
                 if (!$scope.selectedPeer && $scope.erasmus.assignedPeer) {
                     // If there's no selected peer and the Erasmus previously had one, delete it
                     $scope.erasmus.assignedPeer.num_erasmus--;
