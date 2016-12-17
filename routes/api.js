@@ -312,7 +312,7 @@ exports.addErasmus = function(req, res) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.status(201).location('/erasmus/' + erasmus_id);
+          res.location('/erasmus/' + erasmus_id).sendStatus(201);
         }
       });
     }
@@ -334,7 +334,7 @@ exports.addPeer = function(req, res) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.status(201).location('/peer/' + peer_id);
+          res.location('/peer/' + peer_id).sendStatus(201);
         }
       });
     }
@@ -349,7 +349,7 @@ exports.addPeer = function(req, res) {
  * @param req.params.erasmus_id the Erasmus id
  * @param req.body.peer_id the peer id
  */
-exports.addAssignment = function(req, res) {
+exports.addMatch = function(req, res) {
   var erasmus_id, peer_id;
   if (req.body.erasmus_id && req.params.peer_id) {
     erasmus_id = req.body.erasmus_id;
@@ -361,9 +361,13 @@ exports.addAssignment = function(req, res) {
   }
   insertMatch(erasmus_id, peer_id, function(err) {
     if (err) {
-      res.status(503).send(err);
+      if (err.sqlState == '23000') {
+        res.sendStatus(404);
+      } else {
+        res.status(503).send(err);
+      }
     } else {
-      res.status(200);
+      res.sendStatus(204);
     }
   });
 };
@@ -393,15 +397,18 @@ function updatePeer(id, peer, cb) {
 exports.updateErasmus = function(req, res) {
   var erasmus_id = req.param.id;
   var erasmus = JSON.parse(req.body.erasmus);
-  updateStudent(erasmus.student_id, erasmus, function(err) {
+  // TODO: id parameter shouldn't be obtained from data
+  updateStudent(erasmus.student_id, erasmus, function(err, result) {
     if (err) {
       res.status(503).send(err);
+    } else if (result.affectedRows == 0) {
+      res.sendStatus(404);
     } else {
-      updateErasmus(erasmus_id, erasmus, function(err) {
+      updateErasmus(erasmus_id, erasmus, function(err, result) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.status(204);
+          res.sendStatus(result.affectedRows == 0 ? 404 : 204);
         }
       });
     }
@@ -416,15 +423,18 @@ exports.updateErasmus = function(req, res) {
 exports.updatePeer = function(req, res) {
   var peer_id = req.param.id;
   var peer = JSON.parse(req.body.peer);
-  updateStudent(peer.student_id, peer, function(err) {
+  // TODO: id parameter shouldn't be obtained from data
+  updateStudent(peer.student_id, peer, function(err, result) {
     if (err) {
       res.status(503).send(err);
+    } else if (result.affectedRows == 0) {
+      res.sendStatus(404);
     } else {
-      updatePeer(peer, function(err) {
+      updatePeer(peer, function(err, result) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.status(204);
+          res.sendStatus(result.affectedRows == 0 ? 404 : 204);
         }
       });
     }
@@ -464,11 +474,11 @@ function deleteAllAssginedErasmus(peer_id, cb) {
  */
 exports.deleteErasmus = function(req, res) {
   var erasmus_id = req.params.id;
-  deleteErasmus(erasmus_id, function(err) {
+  deleteErasmus(erasmus_id, function(err, result) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.status(200);
+      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
     }
   });
 };
@@ -479,11 +489,11 @@ exports.deleteErasmus = function(req, res) {
  */
 exports.deletePeer = function(req, res) {
   var peer_id = req.params.id;
-  deletePeer(peer_id, function(err) {
+  deletePeer(peer_id, function(err, result) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.status(200);
+      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
     }
   });
 };
@@ -494,11 +504,11 @@ exports.deletePeer = function(req, res) {
  */
 exports.removeAssignedPeer = function(req, res) {
   var erasmus_id = req.params.erasmus_id;
-  deleteAssignedPeer(erasmus_id, function(err) {
+  deleteAssignedPeer(erasmus_id, function(err, result) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.status(200);
+      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
     }
   });
 };
@@ -511,11 +521,11 @@ exports.removeAssignedPeer = function(req, res) {
 exports.removeAssignedErasmus = function(req, res) {
   var peer_id = req.params.peer_id;
   var erasmus_id = req.params.erasmus_id;
-  deleteAssignedErasmus(peer_id, erasmus_id, function(err) {
+  deleteAssignedErasmus(peer_id, erasmus_id, function(err, result) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.status(200);
+      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
     }
   });
 };
@@ -526,11 +536,11 @@ exports.removeAssignedErasmus = function(req, res) {
  */
 exports.removeAllAssignedErasmus = function(req, res) {
   var peer_id = req.params.peer_id;
-  deleteAllAssginedErasmus(peer_id, function(err) {
+  deleteAllAssginedErasmus(peer_id, function(err, result) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.status(200);
+      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
     }
   });
 };
