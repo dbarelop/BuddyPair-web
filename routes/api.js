@@ -1,5 +1,5 @@
 /*
- * Serve JSON to our AngularJS client
+ * REST API that interacts with the MySQL database
  */
 
 var mysql = require('mysql');
@@ -312,7 +312,7 @@ exports.addErasmus = function(req, res) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.json({ erasmus_id: erasmus_id });
+          res.status(201).location('/erasmus/' + erasmus_id);
         }
       });
     }
@@ -334,7 +334,7 @@ exports.addPeer = function(req, res) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.json({ peer_id: peer_id });
+          res.status(201).location('/peer/' + peer_id);
         }
       });
     }
@@ -370,20 +370,65 @@ exports.addAssignment = function(req, res) {
 
 /* MODIFICATIONS */
 
+function updateStudent(id, student, cb) {
+  var query = 'UPDATE STUDENT SET name = ?, surname = ?, gender = ?, birthdate = ?, nacionality = ?, email = ?, phone = ?, studies = ?, faculty = ? WHERE id = ?';
+  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality, student.email, student.phone, student.studies, student.faculty, id], cb);
+}
+
+function updateErasmus(id, erasmus, cb) {
+  var query = 'UPDATE ERASMUS SET register_date = ?, gender_preference = ?, arrival_date = ?, notes = ? WHERE id = ?';
+  connection.query(query, [erasmus.register_date, erasmus.gender_preference, erasmus.arrival_date, erasmus.notes, id], cb);
+}
+
+function updatePeer(id, peer, cb) {
+  var query = 'UPDATE PEER SET register_date = ?, gender_preference = ?, erasmus_limit = ?, notes = ? WHERE id = ?';
+  connection.query(query, [peer.register_date, peer.gender_preference, peer.arrival_date, peer.notes, id], cb);
+}
+
 /**
- * Updates an Erasmus with the new information (the id can't change)
- * @param req.params.erasmus the Erasmus' information
+ * Updates an Erasmus with the new information (the id isn't modified)
+ * @param req.param.id the Erasmus' id
+ * @param req.body.erasmus the Erasmus' new information
  */
-exports.updateErasmus = function(req) {
-  // TODO: implement
+exports.updateErasmus = function(req, res) {
+  var erasmus_id = req.param.id;
+  var erasmus = JSON.parse(req.body.erasmus);
+  updateStudent(erasmus.student_id, erasmus, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      updateErasmus(erasmus_id, erasmus, function(err) {
+        if (err) {
+          res.status(503).send(err);
+        } else {
+          res.status(204);
+        }
+      });
+    }
+  });
 };
 
 /**
- * Updates a peer student with the new information (the id can't change)
- * @param res.params.peer the peer's information
+ * Updates a peer student with the new information (the id isn't modified)
+ * @param req.param.id the peer's id
+ * @param res.body.peer the peer's new information
  */
-exports.updatePeer = function(res) {
-  // TODO: implement
+exports.updatePeer = function(req, res) {
+  var peer_id = req.param.id;
+  var peer = JSON.parse(req.body.peer);
+  updateStudent(peer.student_id, peer, function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      updatePeer(peer, function(err) {
+        if (err) {
+          res.status(503).send(err);
+        } else {
+          res.status(204);
+        }
+      });
+    }
+  });
 };
 
 /* DELETIONS */

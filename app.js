@@ -37,38 +37,40 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 
 // serve index and view partials
-app.get('/', routes.index);
-app.get('/partials/:name', routes.partials);
+app.get(    '/', routes.index);
+app.get(    '/partials/:name', routes.partials);
 
 // satellizer authentication
-app.post('/auth/google', auth.googleAuth);
+app.post(   '/auth/google', auth.googleAuth);
 
 // JSON API
-app.get('/api/me', auth.ensureAuthenticated, auth.findUser);
+app.get(    '/api/me', auth.ensureAuthenticated, auth.findUser);
 
-app.get('/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
-app.get('/api/erasmus/count', api.erasmusCount);
-app.put('/api/erasmus', auth.ensureAuthenticated, api.addErasmus);
+app.get(    '/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
+app.get(    '/api/erasmus/count', api.erasmusCount);
+app.post(   '/api/erasmus', auth.ensureAuthenticated, api.addErasmus);
 
-app.get('/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
-app.delete('/api/erasmus/:id', auth.ensureAuthenticated, api.deleteErasmus);
-app.get('/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.assignedPeer);
-app.put('/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.addAssignment);
-app.delete('/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.removeAssignedPeer);
+app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
+app.put(    '/api/erasmus/:id', auth.ensureAuthenticated, api.updateErasmus);
+app.delete( '/api/erasmus/:id', auth.ensureAuthenticated, api.deleteErasmus);
+app.get(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.assignedPeer);
+app.put(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.addAssignment);
+app.delete( '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.removeAssignedPeer);
 
-app.get('/api/peers', auth.ensureAuthenticated, api.peerList);
-app.get('/api/peers/count', api.peerCount);
-app.put('/api/peers', auth.ensureAuthenticated, api.addPeer);
+app.get(    '/api/peers', auth.ensureAuthenticated, api.peerList);
+app.get(    '/api/peers/count', api.peerCount);
+app.post(   '/api/peers', auth.ensureAuthenticated, api.addPeer);
 
-app.get('/api/peer/:id', auth.ensureAuthenticated, api.peer);
-app.delete('/api/peer/:id', auth.ensureAuthenticated, api.deletePeer);
-app.get('/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.assignedErasmus);
-app.put('/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.addAssignment);
-app.delete('/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.removeAllAssignedErasmus);
-app.delete('/api/peer/:peer_id/assigned_erasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);
+app.get(    '/api/peer/:id', auth.ensureAuthenticated, api.peer);
+app.put(    '/api/peer/:id', auth.ensureAuthenticated, api.updatePeer);
+app.delete( '/api/peer/:id', auth.ensureAuthenticated, api.deletePeer);
+app.get(    '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.assignedErasmus);
+app.put(    '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.addAssignment);
+app.delete( '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.removeAllAssignedErasmus);
+app.delete( '/api/peer/:peer_id/assigned_erasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);
 
 // redirect all others to the index (HTML5 history)
-app.get('*', routes.index);
+app.get(    '*', routes.index);
 
 /**
  * Start Server
