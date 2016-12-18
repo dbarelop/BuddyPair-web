@@ -33,7 +33,7 @@ div(ng-if='peerList !== null')
       div.panel.panel-default
         ul.list-group
           a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3}").list-group-item {{p.name}} {{p.surname}}
-              | ({{p.num_erasmus}} Erasmus)
+            | ({{p.num_erasmus}} Erasmus)
     div.col-md-4
       div.panel.panel-default
         div.panel-heading

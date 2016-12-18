@@ -21,7 +21,7 @@ function handleDisconnect() {
   connection.on('error', function (err) {
     console.log('Database error: ', err);
     if (err.code === 'PROTOCOL_CONNECTION_LOST')
-      // Reconnect if server closes the connection
+    // Reconnect if server closes the connection
       handleDisconnect();
     else
       throw err;
@@ -276,14 +276,14 @@ function insertPeer(peer, cb) {
   connection.query(query, [peer.register_date, peer.student_id, peer.gender_preference, peer.erasmus_limit, peer.notes], function(err, result) {
     if (err && err.sqlState == '23000') {
       // If the peer already exists, fetch their ID and pass it to the callback function
-        var query2 = 'SELECT id FROM PEER WHERE peer = ?';
-        connection.query(query2, peer.student_id, function(err, rows) {
-          if (err || rows.length == 0) {
-            cb(err);
-          } else {
-            cb(err, rows[0].id);
-          }
-        });
+      var query2 = 'SELECT id FROM PEER WHERE peer = ?';
+      connection.query(query2, peer.student_id, function(err, rows) {
+        if (err || rows.length == 0) {
+          cb(err);
+        } else {
+          cb(err, rows[0].id);
+        }
+      });
     } else if (err) {
       cb(err);
     } else {

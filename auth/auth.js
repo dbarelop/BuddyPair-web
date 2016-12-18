@@ -47,7 +47,7 @@ exports.googleAuth = function(req, res) {
       if (profile.error) {
         return res.status(500).send({message: profile.error.message});
       }
-      
+
       var token = createJWT(profile);
       res.send({ token: token });
     });
@@ -76,7 +76,7 @@ exports.ensureAuthenticated = function(req, res, next) {
   if (payload.exp <= moment().unix()) {
     return res.status(401).send({ message: 'Token has expired' });
   }
-  
+
   // TODO: improve access control (based on email)
   if (ALLOWED_USERS.indexOf(payload.sub.email) > -1) {
     req.profile = payload.sub;

@@ -29,7 +29,7 @@ div(ng-if='erasmusList !== null')
       div.panel.panel-default
         ul.list-group
           a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer}").list-group-item {{e.name}} {{e.surname}}
-              | {{e.has_peer ? '' : ' (no assigned peer)'}}
+            | {{e.has_peer ? '' : ' (no assigned peer)'}}
     div.col-md-4
       div.panel.panel-default
         div.panel-heading

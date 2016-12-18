@@ -81,11 +81,11 @@ http.createServer(app).listen(app.get('port'), function () {
 });
 
 /*var privateKey = fs.readFileSync('./sslcert/server.key', 'utf8');
-var certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
-var credentials = { 
-  key: privateKey, 
-  cert: certificate
-};
-https.createServer(credentials, app).listen(app.get('sport'), function() {
-  console.log('Secure Express server listening on port ' + app.get('sport'));
-});*/
+ var certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
+ var credentials = {
+ key: privateKey,
+ cert: certificate
+ };
+ https.createServer(credentials, app).listen(app.get('sport'), function() {
+ console.log('Secure Express server listening on port ' + app.get('sport'));
+ });*/
