@@ -30,6 +30,11 @@ angular.module('BuddyPairApp', ['BuddyPairApp.controllers', 'BuddyPairApp.servic
         controller: 'PeerCtrl',
         activetab: 'peerList'
       })
+      .when('/newErasmus', {
+        templateUrl: '/partials/newErasmus',
+        controller: 'NewErasmusCtrl',
+        activetab: 'newErasmus'
+      })
       .otherwise({
         templateUrl: '/partials/stats',
         controller: 'StatsCtrl',

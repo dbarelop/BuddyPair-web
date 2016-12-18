@@ -80,7 +80,7 @@ angular.module('BuddyPairApp.services')
             var deferred = $q.defer();
             $http.put('/api/erasmus/' + erasmus_id + '/assigned_peer', { peer_id: peer_id })
                 .success(function() {
-                    deferred.resolve(data);
+                    deferred.resolve();
                 }).error(function(msg, code) {
                 deferred.reject({
                     code: code,
@@ -185,7 +185,7 @@ angular.module('BuddyPairApp.services')
             var deferred = $q.defer();
             $http.put('/api/peer/' + peer_id + '/assigned_erasmus', { erasmus_id: erasmus_id })
                 .success(function() {
-                    deferred.resolve(data);
+                    deferred.resolve();
                 }).error(function(msg, code) {
                 deferred.reject({
                     code: code,

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('BuddyPairApp.controllers')
-    .controller('PeerCtrl', ['$scope', '$route', '$routeParams', '$http', 'PeerService', 'ErasmusService', function($scope, $route, $routeParams, $http, PeerService, ErasmusService) {
+    .controller('PeerCtrl', ['$scope', '$route', '$routeParams', 'PeerService', 'ErasmusService', function($scope, $route, $routeParams, PeerService, ErasmusService) {
         $scope.$route = $route;
         if ($routeParams.id) {
             // Get the peer's information from the API
