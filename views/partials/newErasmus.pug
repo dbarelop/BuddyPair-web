@@ -1,28 +1,28 @@
 div.container
   div.col-md-offset-2.col-md-8
-    form.form-horizontal
+    form(data-toggle='validator' role='form').form-horizontal
       div.panel.panel-default
         div.panel-heading Student information
         div.panel-body
           div.form-group
             label(for='name').control-label.col-md-2 Name
             div.col-md-10
-              input(type='text' placeholder='Name' id='name').form-control
+              input(type='text' placeholder='Name' id='name' required).form-control
           div.form-group
             label(for='surname').control-label.col-md-2 Surname
             div.col-md-10
-              input(type='text' placeholder='Surname' id='surname').form-control
+              input(type='text' placeholder='Surname' id='surname' required).form-control
           div.form-group
             label(for='gender').control-label.col-md-2 Gender
             div.col-md-10
               div.radio
-                label #[input(type='radio' name='gender' id='gender')] Male
+                label #[input(type='radio' name='gender' id='gender' required)] Male
               div.radio
-                label #[input(type='radio' name='gender')] Female
+                label #[input(type='radio' name='gender' required)] Female
           div.form-group
             label(for='birthdate').control-label.col-md-2 Birthdate
             div.col-md-10
-              input(type='date' id='birthdate').form-control
+              input(type='date' id='birthdate' required).form-control
           div.form-group
             label(for='nacionality').control-label.col-md-2 Nacionality
             div.col-md-10
@@ -31,7 +31,7 @@ div.container
           div.form-group
             label(for='email').control-label.col-md-2 Email
             div.col-md-10
-              input(type='email' id='email' placeholder='Email').form-control
+              input(type='email' id='email' placeholder='Email' required).form-control
           div.form-group
             label(for='phone').control-label.col-md-2 Phone number
             div.col-md-10
@@ -52,7 +52,7 @@ div.container
           div.form-group
             label(for='register_date').control-label.col-md-2 Register date
             div.col-md-10
-              input(type='datetime-local' id='register_date').form-control
+              input(type='datetime-local' id='register_date' required).form-control
           div.form-group
             label(for='gender_preference').control-label.col-md-2 Gender preference
             div.col-md-10
@@ -60,6 +60,8 @@ div.container
                 label #[input(type='radio' name='gender_preference' id='gender_preference')] Male
               div.radio
                 label #[input(type='radio' name='gender_preference')] Female
+              div.radio
+                label #[input(type='radio' name='gender_preference')] No preference
           div.form-group
             label(for='arrival_date').control-label.col-md-2 Arrival date
             div.col-md-10
@@ -69,4 +71,4 @@ div.container
             div.col-md-10
               textarea(rows='5' id='notes').form-control
       button(type='button' style='margin-right: 5px;').btn.btn-default Cancel
-      button(type='button').btn.btn-primary Submit
+      button(type='submit').btn.btn-primary Submit
