@@ -2,7 +2,8 @@ div.container
   div.col-md-offset-2.col-md-8
     form(data-toggle='validator' role='form').form-horizontal
       div.panel.panel-default
-        div.panel-heading Student information
+        div.panel-heading
+          h4 Student information
         div.panel-body
           div.form-group
             label(for='name').control-label.col-md-2 Name
@@ -47,7 +48,8 @@ div.container
               select(id='faculty').form-control
                 option(ng-repeat='f in faculties') {{f.name}}
       div.panel.panel-default
-        div.panel-heading Erasmus information
+        div.panel-heading
+          h4 Erasmus information
         div.panel-body
           div.form-group
             label(for='register_date').control-label.col-md-2 Register date
