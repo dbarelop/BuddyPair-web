@@ -20,14 +20,14 @@ block body
         div(ng-if='isAuthenticated()').navbar-collapse.collapse
           ul.nav.navbar-nav
             li(ng-class='{active: $route.current.activetab == "index"}')
-              a(href='index') Home
+              a(href='/') Home
             li(ng-class='{active: $route.current.activetab == "erasmusList"}')
-              a(href='erasmusList') Erasmus
+              a(href='/erasmus') Erasmus
             li(ng-class='{active: $route.current.activetab == "peerList"}')
-              a(href='peerList') Peers
+              a(href='/peers') Peers
           ul.nav.navbar-nav.navbar-right
             li(ng-class='{active: $route.current.activetab == "profile"}')
-              a(href='profile') My profile
+              a(href='/profile') My profile
             li
               div.btn-nav
                 button(ng-click='logout()').btn.btn-primary.btn-small.navbar-btn Logout

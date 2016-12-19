@@ -10,7 +10,7 @@ config(function ($routeProvider, $locationProvider, $authProvider) {
       controller: 'ProfileCtrl',
       activetab: 'profile'
     })
-    .when('/erasmusList', {
+    .when('/erasmus', {
       templateUrl: '/partials/erasmusList',
       controller: 'ErasmusCtrl',
       activetab: 'erasmusList'
@@ -20,7 +20,7 @@ config(function ($routeProvider, $locationProvider, $authProvider) {
       controller: 'ErasmusCtrl',
       activetab: 'erasmusList'
     })
-    .when('/peerList', {
+    .when('/peers', {
       templateUrl: '/partials/peerList',
       controller: 'PeerCtrl',
       activetab: 'peerList'

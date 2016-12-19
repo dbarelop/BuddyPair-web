@@ -62,7 +62,7 @@ div(ng-if='peer !== null')
           ul.list-group
             a(href='#' data-toggle='modal' data-target='#assignErasmusDialog').list-group-item Modify assigned Erasmus
             a(href='/unimplemented').list-group-item.list-group-item-warning Edit
-            a(href='/peerList' ng-click='deletePeer()').list-group-item.list-group-item-danger Delete
+            a(href='/peers' ng-click='deletePeer()').list-group-item.list-group-item-danger Delete
     div(id='assignErasmusDialog').modal.fade
       div.modal-dialog
         div.modal-content
