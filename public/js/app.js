@@ -30,10 +30,15 @@ config(function ($routeProvider, $locationProvider, $authProvider) {
       controller: 'PeerCtrl',
       activetab: 'peerList'
     })
-    .when('/newErasmus', {
-      templateUrl: '/partials/newErasmus',
+    .when('/erasmus/new', {
+      templateUrl: '/partials/erasmusForm',
       controller: 'NewErasmusCtrl',
       activetab: 'newErasmus'
+    })
+    .when('/erasmus/:id/edit', {
+      templateUrl: '/partials/erasmusForm',
+      controller: 'EditErasmusCtrl',
+      activetab: 'editErasmus'
     })
     .otherwise({
       templateUrl: '/partials/stats',

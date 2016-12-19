@@ -46,6 +46,10 @@ app.post(   '/auth/google', auth.googleAuth);
 // JSON API
 app.get(    '/api/me', auth.ensureAuthenticated, auth.findUser);
 
+app.get(    '/api/countries', api.countryList);
+app.get(    '/api/studies', api.studiesList);
+app.get(    '/api/faculties', api.facultyList);
+
 app.get(    '/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
 app.get(    '/api/erasmus/count', api.erasmusCount);
 app.post(   '/api/erasmus', auth.ensureAuthenticated, api.addErasmus);

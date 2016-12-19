@@ -32,6 +32,21 @@ handleDisconnect();
 
 /* QUERIES */
 
+function getCountryList(cb) {
+  var query = 'SELECT * FROM COUNTRY';
+  connection.query(query, cb);
+}
+
+function getStudiesList(cb) {
+  var query = 'SELECT * FROM STUDIES';
+  connection.query(query, cb);
+}
+
+function getFacultyList(cb) {
+  var query = 'SELECT * FROM FACULTY';
+  connection.query(query, cb);
+}
+
 function getErasmusList(cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
@@ -111,6 +126,45 @@ function getAssignedPeer(erasmus_id, cb) {
     'WHERE bp.erasmus = ?';
   connection.query(query, erasmus_id, cb);
 }
+
+/**
+ * Fetches the list of available countries
+ */
+exports.countryList = function(req, res) {
+  getCountryList(function(err, list) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(list);
+    }
+  });
+};
+
+/**
+ * Fetches the list of registered studies
+ */
+exports.studiesList = function(req, res) {
+  getStudiesList(function(err, list) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(list);
+    }
+  });
+};
+
+/**
+ * Fetches the list of registered faculties
+ */
+exports.facultyList = function(req, res) {
+  getFacultyList(function(err, list) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(list);
+    }
+  });
+};
 
 /**
  * Fetches the list of Erasmus students (without data from assigned peers)
@@ -391,11 +445,11 @@ function updatePeer(id, peer, cb) {
 
 /**
  * Updates an Erasmus with the new information (the id isn't modified)
- * @param req.param.id the Erasmus' id
+ * @param req.params.id the Erasmus' id
  * @param req.body.erasmus the Erasmus' new information
  */
 exports.updateErasmus = function(req, res) {
-  var erasmus_id = req.param.id;
+  var erasmus_id = req.params.id;
   var erasmus = JSON.parse(req.body.erasmus);
   // TODO: id parameter shouldn't be obtained from data
   updateStudent(erasmus.student_id, erasmus, function(err, result) {
@@ -417,11 +471,11 @@ exports.updateErasmus = function(req, res) {
 
 /**
  * Updates a peer student with the new information (the id isn't modified)
- * @param req.param.id the peer's id
+ * @param req.params.id the peer's id
  * @param res.body.peer the peer's new information
  */
 exports.updatePeer = function(req, res) {
-  var peer_id = req.param.id;
+  var peer_id = req.params.id;
   var peer = JSON.parse(req.body.peer);
   // TODO: id parameter shouldn't be obtained from data
   updateStudent(peer.student_id, peer, function(err, result) {
