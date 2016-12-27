@@ -36,8 +36,8 @@ div(ng-if='erasmusList !== null')
           h4 Actions
         div.panel-body
           // TODO: implement
-          a(href='/unimplemented').list-group-item Match
-          a(href='/unimplemented').list-group-item Manage Erasmus
+          button(type='button' onclick='alert("unimplemented")').list-group-item Match
+          button(type='button' onclick='alert("unimplemented")').list-group-item Manage Erasmus
           a(href='/erasmus/new').list-group-item Add Erasmus
 div(ng-if='erasmusList == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
