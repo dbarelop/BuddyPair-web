@@ -42,6 +42,6 @@ div(ng-if='peerList !== null')
           // TODO: implement
           button(type='button' onclick='alert("unimplemented")').list-group-item Match
           button(type='button' onclick='alert("unimplemented")').list-group-item Manage peers
-          button(type='button' onclick='alert("unimplemented")').list-group-item Add peer
+          a(href='/peers/new').list-group-item Add peer
 div(ng-if='peerList == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

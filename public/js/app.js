@@ -15,30 +15,40 @@ config(function ($routeProvider, $locationProvider, $authProvider) {
       controller: 'ErasmusCtrl',
       activetab: 'erasmusList'
     })
+    .when('/erasmus/new', {
+      templateUrl: '/partials/erasmusForm',
+      controller: 'NewErasmusCtrl',
+      activetab: 'newErasmus'
+    })
     .when('/erasmus/:id', {
       templateUrl: '/partials/erasmusProfile',
       controller: 'ErasmusCtrl',
       activetab: 'erasmusList'
+    })
+    .when('/erasmus/:id/edit', {
+      templateUrl: '/partials/erasmusForm',
+      controller: 'EditErasmusCtrl',
+      activetab: 'editErasmus'
     })
     .when('/peers', {
       templateUrl: '/partials/peerList',
       controller: 'PeerCtrl',
       activetab: 'peerList'
     })
+    .when('/peers/new', {
+      templateUrl: '/partials/peerForm',
+      controller: 'NewPeerCtrl',
+      activetab: 'newPeer'
+    })
     .when('/peer/:id', {
       templateUrl: '/partials/peerProfile',
       controller: 'PeerCtrl',
       activetab: 'peerList'
     })
-    .when('/erasmus/new', {
-      templateUrl: '/partials/erasmusForm',
-      controller: 'NewErasmusCtrl',
-      activetab: 'newErasmus'
-    })
-    .when('/erasmus/:id/edit', {
-      templateUrl: '/partials/erasmusForm',
-      controller: 'EditErasmusCtrl',
-      activetab: 'editErasmus'
+    .when('/peer/:id/edit', {
+      templateUrl: '/partials/peerForm',
+      controller: 'EditPeerCtrl',
+      activetab: 'editPeer'
     })
     .otherwise({
       templateUrl: '/partials/stats',

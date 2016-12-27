@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('BuddyPairApp.controllers')
-  .controller('NewErasmusCtrl', ['$scope', '$location', 'ErasmusService', 'DatabaseService', function($scope, $location, ErasmusService, DatabaseService) {
+  .controller('NewPeerCtrl', ['$scope', '$location', 'PeerService', 'DatabaseService', function($scope, $location, PeerService, DatabaseService) {
     // TODO: get from database *efficiently*
     $scope.countries = [];
     $scope.studies = [];
@@ -10,15 +10,15 @@ angular.module('BuddyPairApp.controllers')
     DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
     DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
 
-    $scope.erasmus = {};
+    $scope.peer = {};
 
     $scope.submit = function() {
-      ErasmusService.addErasmus($scope.erasmus).then(function() {
-        $location.path('/erasmus');
+      PeerService.addPeer($scope.peer).then(function() {
+        $location.path('/peers');
       });
     }
   }])
-  .controller('EditErasmusCtrl', ['$scope', '$location', '$routeParams', 'ErasmusService', 'DatabaseService', function($scope, $location, $routeParams, ErasmusService, DatabaseService) {
+  .controller('EditPeerCtrl', ['$scope', '$location', '$routeParams', 'PeerService', 'DatabaseService', function($scope, $location, $routeParams, PeerService, DatabaseService) {
     // TODO: get from database *efficiently*
     $scope.countries = [];
     $scope.studies = [];
@@ -27,12 +27,11 @@ angular.module('BuddyPairApp.controllers')
     DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
     DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
 
-    //$scope.erasmus = {};
-    ErasmusService.getById($routeParams.id).then(function(erasmus) { $scope.erasmus = erasmus; });
+    PeerService.getById($routeParams.id).then(function(peer) { $scope.peer = peer; });
 
     $scope.submit = function() {
-      ErasmusService.editErasmus($scope.erasmus.erasmus_id, $scope.erasmus).then(function() {
-        $location.path('/erasmus');
+      PeerService.editPeer($scope.peer.peer_id, $scope.peer).then(function() {
+        $location.path('/peers');
       });
     }
   }]);

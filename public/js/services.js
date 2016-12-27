@@ -327,5 +327,37 @@ angular.module('BuddyPairApp.services')
     return deferred.promise;
   };
 
+  service.addPeer = function(peer) {
+    var deferred = $q.defer();
+    $http.post('/api/peers', { peer: JSON.stringify(peer) })
+      .success(function() {
+        deferred.resolve();
+      })
+      .error(function(msg, code) {
+        deferred.reject({
+          code: code,
+          message: msg
+        });
+        console.log(msg);
+      });
+    return deferred.promise;
+  };
+
+  service.editPeer = function(id, peer) {
+    var deferred = $q.defer();
+    $http.put('/api/peer/' + id, { erasmus: JSON.stringify(peer) })
+      .success(function() {
+        deferred.resolve();
+      })
+      .error(function(msg, code) {
+        deferred.reject({
+          code: code,
+          message: msg
+        });
+        console.log(msg);
+      });
+    return deferred.promise;
+  };
+
   return service;
 });
