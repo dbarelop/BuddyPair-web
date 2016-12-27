@@ -13,8 +13,8 @@ angular.module('BuddyPairApp.controllers')
     $scope.peer = {};
 
     $scope.submit = function() {
-      PeerService.addPeer($scope.peer).then(function() {
-        $location.path('/peers');
+      PeerService.addPeer($scope.peer).then(function(location) {
+        $location.path(location);
       });
     }
   }])
@@ -30,8 +30,8 @@ angular.module('BuddyPairApp.controllers')
     PeerService.getById($routeParams.id).then(function(peer) { $scope.peer = peer; });
 
     $scope.submit = function() {
-      PeerService.editPeer($scope.peer.peer_id, $scope.peer).then(function() {
-        $location.path('/peers');
+      PeerService.editPeer($scope.peer.peer_id, $scope.peer).then(function(location) {
+        $location.path('/peer/' + $scope.peer.peer_id);
       });
     }
   }]);

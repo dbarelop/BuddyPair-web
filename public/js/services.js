@@ -169,8 +169,8 @@ angular.module('BuddyPairApp.services')
     service.addErasmus = function(erasmus) {
       var deferred = $q.defer();
       $http.post('/api/erasmus', { erasmus: JSON.stringify(erasmus) })
-        .success(function() {
-          deferred.resolve();
+        .success(function(data, status, headers, config) {
+          deferred.resolve(headers('Location'));
         })
         .error(function(msg, code) {
           deferred.reject({
@@ -330,8 +330,8 @@ angular.module('BuddyPairApp.services')
   service.addPeer = function(peer) {
     var deferred = $q.defer();
     $http.post('/api/peers', { peer: JSON.stringify(peer) })
-      .success(function() {
-        deferred.resolve();
+      .success(function(data, status, headers, config) {
+        deferred.resolve(headers('Location'));
       })
       .error(function(msg, code) {
         deferred.reject({

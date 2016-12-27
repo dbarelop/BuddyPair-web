@@ -284,7 +284,7 @@ function insertStudent(student, cb) {
   var query = 'INSERT INTO STUDENT (name, surname, gender, birthdate, nacionality, email, phone, studies, faculty) ' +
     'VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM STUDIES WHERE name = ?), (SELECT id FROM FACULTY WHERE NAME = ?))';
   connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality, student.email, student.phone, student.studies_name, student.faculty_name], function(err, result) {
-    if (err && err.sqlState == '23000') {
+    if (err && err.errno == 1062) {
       // If the student already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM STUDENT WHERE email = ?';
       connection.query(query2, [student.email], function(err, rows) {
@@ -306,7 +306,7 @@ function insertErasmus(erasmus, cb) {
   var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, arrival_date, notes) ' +
     'VALUES (?, ?, ?, ?, ?)';
   connection.query(query, [erasmus.register_date, erasmus.student_id, erasmus.gender_preference, erasmus.arrival_date, erasmus.notes], function(err, result) {
-    if (err && err.sqlState == '23000') {
+    if (err && err.errno == 1062) {
       // If the Erasmus already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM ERASMUS WHERE erasmus = ?';
       connection.query(query2, erasmus.student_id, function(err, rows) {
@@ -328,7 +328,7 @@ function insertPeer(peer, cb) {
   var query = 'INSERT INTO PEER (register_date, peer, gender_preference, erasmus_limit, notes) ' +
     'VALUES (?, ?, ?, ?, ?)';
   connection.query(query, [peer.register_date, peer.student_id, peer.gender_preference, peer.erasmus_limit, peer.notes], function(err, result) {
-    if (err && err.sqlState == '23000') {
+    if (err && err.errno == 1062) {
       // If the peer already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM PEER WHERE peer = ?';
       connection.query(query2, peer.student_id, function(err, rows) {
@@ -415,7 +415,7 @@ exports.addMatch = function(req, res) {
   }
   insertMatch(erasmus_id, peer_id, function(err) {
     if (err) {
-      if (err.sqlState == '23000') {
+      if (err.errno == 1062) {
         res.sendStatus(404);
       } else {
         res.status(503).send(err);

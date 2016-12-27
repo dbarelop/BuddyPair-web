@@ -13,8 +13,8 @@ angular.module('BuddyPairApp.controllers')
     $scope.erasmus = {};
 
     $scope.submit = function() {
-      ErasmusService.addErasmus($scope.erasmus).then(function() {
-        $location.path('/erasmus');
+      ErasmusService.addErasmus($scope.erasmus).then(function(location) {
+        $location.path(location);
       });
     }
   }])
@@ -32,7 +32,7 @@ angular.module('BuddyPairApp.controllers')
 
     $scope.submit = function() {
       ErasmusService.editErasmus($scope.erasmus.erasmus_id, $scope.erasmus).then(function() {
-        $location.path('/erasmus');
+        $location.path('/erasmus/' + $scope.erasmus.erasmus_id);
       });
     }
   }]);
