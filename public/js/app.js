@@ -12,7 +12,7 @@ config(function ($routeProvider, $locationProvider, $authProvider) {
     })
     .when('/erasmus', {
       templateUrl: '/partials/erasmusList',
-      controller: 'ErasmusCtrl',
+      controller: 'ErasmusListCtrl',
       activetab: 'erasmusList'
     })
     .when('/erasmus/new', {
@@ -32,7 +32,7 @@ config(function ($routeProvider, $locationProvider, $authProvider) {
     })
     .when('/peers', {
       templateUrl: '/partials/peerList',
-      controller: 'PeerCtrl',
+      controller: 'PeerListCtrl',
       activetab: 'peerList'
     })
     .when('/peers/new', {
