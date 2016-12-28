@@ -28,7 +28,7 @@ div.container
           div.form-group
             label(for='nacionality').control-label.col-md-2 Nacionality
             div.col-md-10
-              select(id='nacionality' ng-model='peer.nacionality').form-control
+              select(id='nacionality' ng-model='peer.nacionality_name').form-control
                 option(ng-repeat='c in countries') {{c.country_name}}
           div.form-group
             label(for='email').control-label.col-md-2 Email
