@@ -26,11 +26,13 @@ div(ng-if='erasmusList !== null')
               label.radio-inline
                 input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='n')
                 | No
-      div.panel.panel-default
+      div(ng-if='erasmusList').panel.panel-default
         ul.list-group
           a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer}").list-group-item {{e.name}} {{e.surname}}
             | {{e.has_peer ? '' : ' (no assigned peer)'}}
-    div.col-md-4
+      div(ng-if='erasmusList == null').text-center
+        img(src='/img/giphy.gif')
+    div(ng-if='erasmusList').col-md-4
       div.panel.panel-default
         div.panel-heading
           h4 Actions
@@ -39,5 +41,3 @@ div(ng-if='erasmusList !== null')
           button(type='button' onclick='alert("unimplemented")').list-group-item Match
           button(type='button' onclick='alert("unimplemented")').list-group-item Manage Erasmus
           a(href='/erasmus/new').list-group-item Add Erasmus
-div(ng-if='erasmusList == null').text-center
-  img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')

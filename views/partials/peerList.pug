@@ -30,11 +30,13 @@ div(ng-if='peerList !== null')
               label.checkbox-inline
                 input(type='checkbox' ng-model='filters.numErasmus.three' value='')
                 | 3 or more
-      div.panel.panel-default
+      div(ng-if='erasmusList').panel.panel-default
         ul.list-group
           a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3}").list-group-item {{p.name}} {{p.surname}}
             | {{' (' + p.num_erasmus + ' Erasmus)'}}
-    div.col-md-4
+      div(ng-if='erasmusList == null').text-center
+        img(src='/img/giphy.gif')
+    div(ng-if='erasmusList').col-md-4
       div.panel.panel-default
         div.panel-heading
           h4 Actions
@@ -43,5 +45,3 @@ div(ng-if='peerList !== null')
           button(type='button' onclick='alert("unimplemented")').list-group-item Match
           button(type='button' onclick='alert("unimplemented")').list-group-item Manage peers
           a(href='/peers/new').list-group-item Add peer
-div(ng-if='peerList == null').text-center
-  img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
