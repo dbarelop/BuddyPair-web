@@ -282,7 +282,7 @@ exports.assignedPeer = function(req, res) {
 
 function insertStudent(student, cb) {
   var query = 'INSERT INTO STUDENT (name, surname, gender, birthdate, nacionality, email, phone, studies, faculty) ' +
-    'VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM STUDIES WHERE name = ?), (SELECT id FROM FACULTY WHERE NAME = ?))';
+    'VALUES (?, ?, ?, ?, (SELECT country_code FROM COUNTRY WHERE country_name = ?), ?, ?, (SELECT id FROM STUDIES WHERE name = ?), (SELECT id FROM FACULTY WHERE NAME = ?))';
   connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality, student.email, student.phone, student.studies_name, student.faculty_name], function(err, result) {
     if (err && err.errno == 1062) {
       // If the student already exists, fetch their ID and pass it to the callback function
