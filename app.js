@@ -52,7 +52,7 @@ app.get(    '/api/faculties', api.facultyList);
 
 app.get(    '/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
 app.get(    '/api/erasmus/count', api.erasmusCount);
-app.post(   '/api/erasmus', auth.ensureAuthenticated, api.addErasmus);
+app.post(   '/api/erasmus', api.addErasmus);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.put(    '/api/erasmus/:id', auth.ensureAuthenticated, api.updateErasmus);
@@ -63,7 +63,7 @@ app.delete( '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, 
 
 app.get(    '/api/peers', auth.ensureAuthenticated, api.peerList);
 app.get(    '/api/peers/count', api.peerCount);
-app.post(   '/api/peers', auth.ensureAuthenticated, api.addPeer);
+app.post(   '/api/peers', api.addPeer);
 
 app.get(    '/api/peer/:id', auth.ensureAuthenticated, api.peer);
 app.put(    '/api/peer/:id', auth.ensureAuthenticated, api.updatePeer);
