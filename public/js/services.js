@@ -168,7 +168,7 @@ angular.module('BuddyPairApp.services')
 
     service.addErasmus = function(erasmus) {
       var deferred = $q.defer();
-      $http.post('/api/erasmus', { erasmus: JSON.stringify(erasmus) })
+      $http.post('/api/erasmus', { erasmus: erasmus })
         .success(function(data, status, headers, config) {
           deferred.resolve(headers('Location'));
         })
@@ -184,7 +184,7 @@ angular.module('BuddyPairApp.services')
 
     service.editErasmus = function(id, erasmus) {
       var deferred = $q.defer();
-      $http.put('/api/erasmus/' + id, { erasmus: JSON.stringify(erasmus) })
+      $http.put('/api/erasmus/' + id, { erasmus: erasmus })
         .success(function() {
           deferred.resolve();
         })
@@ -329,7 +329,7 @@ angular.module('BuddyPairApp.services')
 
   service.addPeer = function(peer) {
     var deferred = $q.defer();
-    $http.post('/api/peers', { peer: JSON.stringify(peer) })
+    $http.post('/api/peers', { peer: peer })
       .success(function(data, status, headers, config) {
         deferred.resolve(headers('Location'));
       })
@@ -345,7 +345,7 @@ angular.module('BuddyPairApp.services')
 
   service.editPeer = function(id, peer) {
     var deferred = $q.defer();
-    $http.put('/api/peer/' + id, { erasmus: JSON.stringify(peer) })
+    $http.put('/api/peer/' + id, { erasmus: peer })
       .success(function() {
         deferred.resolve();
       })

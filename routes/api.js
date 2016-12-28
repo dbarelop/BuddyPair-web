@@ -356,7 +356,7 @@ function insertMatch(erasmus_id, peer_id, cb) {
  * @param req.body.erasmus the Erasmus' information
  */
 exports.addErasmus = function(req, res) {
-  var erasmus = JSON.parse(req.body.erasmus);
+  var erasmus = req.body.erasmus;
   insertStudent(erasmus, function(err, student_id) {
     if (err) {
       res.status(503).send(err);
@@ -378,7 +378,7 @@ exports.addErasmus = function(req, res) {
  * @param req.body.peer the peer's information
  */
 exports.addPeer = function(req, res) {
-  var peer = JSON.parse(req.body.peer);
+  var peer = req.body.peer;
   insertStudent(peer, function(err, student_id) {
     if (err) {
       res.status(503).send(err);
@@ -450,7 +450,7 @@ function updatePeer(id, peer, cb) {
  */
 exports.updateErasmus = function(req, res) {
   var erasmus_id = req.params.id;
-  var erasmus = JSON.parse(req.body.erasmus);
+  var erasmus = req.body.erasmus;
   // TODO: id parameter shouldn't be obtained from data
   updateStudent(erasmus.student_id, erasmus, function(err, result) {
     if (err) {
@@ -476,7 +476,7 @@ exports.updateErasmus = function(req, res) {
  */
 exports.updatePeer = function(req, res) {
   var peer_id = req.params.id;
-  var peer = JSON.parse(req.body.peer);
+  var peer = req.body.peer;
   // TODO: id parameter shouldn't be obtained from data
   updateStudent(peer.student_id, peer, function(err, result) {
     if (err) {
