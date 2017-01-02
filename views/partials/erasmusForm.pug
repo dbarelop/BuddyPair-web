@@ -68,6 +68,15 @@ div.container
               div.radio
                 label #[input(type='radio' name='gender_preference' ng-model='erasmus.gender_preference' ng-value='null')] No preference
           div.form-group
+            label(for='language_preference').control-label.col-md-2 Language preference
+            div.col-md-10
+              div.radio
+                label #[input(type='radio' name='language_preference' ng-model='erasmus.language_preference' ng-value='false' id='language_preference')] Spanish
+              div.radio
+                label #[input(type='radio' name='language_preference' ng-model='erasmus.language_preference' ng-value='false')] English
+              div.radio
+                label #[input(type='radio' name='language_preference' ng-model='erasmus.language_preference' ng-value='null')] No preference
+          div.form-group
             label(for='arrival_date').control-label.col-md-2 Arrival date
             div.col-md-10
               input(type='datetime-local' id='arrival_date' ng-model='erasmus.arrival_date').form-control

@@ -26,12 +26,21 @@ div(ng-if='peer !== null')
             li(ng-if='peer.phone !== ""')
               b Phone: 
               | {{peer.phone}}
+            li(ng-if='peer.aegee_member !== ""')
+              b AEGEE member?
+              | {{peer.aegee_member ? "yes" : "no"}}
+            li(ng-if='peer.nia !== null')
+              b NIA:
+              | {{peer.nia}}
             li(ng-if='peer.studies_name !== ""')
               b Studies: 
               | {{peer.studies_name}}
             li(ng-if='peer.faculty_name !== ""')
               b Faculty: 
               | {{peer.faculty_name}}
+            li(ng-if='peer.speaks_english !== ""')
+              b Speaks English?
+              | {{peer.speaks_english ? "yes" : "no"}}
       div.panel.panel-default
         div.panel-heading
           h4 Buddy Pair information

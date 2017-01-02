@@ -39,16 +39,26 @@ div.container
             div.col-md-10
               input(type='tel' id='phone' placeholder='Phone number' ng-model='peer.phone').form-control
           div.form-group
+            label(for='aegee_member').control-label.col-md-2 AEGEE member?
+            div.col-md-10
+              input(type='checkbox' id='aegee_member' ng-model='peer.aegee_member').form-control
+          div.form-group
+            label(for='nia').control-label.col-md-2 NIA
+            div.col-md-10
+              input(type='text' id='nia' ng-model='peer.nia').form-control
+          div.form-group
+            label(for='speaks_english').control-label.col-md-2 Speaks English?
+            div.col-md-10
+              input(type='checkbox' id='speaks_english' ng-model='peer.speaks_english').form-control
+          div.form-group
             label(for='studies').control-label.col-md-2 Studies
             div.col-md-10
               select(id='studies' ng-model='peer.studies').form-control
-                //option(ng-repeat='s in studies' ng-value='s.id') {{s.name}}
                 option(ng-repeat='s in studies') {{s.name}}
           div.form-group
             label(for='faculty').control-label.col-md-2 Faculty
             div.col-md-10
               select(id='faculty' ng-model='peer.faculty').form-control
-                //option(ng-repeat='f in faculties' ng-value='f.id') {{f.name}}
                 option(ng-repeat='f in faculties') {{f.name}}
       div.panel.panel-default
         div.panel-heading
@@ -67,6 +77,11 @@ div.container
                 label #[input(type='radio' name='gender_preference' ng-model='peer.gender_preference' ng-value='false')] Female
               div.radio
                 label #[input(type='radio' name='gender_preference' ng-model='peer.gender_preference' ng-value='null')] No preference
+          div.form-group
+            label(for='nationality_preference').control-label.col-md-2 Nationality preference
+            div.col-md-10
+              select(id='nationality_preference' ng-model='peer.nationality_preference_name').form-control
+                option(ng-repeat='c in countries') {{c.country_name}}
           div.form-group
             label(for='erasmus_limit').control-label.col-md-2 Limit of Erasmus
             div.col-md-10

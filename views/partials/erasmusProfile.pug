@@ -42,7 +42,10 @@ div(ng-if='erasmus !== null')
               | {{erasmus.register_date}}
             li(ng-if='erasmus.gender_preference !== null')
               b Gender preference: 
-              | {{erasmus.gender_preference}}
+              | {{erasmus.gender_preference ? "male" : "female"}}
+            li(ng-if='erasmus.language_preference !== null')
+              b Language preference:
+              | {{erasmus.language_preference ? "spanish" : "english"}}
             li(ng-if='erasmus.arrival_date !== ""')
               b Arrival date: 
               | {{erasmus.arrival_date}}
