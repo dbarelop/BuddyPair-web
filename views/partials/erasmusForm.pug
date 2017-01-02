@@ -28,7 +28,8 @@ div.container
           div.form-group
             label(for='nationality').control-label.col-md-2 Nationality
             div.col-md-10
-              select(id='nationality' ng-model='erasmus.nationality_name').form-control
+              select(id='nationality' ng-model='erasmus.nationality_name' required).form-control
+                option(value='' disabled='disabled')
                 option(ng-repeat='c in countries') {{c.country_name}}
           div.form-group
             label(for='email').control-label.col-md-2 Email
