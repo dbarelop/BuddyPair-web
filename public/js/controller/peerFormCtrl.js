@@ -11,6 +11,7 @@ angular.module('BuddyPairApp.controllers')
     DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
 
     $scope.peer = {};
+    $scope.peer.erasmus_limit = 1;
 
     $scope.submit = function() {
       PeerService.addPeer($scope.peer).then(function(location) {
