@@ -53,12 +53,12 @@ div.container
           div.form-group
             label(for='studies').control-label.col-md-2 Studies
             div.col-md-10
-              select(id='studies' ng-model='peer.studies').form-control
+              select(id='studies' ng-model='peer.studies_name').form-control
                 option(ng-repeat='s in studies') {{s.name}}
           div.form-group
             label(for='faculty').control-label.col-md-2 Faculty
             div.col-md-10
-              select(id='faculty' ng-model='peer.faculty').form-control
+              select(id='faculty' ng-model='peer.faculty_name').form-control
                 option(ng-repeat='f in faculties') {{f.name}}
       div.panel.panel-default
         div.panel-heading

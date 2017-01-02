@@ -303,9 +303,9 @@ function insertStudent(student, cb) {
 }
 
 function insertErasmus(erasmus, cb) {
-  var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, arrival_date, notes) ' +
-    'VALUES (?, ?, ?, ?, ?)';
-  connection.query(query, [erasmus.register_date, erasmus.student_id, erasmus.gender_preference, erasmus.arrival_date, erasmus.notes], function(err, result) {
+  var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, language_preference, arrival_date, notes) ' +
+    'VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(query, [erasmus.register_date, erasmus.student_id, erasmus.gender_preference, erasmus.language_preference, erasmus.arrival_date, erasmus.notes], function(err, result) {
     if (err && err.errno == 1062) {
       // If the Erasmus already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM ERASMUS WHERE erasmus = ?';
@@ -325,9 +325,9 @@ function insertErasmus(erasmus, cb) {
 }
 
 function insertPeer(peer, cb) {
-  var query = 'INSERT INTO PEER (register_date, peer, gender_preference, erasmus_limit, notes) ' +
-    'VALUES (?, ?, ?, ?, ?)';
-  connection.query(query, [peer.register_date, peer.student_id, peer.gender_preference, peer.erasmus_limit, peer.notes], function(err, result) {
+  var query = 'INSERT INTO PEER (register_date, peer, gender_preference, nationality_preference, erasmus_limit, notes, aegee_member, nia, speaks_english) ' +
+    'VALUES (?, ?, ?, (SELECT country_code FROM COUNTRY WHERE country_name = ?), ?, ?, ?, ?, ?)';
+  connection.query(query, [peer.register_date, peer.student_id, peer.gender_preference, peer.nationality_preference_name, peer.erasmus_limit, peer.notes, peer.aegee_member, peer.nia, peer.speaks_english], function(err, result) {
     if (err && err.errno == 1062) {
       // If the peer already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM PEER WHERE peer = ?';
@@ -434,13 +434,13 @@ function updateStudent(id, student, cb) {
 }
 
 function updateErasmus(id, erasmus, cb) {
-  var query = 'UPDATE ERASMUS SET register_date = ?, gender_preference = ?, arrival_date = ?, notes = ? WHERE id = ?';
-  connection.query(query, [erasmus.register_date, erasmus.gender_preference, erasmus.arrival_date, erasmus.notes, id], cb);
+  var query = 'UPDATE ERASMUS SET register_date = ?, gender_preference = ?, language_preference = ?, arrival_date = ?, notes = ? WHERE id = ?';
+  connection.query(query, [erasmus.register_date, erasmus.gender_preference, erasmus.language_preference, erasmus.arrival_date, erasmus.notes, id], cb);
 }
 
 function updatePeer(id, peer, cb) {
-  var query = 'UPDATE PEER SET register_date = ?, gender_preference = ?, erasmus_limit = ?, notes = ? WHERE id = ?';
-  connection.query(query, [peer.register_date, peer.gender_preference, peer.arrival_date, peer.notes, id], cb);
+  var query = 'UPDATE PEER SET register_date = ?, gender_preference = ?, nationality_preference = ?, erasmus_limit = ?, notes = ?, aegee_member = ?, nia = ?, speaks_english = ? WHERE id = ?';
+  connection.query(query, [peer.register_date, peer.gender_preference, peer.nationality_preference, peer.arrival_date, peer.notes, peer.aegee_member, peer.nia, peer.speaks_english, id], cb);
 }
 
 /**
