@@ -281,9 +281,9 @@ exports.assignedPeer = function(req, res) {
 /* INSERTIONS */
 
 function insertStudent(student, cb) {
-  var query = 'INSERT INTO STUDENT (name, surname, gender, birthdate, nacionality, email, phone, studies, faculty) ' +
+  var query = 'INSERT INTO STUDENT (name, surname, gender, birthdate, nationality, email, phone, studies, faculty) ' +
     'VALUES (?, ?, ?, ?, (SELECT country_code FROM COUNTRY WHERE country_name = ?), ?, ?, (SELECT id FROM STUDIES WHERE name = ?), (SELECT id FROM FACULTY WHERE NAME = ?))';
-  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality_name, student.email, student.phone, student.studies_name, student.faculty_name], function(err, result) {
+  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nationality_name, student.email, student.phone, student.studies_name, student.faculty_name], function(err, result) {
     if (err && err.errno == 1062) {
       // If the student already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM STUDENT WHERE email = ?';
@@ -429,8 +429,8 @@ exports.addMatch = function(req, res) {
 /* MODIFICATIONS */
 
 function updateStudent(id, student, cb) {
-  var query = 'UPDATE STUDENT SET name = ?, surname = ?, gender = ?, birthdate = ?, nacionality = ?, email = ?, phone = ?, studies = ?, faculty = ? WHERE id = ?';
-  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nacionality, student.email, student.phone, student.studies, student.faculty, id], cb);
+  var query = 'UPDATE STUDENT SET name = ?, surname = ?, gender = ?, birthdate = ?, nationality = ?, email = ?, phone = ?, studies = ?, faculty = ? WHERE id = ?';
+  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nationality, student.email, student.phone, student.studies, student.faculty, id], cb);
 }
 
 function updateErasmus(id, erasmus, cb) {
