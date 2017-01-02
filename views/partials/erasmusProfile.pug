@@ -13,12 +13,12 @@ div(ng-if='erasmus !== null')
           ul
             li(ng-if='erasmus.gender !== ""')
               b Gender: 
-              | {{erasmus.gender ? "male" : "female"}}
+              | {{erasmus.gender ? "Male" : "Female"}}
             li(ng-if='erasmus.birthdate !== ""')
               b Birthdate: 
               | {{erasmus.birthdate}}
             li(ng-if='erasmus.nationality !== ""')
-              b Nationality:
+              b Nationality: 
               | {{erasmus.nationality}}
             li(ng-if='erasmus.email !== ""')
               b Email: 
@@ -42,10 +42,10 @@ div(ng-if='erasmus !== null')
               | {{erasmus.register_date}}
             li(ng-if='erasmus.gender_preference !== null')
               b Gender preference: 
-              | {{erasmus.gender_preference ? "male" : "female"}}
+              | {{erasmus.gender_preference ? "Male" : "Female"}}
             li(ng-if='erasmus.language_preference !== null')
-              b Language preference:
-              | {{erasmus.language_preference ? "spanish" : "english"}}
+              b Language preference: 
+              | {{erasmus.language_preference ? "Spanish" : "English"}}
             li(ng-if='erasmus.arrival_date !== ""')
               b Arrival date: 
               | {{erasmus.arrival_date}}

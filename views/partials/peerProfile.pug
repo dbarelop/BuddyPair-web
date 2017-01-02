@@ -13,12 +13,12 @@ div(ng-if='peer !== null')
           ul
             li(ng-if='peer.gender !== ""')
               b Gender: 
-              | {{peer.gender ? "male" : "female"}}
+              | {{peer.gender ? "Male" : "Female"}}
             li(ng-if='peer.birthdate !== ""')
               b Birthdate: 
               | {{peer.birthdate}}
             li(ng-if='peer.nationality !== ""')
-              b Nationality:
+              b Nationality: 
               | {{peer.nationality}}
             li(ng-if='peer.email !== ""')
               b Email: 
@@ -27,10 +27,10 @@ div(ng-if='peer !== null')
               b Phone: 
               | {{peer.phone}}
             li(ng-if='peer.aegee_member !== ""')
-              b AEGEE member?
-              | {{peer.aegee_member ? "yes" : "no"}}
+              b AEGEE member? 
+              | {{peer.aegee_member ? "Yes" : "No"}}
             li(ng-if='peer.nia !== null')
-              b NIA:
+              b NIA: 
               | {{peer.nia}}
             li(ng-if='peer.studies_name !== ""')
               b Studies: 
@@ -39,8 +39,8 @@ div(ng-if='peer !== null')
               b Faculty: 
               | {{peer.faculty_name}}
             li(ng-if='peer.speaks_english !== ""')
-              b Speaks English?
-              | {{peer.speaks_english ? "yes" : "no"}}
+              b Speaks English? 
+              | {{peer.speaks_english ? "Yes" : "No"}}
       div.panel.panel-default
         div.panel-heading
           h4 Buddy Pair information
