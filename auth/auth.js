@@ -6,6 +6,7 @@ var jwt = require('jwt-simple'),
 var TOKEN_SECRET = process.env.TOKEN_SECRET || require('./config').auth.TOKEN_SECRET;
 var GOOGLE_SECRET = process.env.GOOGLE_SECRET || require('./config').auth.GOOGLE_SECRET;
 var ALLOWED_USERS = process.env.ALLOWED_USERS ? process.env.ALLOWED_USERS.split(',') : require('./config').auth.ALLOWED_USERS;
+var DEBUG = process.env.NODE_ENV ? process.env.NODE_ENV === 'test' : false;
 
 /*
  |--------------------------------------------------------------------------
@@ -60,29 +61,33 @@ exports.googleAuth = function(req, res) {
  |--------------------------------------------------------------------------
  */
 exports.ensureAuthenticated = function(req, res, next) {
-  if (!req.headers.authorization) {
-    return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
-  }
-  var token = req.headers.authorization.split(' ')[1];
-
-  var payload = null;
-  try {
-    payload = jwt.decode(token, TOKEN_SECRET);
-  }
-  catch (err) {
-    return res.status(401).send({ message: err.message });
-  }
-
-  if (payload.exp <= moment().unix()) {
-    return res.status(401).send({ message: 'Token has expired' });
-  }
-
-  // TODO: improve access control (based on email)
-  if (ALLOWED_USERS.indexOf(payload.sub.email) > -1) {
-    req.profile = payload.sub;
+  if (DEBUG) {
     next();
   } else {
-    return res.status(403).send({ message: 'You don\'t have permission to access the application' });
+    if (!req.headers.authorization) {
+      return res.status(401).send({message: 'Please make sure your request has an Authorization header'});
+    }
+    var token = req.headers.authorization.split(' ')[1];
+
+    var payload = null;
+    try {
+      payload = jwt.decode(token, TOKEN_SECRET);
+    }
+    catch (err) {
+      return res.status(401).send({message: err.message});
+    }
+
+    if (payload.exp <= moment().unix()) {
+      return res.status(401).send({message: 'Token has expired'});
+    }
+
+    // TODO: improve access control (based on email)
+    if (ALLOWED_USERS.indexOf(payload.sub.email) > -1) {
+      req.profile = payload.sub;
+      next();
+    } else {
+      return res.status(403).send({message: 'You don\'t have permission to access the application'});
+    }
   }
 };
 

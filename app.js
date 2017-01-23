@@ -73,6 +73,9 @@ app.put(    '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api
 app.delete( '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.removeAllAssignedErasmus);
 app.delete( '/api/peer/:peer_id/assigned_erasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);
 
+// TODO: make available only for testing?
+app.delete( '/api/students', auth.ensureAuthenticated, api.deleteAllStudents);
+
 // redirect all others to the index (HTML5 history)
 app.get(    '*', routes.index);
 

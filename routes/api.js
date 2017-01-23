@@ -497,6 +497,11 @@ exports.updatePeer = function(req, res) {
 
 /* DELETIONS */
 
+function deleteAllStudents(cb) {
+  var query = 'DELETE FROM STUDENT';
+  connection.query(query, cb);
+}
+
 function deleteErasmus(erasmus_id, cb) {
   var query = 'DELETE FROM ERASMUS WHERE id = ?';
   connection.query(query, erasmus_id, cb);
@@ -521,6 +526,16 @@ function deleteAllAssginedErasmus(peer_id, cb) {
   var query = 'DELETE FROM BUDDY_PAIR WHERE peer = ?';
   connection.query(query, peer_id, cb);
 }
+
+exports.deleteAllStudents = function(req, res) {
+  deleteAllStudents(function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.sendStatus(200);
+    }
+  })
+};
 
 /**
  * Deletes an Erasmus record from the database
