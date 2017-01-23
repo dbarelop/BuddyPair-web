@@ -15,12 +15,9 @@ angular.module('BuddyPairApp.controllers')
     $scope.setSelectedPeer = function(peer) {
       $scope.selectedPeer = peer;
     };
-    // TODO: not working!
-    var dialog = $('#assignPeerDialog');
-    dialog.on('hide.bs.modal', function() {
-      alert('modal hiding!');
+    $scope.restoreSelectedPeer = function() {
       $scope.selectedPeer = $scope.erasmus.assignedPeer;
-    });
+    };
     $scope.availablePeers = null;
     PeerService.getList().then(function(peers) { $scope.availablePeers = peers; });
     $scope.updateAssignedPeer = function() {

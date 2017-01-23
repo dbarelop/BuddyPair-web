@@ -8,7 +8,7 @@ angular.module('BuddyPairApp.controllers')
     $scope.selectedErasmus = [];
     PeerService.getById($routeParams.id).then(function(peer) {
       $scope.peer = peer;
-      peer.assignedErasmus.forEach(function(e) { $scope.selectedErasmus.push(e); });
+      $scope.selectedErasmus = peer.assignedErasmus.slice();
       ErasmusService.getList().then(function(erasmusList) {
         $scope.availableErasmus = erasmusList.filter(function(e1) {
           var isAssigned = false;
@@ -39,15 +39,9 @@ angular.module('BuddyPairApp.controllers')
             $scope.selectedErasmus.splice(i, 1);
       }
     };
-    // TODO: not working!
-    var dialog = $('#assignErasmusDialog');
-    dialog.on('hide.bs.modal', function() {
-      alert('modal hiding!');
-      $scope.selectedErasmus = [];
-      $scope.peer.assignedErasmus.forEach(function(e) {
-        $scope.selectedErasmus.push(e);
-      });
-    });
+    $scope.restoreSelectedErasmus = function() {
+      $scope.selectedErasmus = $scope.peer.assignedErasmus.slice();
+    };
     $scope.availableErasmus = null;
     $scope.updateAssignedErasmus = function() {
       if ($scope.selectedErasmus.length == 0 && $scope.peer.assignedErasmus != 0) {
@@ -82,7 +76,7 @@ angular.module('BuddyPairApp.controllers')
         });
       }
       $scope.peer.num_erasmus = $scope.selectedErasmus.length;
-      $scope.peer.assignedErasmus = $scope.selectedErasmus;
+      $scope.peer.assignedErasmus = $scope.selectedErasmus.slice();
     };
     // Setup the peer deletion action
     $scope.deletePeer = function() {

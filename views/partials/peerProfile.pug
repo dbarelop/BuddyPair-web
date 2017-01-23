@@ -86,7 +86,7 @@ div(ng-if='peer !== null')
             div(ng-if='availableErasmus == null').text-center
               img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
             div.modal-footer
-              button(type='button' data-dismiss='modal').btn.btn-default Close
+              button(type='button' ng-click='restoreSelectedErasmus()' data-dismiss='modal').btn.btn-default Close
               button(type='button' ng-click='updateAssignedErasmus()' data-dismiss='modal').btn.btn-primary Save
 div(ng-if='peer == null').text-center
   img(src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif')
