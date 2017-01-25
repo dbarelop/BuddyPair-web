@@ -51,7 +51,7 @@ div(ng-if='peer !== null')
               | {{peer.register_date}}
             li(ng-if='peer.gender_preference !== null')
               b Gender preference: 
-              | {{peer.gender_preference}}
+              | {{peer.gender_preference ? "Male" : "Female"}}
             li(ng-if='peer.erasmus_limit !== ""')
               b Erasmus limit: 
               | {{peer.erasmus_limit}}
