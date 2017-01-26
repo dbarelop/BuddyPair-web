@@ -58,6 +58,19 @@ function getErasmusList(cb) {
   connection.query(query, cb);
 }
 
+function getUnnotifiedErasmusList(cb) {
+  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
+    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
+    'FROM ERASMUS e ' +
+    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
+    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'INNER JOIN BUDDY_PAIR bp ON bp.erasmus = e.id ' +
+    'WHERE NOT bp.notified_erasmus ' +
+    'ORDER BY e.register_date ASC';
+  connection.query(query, cb);
+}
+
 function getErasmusCount(cb) {
   var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_erasmus, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_erasmus ' +
     'FROM ERASMUS e ' +
@@ -83,6 +96,19 @@ function getPeerList(cb) {
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'ORDER BY p.register_date ASC';
+  connection.query(query, cb);
+}
+
+function getUnnotifiedPeersList(cb) {
+  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
+    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
+    'FROM PEER p ' +
+    'INNER JOIN STUDENT s ON p.peer = s.id ' +
+    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'INNER JOIN BUDDY_PAIR bp ON bp.peer = p.id ' +
+    'WHERE NOT bp.notified_peer ' +
     'ORDER BY p.register_date ASC';
   connection.query(query, cb);
 }
@@ -180,6 +206,20 @@ exports.erasmusList = function(req, res) {
 };
 
 /**
+ * Fetches the list of Erasmus students (without data from assigned peers)
+ * from unnotified Erasmus
+ */
+exports.unnotifiedErasmusList = function(req, res) {
+  getUnnotifiedErasmusList(function(err, list) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(list);
+    }
+  });
+};
+
+/**
  * Fetches the number of Erasmus
  */
 exports.erasmusCount = function(req, res) {
@@ -212,6 +252,20 @@ exports.erasmus = function(req, res) {
  */
 exports.peerList = function(req, res) {
   getPeerList(function(err, list) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(list);
+    }
+  });
+};
+
+/**
+ * Fetches the list of peer students (without data from assigned Erasmus)
+ * from unnotified students
+ */
+exports.unnotifiedPeersList = function(req, res) {
+  getUnnotifiedPeersList(function(err, list) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -286,7 +340,7 @@ function insertStudent(student, cb) {
   query += student.nationality ? '?, ' : '(SELECT country_code FROM COUNTRY WHERE country_name = ?), ';
   query += '?, ?, ';
   query += student.studies ? '?, ' : '(SELECT id FROM STUDIES WHERE name = ?), ';
-  query += student.faculty ? '?)' : '(SELECT id FROM FACULTY WHERE NAME = ?))';
+  query += student.faculty ? '?)' : '(SELECT id FROM FACULTY WHERE name = ?))';
   var values = [student.name, student.surname, student.gender, student.birthdate, student.nationality ? student.nationality : student.nationality_name, 
     student.email, student.phone, student.studies ? student.studies : student.studies_name, student.faculty ? student.faculty : student.faculty_name];
   connection.query(query, values, function(err, result) {
@@ -537,6 +591,9 @@ function deleteAllAssginedErasmus(peer_id, cb) {
   connection.query(query, peer_id, cb);
 }
 
+/**
+ * Deletes all the students (Erasmus and peers)
+ */
 exports.deleteAllStudents = function(req, res) {
   deleteAllStudents(function(err) {
     if (err) {
@@ -544,7 +601,7 @@ exports.deleteAllStudents = function(req, res) {
     } else {
       res.sendStatus(200);
     }
-  })
+  });
 };
 
 /**
@@ -620,6 +677,23 @@ exports.removeAllAssignedErasmus = function(req, res) {
       res.status(503).send(err);
     } else {
       res.sendStatus(result.affectedRows == 0 ? 404 : 200);
+    }
+  });
+};
+
+/* PROCEDURES */
+
+function matchStudents(cb) {
+  var query = 'CALL emparejar()';
+  connection.query(query, cb);
+}
+
+exports.match = function(req, res) {
+  matchStudents(function(err) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.sendStatus(200);
     }
   });
 };
