@@ -159,3 +159,32 @@ describe('GET peers', function() {
     });
   });
 });
+
+describe('GET unnotified students', function() {
+  it('it should get all the unnotified peers', function(done) {
+    chai.request(app).get('/api/peers/unnotified').end(function(err, res) {
+      res.should.have.status(200);
+      res.body.should.be.a('array');
+      res.body.length.should.be.eql(0);
+      chai.request(app).get('/api/erasmus/unnotified').end(function(err, res) {
+        res.should.have.status(200);
+        res.body.should.be.a('array');
+        res.body.length.should.be.eql(0);
+        chai.request(app).get('/api/match').end(function(err, res) {
+          res.should.have.status(200);
+          chai.request(app).get('/api/peers/unnotified').end(function(err, res) {
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.length.should.be.eql(NUM_PEERS);
+            chai.request(app).get('/api/erasmus/unnotified').end(function(err, res) {
+              res.should.have.status(200);
+              res.body.should.be.a('array');
+              res.body.length.should.be.eql(NUM_ERASMUS);
+              done();
+            });
+          });
+        });
+      });
+    });
+  });
+});
