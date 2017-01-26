@@ -3,7 +3,14 @@
  */
 
 var mysql = require('mysql');
+var gapi = require('googleapis');
+var gmail = gapi.gmail('v1');
 var connection;
+var googleAuth;
+
+exports.setGoogleAuth = function(auth) {
+  googleAuth = auth;
+};
 
 function handleDisconnect() {
   database = {
@@ -681,7 +688,7 @@ exports.removeAllAssignedErasmus = function(req, res) {
   });
 };
 
-/* PROCEDURES */
+/* ACTIONS */
 
 function matchStudents(cb) {
   var query = 'CALL emparejar()';
@@ -694,6 +701,24 @@ exports.match = function(req, res) {
       res.status(503).send(err);
     } else {
       res.sendStatus(200);
+    }
+  });
+};
+
+exports.sendTestEmail = function(req, res) {
+  var recipient = req.body.recipient;
+  var subject = req.body.subject;
+  var body = req.body.body;
+  var content = '';
+  content += 'To: ' + recipient + '\r\n';
+  content += 'From: erasmus@aegee-zaragoza.org' + '\r\n';
+  content += 'Subject: ' + subject + '\r\n';
+  content += '\r\n' + body;
+  gmail.users.messages.send({
+    auth: googleAuth,
+    userId: 'me',
+    resource: {
+      raw: new Buffer(content).toString('base64')
     }
   });
 };

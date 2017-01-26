@@ -13,7 +13,8 @@ var express = require('express'),
   https = require('https'),
   fs = require('fs'),
   path = require('path'),
-  auth = require('./auth/auth');
+  auth = require('./auth/auth'),
+  googleAuth = require('./auth/google_auth');
 
 var app = module.exports = express();
 
@@ -87,16 +88,22 @@ app.get(    '*', routes.index);
  * Start Server
  */
 
-http.createServer(app).listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'));
+fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+  if (err) {
+    console.log('Error loading client secret file: ' + err);
+    return;
+  }
+  googleAuth.authorize(JSON.parse(content), function(googleAuth) {
+    api.setGoogleAuth(googleAuth);
+    api.sendTestEmail({
+      body: {
+        recipient: 'xxx@gmail.com',
+        subject: 'TEST EMAIL',
+        body: 'Test email from NodeJS'
+      }
+    });
+    http.createServer(app).listen(app.get('port'), function () {
+      console.log('Express server listening on port ' + app.get('port'));
+    });
+  });
 });
-
-/*var privateKey = fs.readFileSync('./sslcert/server.key', 'utf8');
- var certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
- var credentials = {
- key: privateKey,
- cert: certificate
- };
- https.createServer(credentials, app).listen(app.get('sport'), function() {
- console.log('Secure Express server listening on port ' + app.get('sport'));
- });*/

@@ -17,12 +17,13 @@
     "satellizer": "^0.13.4",
     "request": "^2.65.0",
     "jwt-simple": "^0.3.1",
-    "moment": "^2.14.1"
+    "moment": "^2.14.1",
+    "googleapis": "^16.1.0",
+    "google-auth-library": "^0.10.0"
   },
   "devDependencies": {
     "mocha": "^3.2.0",
     "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
-    "request": "^2.65.0"
+    "chai-http": "^3.0.0"
   }
 }
