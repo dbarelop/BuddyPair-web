@@ -29,7 +29,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,6 +55,7 @@ app.get(    '/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
 app.get(    '/api/erasmus/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
 app.get(    '/api/erasmus/count', api.erasmusCount);
 app.post(   '/api/erasmus', api.addErasmus);
+app.post(   '/api/erasmus/bulk', api.addErasmusBulk);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.put(    '/api/erasmus/:id', auth.ensureAuthenticated, api.updateErasmus);
@@ -67,6 +68,7 @@ app.get(    '/api/peers', auth.ensureAuthenticated, api.peerList);
 app.get(    '/api/peers/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
 app.get(    '/api/peers/count', api.peerCount);
 app.post(   '/api/peers', api.addPeer);
+app.post(   '/api/peers/bulk', api.addPeersBulk);
 
 app.get(    '/api/peer/:id', auth.ensureAuthenticated, api.peer);
 app.put(    '/api/peer/:id', auth.ensureAuthenticated, api.updatePeer);

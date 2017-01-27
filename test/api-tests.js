@@ -7,13 +7,15 @@ var chaiHttp = require('chai-http');
 var request = require('request');
 var app = require('../app');
 var should = chai.should();
+var expect = chai.expect;
+var _ = require('lodash');
 
 var NUM_STUDIES = 17;
 var NUM_FACULTIES = 10;
 var COUNTRIES = [ 'US', 'CA', 'AF', 'AL', 'DZ', 'DS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ', 'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BV', 'BR', 'IO', 'BN', 'BG', 'BF', 'BI', 'KH', 'CM', 'CV', 'KY', 'CF', 'TD', 'CL', 'CN', 'CX', 'CC', 'CO', 'KM', 'CG', 'CK', 'CR', 'HR', 'CU', 'CY', 'CZ', 'DK', 'DJ', 'DM', 'DO', 'TP', 'EC', 'EG', 'SV', 'GQ', 'ER', 'EE', 'ET', 'FK', 'FO', 'FJ', 'FI', 'FR', 'FX', 'GF', 'PF', 'TF', 'GA', 'GM', 'GE', 'DE', 'GH', 'GI', 'GR', 'GL', 'GD', 'GP', 'GU', 'GT', 'GN', 'GW', 'GY', 'HT', 'HM', 'HN', 'HK', 'HU', 'IS', 'IN', 'ID', 'IR', 'IQ', 'IE', 'IL', 'IT', 'CI', 'JM', 'JP', 'JO', 'KZ', 'KE', 'KI', 'KP', 'KR', 'XK', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU', 'MO', 'MK', 'MG', 'MW', 'MY', 'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU', 'TY', 'MX', 'FM', 'MD', 'MC', 'MN', 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA', 'NR', 'NP', 'NL', 'AN', 'NC', 'NZ', 'NI', 'NE', 'NG', 'NU', 'NF', 'MP', 'NO', 'OM', 'PK', 'PW', 'PA', 'PG', 'PY', 'PE', 'PH', 'PN', 'PL', 'PT', 'PR', 'QA', 'RE', 'RO', 'RU', 'RW', 'KN', 'LC', 'VC', 'WS', 'SM', 'ST', 'SA', 'SN', 'RS', 'SC', 'SL', 'SG', 'SK', 'SI', 'SB', 'SO', 'ZA', 'GS', 'ES', 'LK', 'SH', 'PM', 'SD', 'SR', 'SJ', 'SZ', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TG', 'TK', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 'UG', 'UA', 'AE', 'GB', 'UM', 'UY', 'UZ', 'VU', 'VA', 'VE', 'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'YU', 'ZR', 'ZM', 'ZW' ];
 
-var NUM_ERASMUS = 50;
-var NUM_PEERS = 50;
+var NUM_ERASMUS = 500;
+var NUM_PEERS = 500;
 
 chai.use(chaiHttp);
 
@@ -22,8 +24,8 @@ var getRandomInt = function(min, max) {
 };
 
 var getRandomErasmus = function(n, cb) {
-  request.get('https://randomuser.me/api/1.1/?nat=au,br,ca,ch,de,dk,es,fi,fr,gb,ie,nl,nz,us&results=' + n, function(err, res, body) {
-    var people = JSON.parse(body).results;
+  request.get('https://randomuser.me/api/1.1/?seed=buddypair&nat=au,br,ca,ch,de,dk,fi,fr,gb,ie,nl,nz,us&results=' + n, function(err, res, body) {
+    var people = _.uniqBy(JSON.parse(body).results, 'email');
     var erasmus = [];
     people.forEach(function(p) {
       var e = {
@@ -32,7 +34,8 @@ var getRandomErasmus = function(n, cb) {
         gender: p.gender === 'male',
         birthdate: p.dob.split(' ')[0],
         nationality: p.nat,
-        email: p.email,
+        // workaround to avoid email clashes with peers
+        email: 'e_' + p.email,
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
@@ -45,14 +48,15 @@ var getRandomErasmus = function(n, cb) {
       };
       erasmus.push(e);
     });
+    NUM_ERASMUS = erasmus.length;
     cb(erasmus);
   });
 };
 
 var getRandomPeer = function(n, cb) {
-  request.get('https://randomuser.me/api/1.1/?nat=es&results=' + n, function(err, res, body) {
-    var people = JSON.parse(body).results;
-    var erasmus = [];
+  request.get('https://randomuser.me/api/1.1/?seed=buddypair&nat=es&results=' + n, function(err, res, body) {
+    var people = _.uniqBy(JSON.parse(body).results, 'email');
+    var peers = [];
     people.forEach(function(p) {
       var e = {
         name: p.name.first,
@@ -60,7 +64,8 @@ var getRandomPeer = function(n, cb) {
         gender: p.gender === 'male',
         birthdate: p.dob.split(' ')[0],
         nationality: p.nat,
-        email: p.email,
+        // workaround to avoid email clashes with erasmus
+        email: 'p_' + p.email,
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
@@ -74,9 +79,10 @@ var getRandomPeer = function(n, cb) {
         speaks_english: Math.random() >= 0.5,
         notifications: Math.random() >= 0.5
       };
-      erasmus.push(e);
+      peers.push(e);
     });
-    cb(erasmus);
+    NUM_PEERS = peers.length;
+    cb(peers);
   });
 };
 
@@ -86,20 +92,14 @@ before(function(done) {
     getRandomErasmus(NUM_ERASMUS, function(erasmus) {
       getRandomPeer(NUM_PEERS, function(peers) {
         var inserted = 0;
-        erasmus.forEach(function(e) {
-          chai.request(app).post('/api/erasmus').send({ erasmus: e }).end(function() {
-            if (++inserted == erasmus.length + peers.length) {
-              done();
-            }
-          });
-        });
-        peers.forEach(function(p) {
-          chai.request(app).post('/api/peers').send({ peer: p }).end(function() {
-            if (++inserted == erasmus.length + peers.length) {
-              done();
-            }
-          });
-        });
+        var callback = function(err, res) {
+          expect(res).to.have.status(201);
+          if (++inserted == 2) {
+            done();
+          }
+        };
+        chai.request(app).post('/api/erasmus/bulk').send({ erasmus_list: erasmus }).end(callback);
+        chai.request(app).post('/api/peers/bulk').send({ peers_list: peers }).end(callback);
       });
     });
   });

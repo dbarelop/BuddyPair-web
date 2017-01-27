@@ -369,6 +369,21 @@ function insertStudent(student, cb) {
   });
 }
 
+function insertStudentBulk(studentList, cb) {
+  var query = 'INSERT INTO STUDENT (name, surname, gender, birthdate, nationality, email, phone, studies, faculty) VALUES ?';
+  var values = [];
+  studentList.forEach(function(s) {
+    values.push([s.name, s.surname, s.gender, s.birthdate, s.nationality, s.email, s.phone, s.studies, s.faculty]);
+  });
+  connection.query(query, [values], function(err, result) {
+    if (err) {
+      cb(err);
+    } else {
+      cb(err, result.insertId);
+    }
+  });
+}
+
 function insertErasmus(erasmus, cb) {
   var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, language_preference, arrival_date, notes) ' +
     'VALUES (?, ?, ?, ?, ?, ?)';
@@ -384,6 +399,21 @@ function insertErasmus(erasmus, cb) {
         }
       });
     } else if (err) {
+      cb(err);
+    } else {
+      cb(err, result.insertId);
+    }
+  });
+}
+
+function insertErasmusBulk(erasmusList, cb) {
+  var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, language_preference, arrival_date, notes) VALUES ?';
+  var values = [];
+  erasmusList.forEach(function(e) {
+    values.push([e.register_date, e.student_id, e.gender_preference, e.language_preference, e.arrival_date, e.notes]);
+  });
+  connection.query(query, [values], function(err, result) {
+    if (err) {
       cb(err);
     } else {
       cb(err, result.insertId);
@@ -410,6 +440,21 @@ function insertPeer(peer, cb) {
         }
       });
     } else if (err) {
+      cb(err);
+    } else {
+      cb(err, result.insertId);
+    }
+  });
+}
+
+function insertPeersBulk(peersList, cb) {
+  var query = 'INSERT INTO PEER (register_date, peer, gender_preference, nationality_preference, erasmus_limit, notes, aegee_member, nia, speaks_english) VALUES ?';
+  var values = [];
+  peersList.forEach(function(p) {
+    values.push([p.register_date, p.student_id, p.gender_preference, p.nationality_preference, p.erasmus_limit, p.notes, p.aegee_member, p.nia, p.speaks_english]);
+  });
+  connection.query(query, [values], function(err, result) {
+    if (err) {
       cb(err);
     } else {
       cb(err, result.insertId);
@@ -445,6 +490,29 @@ exports.addErasmus = function(req, res) {
 };
 
 /**
+ * Adds a list of Erasmus to the database
+ * @param req.body.erasmus_list the Erasmus list
+ */
+exports.addErasmusBulk = function(req, res) {
+  var erasmusList = req.body.erasmus_list;
+  insertStudentBulk(erasmusList, function(err, firstStudentId) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      // NOTE: concurrency problems (function only used for testing)
+      erasmusList.forEach(function(e) { e.student_id = firstStudentId++; });
+      insertErasmusBulk(erasmusList, function(err) {
+        if (err) {
+          res.status(503).send(err);
+        } else {
+          res.location('/erasmus').sendStatus(201);
+        }
+      });
+    }
+  });
+};
+
+/**
  * Adds a peer student to the database
  * @param req.body.peer the peer's information
  */
@@ -460,6 +528,29 @@ exports.addPeer = function(req, res) {
           res.status(503).send(err);
         } else {
           res.location('/peer/' + peer_id).sendStatus(201);
+        }
+      });
+    }
+  });
+};
+
+/**
+ * Adds a list of peer students to the database
+ * @param req.body.peers_list the peers list
+ */
+exports.addPeersBulk = function(req, res) {
+  var peersList = req.body.peers_list;
+  insertStudentBulk(peersList, function(err, firstStudentId) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      // NOTE: concurrency problems (function only used for testing)
+      peersList.forEach(function(p) { p.student_id = firstStudentId++; });
+      insertPeersBulk(peersList, function(err) {
+        if (err) {
+          res.status(503).send(err);
+        } else {
+          res.location('/erasmus').sendStatus(201);
         }
       });
     }
