@@ -25,9 +25,7 @@ div
           label(for='peersGenderChart') Peers gender
           canvas(id='peersGenderChart' chart-data='genderPeers.data' chart-labels='genderPeers.labels').chart.chart-pie
       div
-        div.col-md-6
-          label(for='registeredErasmusChart') Number of registered Erasmus over time
-          canvas(id='registeredErasmusChart' chart-data='registeredErasmus.data' chart-options='registeredErasmus.options').chart.chart-line
-        div.col-md-6
-          label(for='registeredPeersChart') Number of registered peers over time
-          canvas(id='registeredPeersChart' chart-data='registeredPeers.data' chart-options='registeredPeers.options').chart.chart-line
+        div.col-md-12
+          label(for='registeredStudentsChart') Number of registered students over time
+          canvas(id='registeredStudentsChart' chart-data='registeredStudents.data' chart-series='registeredStudents.series' chart-options='registeredStudents.options').chart.chart-line
+          

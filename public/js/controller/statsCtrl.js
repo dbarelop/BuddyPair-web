@@ -33,8 +33,11 @@ angular.module('BuddyPairApp.controllers')
       labels: ['Male', 'Female']
     };
 
-    $scope.registeredErasmus = {
-      data: [[]],
+    // TODO: fix tooltip
+    // TODO: display series names in legend
+    $scope.registeredStudents = {
+      data: [[], []],
+      series: ['Erasmus', 'Peers'],
       options: {
         scales: {
           xAxes: [{
@@ -44,17 +47,6 @@ angular.module('BuddyPairApp.controllers')
       }
     };
 
-    $scope.registeredPeers = {
-      data: [[]],
-      options: {
-        scales: {
-          xAxes: [{
-            type: 'time'
-          }]
-        }
-      }
-    };
-    
     ErasmusService.getCount().then(function (count) {
       $scope.male_erasmus = count.male_erasmus;
       $scope.female_erasmus = count.female_erasmus;
@@ -78,20 +70,20 @@ angular.module('BuddyPairApp.controllers')
     });
     
     ErasmusService.getList().then(function(erasmus) {
-      $scope.registeredErasmus.data[0] = [];
+      $scope.registeredStudents.data[0] = [];
       var n = 0;
       erasmus.forEach(function(e) {
-        $scope.registeredErasmus.data[0].push({y: ++n, x: new Date(e.register_date)})
+        $scope.registeredStudents.data[0].push({y: ++n, x: new Date(e.register_date)})
       });
     }, function(err) {
       $scope.error = err.message.code;
     });
     
     PeerService.getList().then(function(peers) {
-      $scope.registeredPeers.data[0] = [];
+      $scope.registeredStudents.data[1] = [];
       var n = 0;
       peers.forEach(function(p) {
-        $scope.registeredPeers.data[0].push({y: ++n, x: new Date(p.register_date)})
+        $scope.registeredStudents.data[1].push({y: ++n, x: new Date(p.register_date)})
       });
     }, function(err) {
       $scope.error = err.message.code;
