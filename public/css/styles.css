@@ -1,6 +1,23 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
 body {
     padding-top: 70px;
     padding-bottom: 70px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #222;
+}
+
+.footer p {
+    color: #9d9d9d;
 }
 
 .input-group-addon {
