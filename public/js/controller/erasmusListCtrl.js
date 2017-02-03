@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('BuddyPairApp.controllers')
-  .controller('ErasmusListCtrl', ['$scope', '$route', '$location', '$routeParams', 'ErasmusService', function($scope, $route, $location, $routeParams, ErasmusService) {
+  .controller('ErasmusListCtrl', ['$scope', '$route', '$location', '$routeParams', 'ErasmusService', 'StudentService', function($scope, $route, $location, $routeParams, ErasmusService, StudentService) {
     $scope.$route = $route;
     $scope.$location = $location;
     $scope.filters = {
@@ -14,6 +14,14 @@ angular.module('BuddyPairApp.controllers')
       var assignedPeerFilter = !filters.withPeer || (filters.withPeer == 'all') ||
         (filters.withPeer == 'y' && e.has_peer) || (filters.withPeer == 'n' && !e.has_peer);
       return nameFilter && assignedPeerFilter;
+    };
+    
+    $scope.match_students = function() {
+      StudentService.matchStudents().then(function() {
+        $route.reload();
+      }, function(err) {
+        $scope.error = err.message.code;
+      });
     };
 
     ErasmusService.getList().then(function(data) {

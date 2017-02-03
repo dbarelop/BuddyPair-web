@@ -35,9 +35,7 @@ div(ng-if='peerList !== null')
         div.panel-heading
           h4 Actions
         div.panel-body
-          // TODO: implement
-          button(type='button' onclick='alert("unimplemented")').list-group-item Match
-          button(type='button' onclick='alert("unimplemented")').list-group-item Manage peers
+          button(type='button' ng-click='match_students()').list-group-item Match
           a(href='/peers/new').list-group-item Add peer
   div.row
     div.col-md-12
