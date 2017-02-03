@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('BuddyPairApp.controllers')
-  .controller('ErasmusListCtrl', ['$scope', '$route', '$routeParams', 'ErasmusService', function($scope, $route, $routeParams, ErasmusService) {
+  .controller('ErasmusListCtrl', ['$scope', '$route', '$location', '$routeParams', 'ErasmusService', function($scope, $route, $location, $routeParams, ErasmusService) {
     $scope.$route = $route;
+    $scope.$location = $location;
     $scope.filters = {
       withPeer: 'all'
     };

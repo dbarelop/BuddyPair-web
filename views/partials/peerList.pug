@@ -5,7 +5,7 @@ div(ng-show='error').alert.alert-danger.fade.in
 div(ng-if='peerList !== null')
   h3 There are currently {{peerList.length}} peer students in the system:
   div.row
-    div.col-md-8
+    div.col-md-9
       div.panel.panel-default
         div.panel-heading
           h4 Filters
@@ -30,13 +30,7 @@ div(ng-if='peerList !== null')
               label.checkbox-inline
                 input(type='checkbox' ng-model='filters.numErasmus.three' value='')
                 | 3 or more
-      div(ng-if='peerList').panel.panel-default
-        ul.list-group
-          a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3}").list-group-item {{p.name}} {{p.surname}}
-            | {{' (' + p.num_erasmus + ' Erasmus)'}}
-      div(ng-if='peerList == null').text-center
-        img(src='/img/giphy.gif')
-    div(ng-if='peerList').col-md-4
+    div(ng-if='peerList').col-md-3
       div.panel.panel-default
         div.panel-heading
           h4 Actions
@@ -45,3 +39,26 @@ div(ng-if='peerList !== null')
           button(type='button' onclick='alert("unimplemented")').list-group-item Match
           button(type='button' onclick='alert("unimplemented")').list-group-item Manage peers
           a(href='/peers/new').list-group-item Add peer
+  div.row
+    div.col-md-12
+      table(id='peersTable' ng-if='peerList').table.table-hover.table-bordered.table-striped
+        thead
+          tr
+            th #
+            th Register date
+            th Name
+            th Nationality
+            th Studies
+            th Faculty
+            th Assigned Erasmus
+        tbody
+          tr(ng-repeat='p in peerList.filter(filter_peers)' ng-click='$location.url("/peer/" + p.peer_id)' ng-class="{'danger': p.num_erasmus == 0 || p.num_erasmus > 3}" style='cursor: pointer')
+            td {{p.id}}
+            td {{p.register_date}}
+            td {{p.name}} {{p.surname}}
+            td {{p.nationality}}
+            td {{p.studies_name}}
+            td {{p.faculty_name}}
+            td {{p.num_erasmus}}
+      div(ng-if='peerList == null').text-center
+        img(src='/img/giphy.gif')

@@ -5,7 +5,7 @@ div(ng-show='error').alert.alert-danger.fade.in
 div(ng-if='erasmusList !== null')
   h3 There are currently {{erasmusList.length}} Erasmus students in the system:
   div.row
-    div.col-md-8
+    div.col-md-9
       div.panel.panel-default
         div.panel-heading
           h4 Filters
@@ -26,13 +26,7 @@ div(ng-if='erasmusList !== null')
               label.radio-inline
                 input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='n')
                 | No
-      div(ng-if='erasmusList').panel.panel-default
-        ul.list-group
-          a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer}").list-group-item {{e.name}} {{e.surname}}
-            | {{e.has_peer ? '' : ' (no assigned peer)'}}
-      div(ng-if='erasmusList == null').text-center
-        img(src='/img/giphy.gif')
-    div(ng-if='erasmusList').col-md-4
+    div(ng-if='erasmusList').col-md-3
       div.panel.panel-default
         div.panel-heading
           h4 Actions
@@ -41,3 +35,26 @@ div(ng-if='erasmusList !== null')
           button(type='button' onclick='alert("unimplemented")').list-group-item Match
           button(type='button' onclick='alert("unimplemented")').list-group-item Manage Erasmus
           a(href='/erasmus/new').list-group-item Add Erasmus
+  div.row
+    div.col-md-12
+      table(id='erasmusTable' ng-if='erasmusList').table.table-hover.table-bordered.table-striped
+        thead
+          tr
+            th #
+            th Register date
+            th Name
+            th Nationality
+            th Studies
+            th Faculty
+            th Assigned peer
+        tbody
+          tr(ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-click='$location.url("/erasmus/" + e.erasmus_id)' ng-class="{'danger': !e.has_peer}" style='cursor: pointer')
+            td {{e.id}}
+            td {{e.register_date}}
+            td {{e.name}} {{e.surname}}
+            td {{e.nationality}}
+            td {{e.studies_name}}
+            td {{e.faculty_name}}
+            td {{e.has_peer ? "Yes" : "No"}}
+      div(ng-if='erasmusList == null').text-center
+        img(src='/img/giphy.gif')
