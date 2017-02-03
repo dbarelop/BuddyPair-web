@@ -6,9 +6,13 @@ angular.module('BuddyPairApp.controllers')
     
     $scope.numRegistered = {
       data: [[0], [0]],
-      labels: ['2016'],
+      // TODO: change year!
+      labels: ['2016 / 2017'],
       series: ['Erasmus', 'Peers'],
       options: {
+        tooltips: {
+          enabled: false
+        },
         legend: {
           display: true
         },
@@ -33,15 +37,67 @@ angular.module('BuddyPairApp.controllers')
       labels: ['Male', 'Female']
     };
 
-    // TODO: fix tooltip
-    // TODO: display series names in legend
-    $scope.registeredStudents = {
+    $scope.registeredStudentsDiff = {
       data: [[], []],
       series: ['Erasmus', 'Peers'],
       options: {
+        tooltips: {
+          enabled: false
+        },
+        legend: {
+          display: true
+        },
         scales: {
           xAxes: [{
-            type: 'time'
+            type: 'time',
+            time: {
+              displayFormats: {
+                'millisecond': 'DD/MM/YYYY',
+                'second': 'DD/MM/YYYY',
+                'minute': 'DD/MM/YYYY',
+                'hour': 'DD/MM/YYYY',
+                'day': 'DD/MM/YYYY',
+                'week': 'DD/MM/YYYY',
+                'month': 'DD/MM/YYYY',
+                'quarter': 'DD/MM/YYYY',
+                'year': 'DD/MM/YYYY'
+              }
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              min: 0
+            }
+          }]
+        }
+      }
+    };
+    $scope.registeredStudentsCum = {
+      data: [[], []],
+      series: ['Erasmus', 'Peers'],
+      options: {
+        tooltips: {
+          enabled: false
+        },
+        legend: {
+          display: true
+        },
+        scales: {
+          xAxes: [{
+            type: 'time',
+            time: {
+              displayFormats: {
+                'millisecond': 'DD/MM/YYYY',
+                'second': 'DD/MM/YYYY',
+                'minute': 'DD/MM/YYYY',
+                'hour': 'DD/MM/YYYY',
+                'day': 'DD/MM/YYYY',
+                'week': 'DD/MM/YYYY',
+                'month': 'DD/MM/YYYY',
+                'quarter': 'DD/MM/YYYY',
+                'year': 'DD/MM/YYYY'
+              }
+            }
           }]
         }
       }
@@ -70,20 +126,44 @@ angular.module('BuddyPairApp.controllers')
     });
     
     ErasmusService.getList().then(function(erasmus) {
-      $scope.registeredStudents.data[0] = [];
-      var n = 0;
+      $scope.registeredStudentsCum.data[0] = [];
+      var sum = 0;
+      var daily = {};
       erasmus.forEach(function(e) {
-        $scope.registeredStudents.data[0].push({y: ++n, x: new Date(e.register_date)})
+        $scope.registeredStudentsCum.data[0].push({y: ++sum, x: new Date(e.register_date)});
+        var dateTrunc = new Date(e.register_date);
+        dateTrunc.setHours(0); dateTrunc.setMinutes(0); dateTrunc.setSeconds(0); dateTrunc.setMilliseconds(0);
+        if (daily[dateTrunc.getTime()]) {
+          daily[dateTrunc.getTime()]++;
+        } else {
+          daily[dateTrunc.getTime()] = 1;
+        }
+      });
+      Object.keys(daily).forEach(function(k) {
+        var d = new Date(); d.setTime(k);
+        $scope.registeredStudentsDiff.data[0].push({y: daily[k], x: d});
       });
     }, function(err) {
       $scope.error = err.message.code;
     });
     
     PeerService.getList().then(function(peers) {
-      $scope.registeredStudents.data[1] = [];
-      var n = 0;
+      $scope.registeredStudentsCum.data[1] = [];
+      var sum = 0;
+      var daily = {};
       peers.forEach(function(p) {
-        $scope.registeredStudents.data[1].push({y: ++n, x: new Date(p.register_date)})
+        $scope.registeredStudentsCum.data[1].push({y: ++sum, x: new Date(p.register_date)});
+        var dateTrunc = new Date(p.register_date);
+        dateTrunc.setHours(0); dateTrunc.setMinutes(0); dateTrunc.setSeconds(0); dateTrunc.setMilliseconds(0);
+        if (daily[dateTrunc.getTime()]) {
+          daily[dateTrunc.getTime()]++;
+        } else {
+          daily[dateTrunc.getTime()] = 1;
+        }
+      });
+      Object.keys(daily).forEach(function(k) {
+        var d = new Date(); d.setTime(k);
+        $scope.registeredStudentsDiff.data[1].push({y: daily[k], x: d});
       });
     }, function(err) {
       $scope.error = err.message.code;

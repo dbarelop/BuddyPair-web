@@ -9,11 +9,11 @@ div
     div(ng-if='!error').panel-body
       ul
         li
-          b Registered Erasmus students:#{' '}
-          | {{num_erasmus}}
+          b Registered Erasmus students
+          span(style='margin-left: 1em').badge {{num_erasmus}}
         li
-          b Registered peer students:#{' '}
-          | {{num_peers}}
+          b Registered peer students
+          span(style='margin-left: 1em').badge {{num_peers}}
       div
         div.col-md-4
           label(for='numRegisteredChart') Number of registered Erasmus and peers
@@ -24,8 +24,12 @@ div
         div.col-md-4
           label(for='peersGenderChart') Peers gender
           canvas(id='peersGenderChart' chart-data='genderPeers.data' chart-labels='genderPeers.labels').chart.chart-pie
+      br
       div
-        div.col-md-12
-          label(for='registeredStudentsChart') Number of registered students over time
-          canvas(id='registeredStudentsChart' chart-data='registeredStudents.data' chart-series='registeredStudents.series' chart-options='registeredStudents.options').chart.chart-line
+        div.col-md-6
+          label(for='registeredStudentsDiffChart') Daily registered students
+          canvas(id='registeredStudentsDiffChart' chart-data='registeredStudentsDiff.data' chart-series='registeredStudentsDiff.series' chart-options='registeredStudentsDiff.options').chart.chart-line
+        div.col-md-6
+          label(for='registeredStudentsCumChart') Total registered students
+          canvas(id='registeredStudentsCumChart' chart-data='registeredStudentsCum.data' chart-series='registeredStudentsCum.series' chart-options='registeredStudentsCum.options').chart.chart-line
           
