@@ -34,7 +34,7 @@ div(ng-if='erasmusList !== null')
           button(type='button' ng-click='match_students()').list-group-item Match
           a(href='/erasmus/new').list-group-item Add Erasmus
   div.row
-    div.col-md-12
+    div.col-md-12.visible-lg.visible-md.hidden-sm.hidden-xs
       table(id='erasmusTable' ng-if='erasmusList').table.table-hover.table-bordered.table-striped
         thead
           tr
@@ -56,3 +56,8 @@ div(ng-if='erasmusList !== null')
             td {{e.has_peer ? "Yes" : "No"}}
       div(ng-if='erasmusList == null').text-center
         img(src='/img/giphy.gif')
+    div.col-md-12.hidden-lg.hidden-md.visible-sm.visible-xs
+      div.panel.panel-default
+        ul.list-group
+          a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer}").list-group-item {{e.name}} {{e.surname}}
+            | {{e.has_peer ? '' : ' (no assigned peer)'}}

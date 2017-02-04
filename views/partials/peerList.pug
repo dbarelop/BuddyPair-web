@@ -38,7 +38,7 @@ div(ng-if='peerList !== null')
           button(type='button' ng-click='match_students()').list-group-item Match
           a(href='/peers/new').list-group-item Add peer
   div.row
-    div.col-md-12
+    div.col-md-12.visible-lg.visible-md.hidden-sm.hidden-xs
       table(id='peersTable' ng-if='peerList').table.table-hover.table-bordered.table-striped
         thead
           tr
@@ -60,3 +60,8 @@ div(ng-if='peerList !== null')
             td {{p.num_erasmus}}
       div(ng-if='peerList == null').text-center
         img(src='/img/giphy.gif')
+    div.col-md-12.hidden-lg.hidden-md.visible-sm.visible-xs
+      div.panel.panel-default
+        ul.list-group
+          a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3}").list-group-item {{p.name}} {{p.surname}}
+            | {{' (' + p.num_erasmus + ' Erasmus)'}}
