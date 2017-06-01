@@ -36,6 +36,7 @@ var getRandomErasmus = function(n, cb) {
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
+        course_year: 2016,
         register_date: new Date(new Date().getTime() - Math.floor(Math.random() * 10000000000)),
         gender_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
         language_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
@@ -64,6 +65,7 @@ var getRandomPeer = function(n, cb) {
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
+        course_year: 2016,
         register_date: new Date(new Date().getTime() - Math.floor(Math.random() * 10000000000)),
         gender_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
         nationality_preference: Math.random() >= 0.5 ? null : COUNTRIES[getRandomInt(0, COUNTRIES.length)],
@@ -88,14 +90,14 @@ before(function(done) {
         var inserted = 0;
         erasmus.forEach(function(e) {
           chai.request(app).post('/api/erasmus').send({ erasmus: e }).end(function() {
-            if (++inserted == erasmus.length + peers.length) {
+            if (++inserted === erasmus.length + peers.length) {
               done();
             }
           });
         });
         peers.forEach(function(p) {
           chai.request(app).post('/api/peers').send({ peer: p }).end(function() {
-            if (++inserted == erasmus.length + peers.length) {
+            if (++inserted === erasmus.length + peers.length) {
               done();
             }
           });
@@ -170,7 +172,7 @@ describe('GET unnotified students', function() {
         res.should.have.status(200);
         res.body.should.be.a('array');
         res.body.length.should.be.eql(0);
-        chai.request(app).get('/api/match').end(function(err, res) {
+        chai.request(app).get('/api/match/2016').end(function(err, res) {
           res.should.have.status(200);
           chai.request(app).get('/api/peers/unnotified').end(function(err, res) {
             res.should.have.status(200);

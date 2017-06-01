@@ -195,6 +195,7 @@ exports.facultyList = function(req, res) {
 /**
  * Fetches the list of Erasmus students (without data from assigned peers)
  */
+// TODO: add param for course_year
 exports.erasmusList = function(req, res) {
   getErasmusList(function(err, list) {
     if (err) {
@@ -209,6 +210,7 @@ exports.erasmusList = function(req, res) {
  * Fetches the list of Erasmus students (without data from assigned peers)
  * from unnotified Erasmus
  */
+// TODO: add param for course_year
 exports.unnotifiedErasmusList = function(req, res) {
   getUnnotifiedErasmusList(function(err, list) {
     if (err) {
@@ -222,6 +224,7 @@ exports.unnotifiedErasmusList = function(req, res) {
 /**
  * Fetches the number of Erasmus
  */
+// TODO: add param for course_year
 exports.erasmusCount = function(req, res) {
   getErasmusCount(function(err, count) {
     if (err) {
@@ -236,6 +239,7 @@ exports.erasmusCount = function(req, res) {
  * Fetches the information of a given Erasmus student (without data from assigned peer)
  * @param req.params.id the Erasmus id
  */
+// TODO: add param for course_year
 exports.erasmus = function(req, res) {
   var erasmus_id = req.params.id;
   getErasmus(erasmus_id, function(err, erasmus) {
@@ -250,6 +254,7 @@ exports.erasmus = function(req, res) {
 /**
  * Fetches the list of peer students (without data from assigned Erasmus)
  */
+// TODO: add param for course_year
 exports.peerList = function(req, res) {
   getPeerList(function(err, list) {
     if (err) {
@@ -264,6 +269,7 @@ exports.peerList = function(req, res) {
  * Fetches the list of peer students (without data from assigned Erasmus)
  * from unnotified students
  */
+// TODO: add param for course_year
 exports.unnotifiedPeersList = function(req, res) {
   getUnnotifiedPeersList(function(err, list) {
     if (err) {
@@ -277,6 +283,7 @@ exports.unnotifiedPeersList = function(req, res) {
 /**
  * Fetches the number of peer students
  */
+// TODO: add param for course_year
 exports.peerCount = function(req, res) {
   getPeerCount(function(err, count) {
     if (err) {
@@ -344,7 +351,7 @@ function insertStudent(student, cb) {
   var values = [student.name, student.surname, student.gender, student.birthdate, student.nationality ? student.nationality : student.nationality_name, 
     student.email, student.phone, student.studies ? student.studies : student.studies_name, student.faculty ? student.faculty : student.faculty_name];
   connection.query(query, values, function(err, result) {
-    if (err && err.errno == 1062) {
+    if (err && err.errno === 1062) {
       // If the student already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM STUDENT WHERE email = ?';
       connection.query(query2, [student.email], function(err, rows) {
@@ -363,14 +370,16 @@ function insertStudent(student, cb) {
 }
 
 function insertErasmus(erasmus, cb) {
-  var query = 'INSERT INTO ERASMUS (register_date, erasmus, gender_preference, language_preference, arrival_date, notes) ' +
-    'VALUES (?, ?, ?, ?, ?, ?)';
-  connection.query(query, [erasmus.register_date, erasmus.student_id, erasmus.gender_preference, erasmus.language_preference, erasmus.arrival_date, erasmus.notes], function(err, result) {
-    if (err && err.errno == 1062) {
+  var moment = require('moment');
+  var query = 'INSERT INTO ERASMUS (course_year, register_date, erasmus, gender_preference, language_preference, arrival_date, notes) ' +
+    'VALUES (?, ?, ?, ?, ?, ?, ?)';
+  var values = [erasmus.course_year, moment(erasmus.register_date).format('YYYY-MM-DD HH:mm:ss'), erasmus.student_id, erasmus.gender_preference, erasmus.language_preference, moment(erasmus.arrival_date).format('YYYY-MM-DD HH:mm:ss'), erasmus.notes];
+  connection.query(query, values, function(err, result) {
+    if (err && err.errno === 1062) {
       // If the Erasmus already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM ERASMUS WHERE erasmus = ?';
       connection.query(query2, erasmus.student_id, function(err, rows) {
-        if (err || rows.length == 0) {
+        if (err || rows.length === 0) {
           cb(err);
         } else {
           cb(err, rows[0].id);
@@ -385,18 +394,19 @@ function insertErasmus(erasmus, cb) {
 }
 
 function insertPeer(peer, cb) {
-  var query = 'INSERT INTO PEER (register_date, peer, gender_preference, nationality_preference, erasmus_limit, notes, aegee_member, nia, speaks_english) ';
-  query += 'VALUES (?, ?, ?, ';
+  var moment = require('moment');
+  var query = 'INSERT INTO PEER (course_year, register_date, peer, gender_preference, nationality_preference, erasmus_limit, notes, aegee_member, nia, speaks_english) ';
+  query += 'VALUES (?, ?, ?, ?, ';
   query += peer.nationality_preference ? '?, ' : '(SELECT country_code FROM COUNTRY WHERE country_name = ?), ';
   query += '?, ?, ?, ?, ?)';
-  var values = [peer.register_date, peer.student_id, peer.gender_preference, peer.nationality_preference ? peer.nationality_preference : peer.nationality_preference_name, 
+  var values = [peer.course_year, moment(peer.register_date).format('YYYY-MM-DD HH:mm:ss'), peer.student_id, peer.gender_preference, peer.nationality_preference ? peer.nationality_preference : peer.nationality_preference_name, 
     peer.erasmus_limit, peer.notes, peer.aegee_member, peer.nia, peer.speaks_english];
   connection.query(query, values, function(err, result) {
-    if (err && err.errno == 1062) {
+    if (err && err.errno === 1062) {
       // If the peer already exists, fetch their ID and pass it to the callback function
       var query2 = 'SELECT id FROM PEER WHERE peer = ?';
       connection.query(query2, peer.student_id, function(err, rows) {
-        if (err || rows.length == 0) {
+        if (err || rows.length === 0) {
           cb(err);
         } else {
           cb(err, rows[0].id);
@@ -479,7 +489,7 @@ exports.addMatch = function(req, res) {
   }
   insertMatch(erasmus_id, peer_id, function(err) {
     if (err) {
-      if (err.errno == 1062) {
+      if (err.errno === 1062) {
         res.sendStatus(404);
       } else {
         res.status(503).send(err);
@@ -519,14 +529,14 @@ exports.updateErasmus = function(req, res) {
   updateStudent(erasmus.student_id, erasmus, function(err, result) {
     if (err) {
       res.status(503).send(err);
-    } else if (result.affectedRows == 0) {
+    } else if (result.affectedRows === 0) {
       res.sendStatus(404);
     } else {
       updateErasmus(erasmus_id, erasmus, function(err, result) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.sendStatus(result.affectedRows == 0 ? 404 : 204);
+          res.sendStatus(result.affectedRows === 0 ? 404 : 204);
         }
       });
     }
@@ -545,14 +555,14 @@ exports.updatePeer = function(req, res) {
   updateStudent(peer.student_id, peer, function(err, result) {
     if (err) {
       res.status(503).send(err);
-    } else if (result.affectedRows == 0) {
+    } else if (result.affectedRows === 0) {
       res.sendStatus(404);
     } else {
       updatePeer(peer, function(err, result) {
         if (err) {
           res.status(503).send(err);
         } else {
-          res.sendStatus(result.affectedRows == 0 ? 404 : 204);
+          res.sendStatus(result.affectedRows === 0 ? 404 : 204);
         }
       });
     }
@@ -594,6 +604,7 @@ function deleteAllAssginedErasmus(peer_id, cb) {
 /**
  * Deletes all the students (Erasmus and peers)
  */
+// TODO: add param for course_year
 exports.deleteAllStudents = function(req, res) {
   deleteAllStudents(function(err) {
     if (err) {
@@ -614,7 +625,7 @@ exports.deleteErasmus = function(req, res) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
+      res.sendStatus(result.affectedRows === 0 ? 404 : 200);
     }
   });
 };
@@ -629,7 +640,7 @@ exports.deletePeer = function(req, res) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
+      res.sendStatus(result.affectedRows === 0 ? 404 : 200);
     }
   });
 };
@@ -644,7 +655,7 @@ exports.removeAssignedPeer = function(req, res) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
+      res.sendStatus(result.affectedRows === 0 ? 404 : 200);
     }
   });
 };
@@ -661,7 +672,7 @@ exports.removeAssignedErasmus = function(req, res) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
+      res.sendStatus(result.affectedRows === 0 ? 404 : 200);
     }
   });
 };
@@ -676,20 +687,21 @@ exports.removeAllAssignedErasmus = function(req, res) {
     if (err) {
       res.status(503).send(err);
     } else {
-      res.sendStatus(result.affectedRows == 0 ? 404 : 200);
+      res.sendStatus(result.affectedRows === 0 ? 404 : 200);
     }
   });
 };
 
 /* PROCEDURES */
 
-function matchStudents(cb) {
-  var query = 'CALL emparejar()';
-  connection.query(query, cb);
+function matchStudents(course_year, cb) {
+  var query = 'CALL emparejar(?)';
+  connection.query(query, course_year, cb);
 }
 
 exports.match = function(req, res) {
-  matchStudents(function(err) {
+  var course_year = req.params.course_year;
+  matchStudents(course_year, function(err) {
     if (err) {
       res.status(503).send(err);
     } else {

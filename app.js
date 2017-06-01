@@ -78,7 +78,7 @@ app.delete( '/api/peer/:peer_id/assigned_erasmus/:erasmus_id', auth.ensureAuthen
 // TODO: make available only for testing?
 app.delete( '/api/students', auth.ensureAuthenticated, api.deleteAllStudents);
 
-app.get(    '/api/match', auth.ensureAuthenticated, api.match);
+app.get(    '/api/match/:course_year', auth.ensureAuthenticated, api.match);
 
 // redirect all others to the index (HTML5 history)
 app.get(    '*', routes.index);
