@@ -6,8 +6,7 @@ angular.module('BuddyPairApp.controllers')
     
     $scope.numRegistered = {
       data: [[0], [0]],
-      // TODO: change year!
-      labels: ['2016 / 2017'],
+      labels: [$scope.selected_course_year + ' / ' + ($scope.selected_course_year + 1)],
       series: ['Erasmus', 'Peers'],
       options: {
         tooltips: {
@@ -103,7 +102,7 @@ angular.module('BuddyPairApp.controllers')
       }
     };
 
-    ErasmusService.getCount().then(function (count) {
+    ErasmusService.getCount($scope.selected_course_year).then(function (count) {
       $scope.male_erasmus = count.male_erasmus;
       $scope.female_erasmus = count.female_erasmus;
       $scope.num_erasmus = $scope.male_erasmus + $scope.female_erasmus;
@@ -114,7 +113,7 @@ angular.module('BuddyPairApp.controllers')
       $scope.error = err.message.code;
     });
     
-    PeerService.getCount().then(function (count) {
+    PeerService.getCount($scope.selected_course_year).then(function (count) {
       $scope.male_peers = count.male_peers;
       $scope.female_peers = count.female_peers;
       $scope.num_peers = $scope.male_peers + $scope.female_peers;
@@ -125,7 +124,7 @@ angular.module('BuddyPairApp.controllers')
       $scope.error = err.message.code;
     });
     
-    ErasmusService.getList().then(function(erasmus) {
+    ErasmusService.getList($scope.selected_course_year).then(function(erasmus) {
       $scope.registeredStudentsCum.data[0] = [];
       var sum = 0;
       var daily = {};
@@ -147,7 +146,7 @@ angular.module('BuddyPairApp.controllers')
       $scope.error = err.message.code;
     });
     
-    PeerService.getList().then(function(peers) {
+    PeerService.getList($scope.selected_course_year).then(function(peers) {
       $scope.registeredStudentsCum.data[1] = [];
       var sum = 0;
       var daily = {};

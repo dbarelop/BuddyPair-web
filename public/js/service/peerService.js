@@ -4,9 +4,9 @@ angular.module('BuddyPairApp.services')
   .service('PeerService', function($q, $http) {
     var service = {};
 
-    service.getList = function() {
+    service.getList = function(course_year) {
       var deferred = $q.defer();
-      $http.get('/api/peers')
+      $http.get('/api/peers/' + course_year)
         .success(function(data) {
           deferred.resolve(data);
         })
@@ -20,9 +20,9 @@ angular.module('BuddyPairApp.services')
       return deferred.promise;
     };
 
-    service.getCount = function() {
+    service.getCount = function(course_year) {
       var deferred = $q.defer();
-      $http.get('/api/peers/count')
+      $http.get('/api/peers/' + course_year + '/count')
         .success(function(data) {
           deferred.resolve(data[0]);
         })

@@ -31,4 +31,9 @@ angular.module('BuddyPairApp.controllers')
         console.log('Logged out');
       });
     };
+    $scope.available_course_years = [2015, 2016, 2017];
+    $scope.selected_course_year = $scope.available_course_years[1];
+    $scope.onchange_course_year = function() {
+      // TODO: implement switching years
+    };
   }]);

@@ -36,7 +36,7 @@ angular.module('BuddyPairApp.controllers')
     };
     
     $scope.peerList = null;
-    PeerService.getList().then(function (peerList) {
+    PeerService.getList($scope.selected_course_year).then(function (peerList) {
       $scope.peerList = peerList;
     }, function (err) {
       $scope.error = err.message.code;

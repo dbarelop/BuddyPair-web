@@ -11,8 +11,8 @@ angular.module('BuddyPairApp.controllers')
     $scope.filter_erasmus = function(e) {
       var filters = $scope.filters;
       var nameFilter = !filters.name || (e.name + " " + e.surname).toLowerCase().indexOf(filters.name.toLowerCase()) > -1;
-      var assignedPeerFilter = !filters.withPeer || (filters.withPeer == 'all') ||
-        (filters.withPeer == 'y' && e.has_peer) || (filters.withPeer == 'n' && !e.has_peer);
+      var assignedPeerFilter = !filters.withPeer || (filters.withPeer === 'all') ||
+        (filters.withPeer === 'y' && e.has_peer) || (filters.withPeer === 'n' && !e.has_peer);
       return nameFilter && assignedPeerFilter;
     };
     
@@ -24,7 +24,7 @@ angular.module('BuddyPairApp.controllers')
       });
     };
 
-    ErasmusService.getList().then(function(data) {
+    ErasmusService.getList($scope.selected_course_year).then(function(data) {
       $scope.erasmusList = data;
     }, function(err) {
       $scope.error = err.message.code;
