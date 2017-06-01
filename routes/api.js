@@ -47,18 +47,19 @@ function getFacultyList(cb) {
   connection.query(query, cb);
 }
 
-function getErasmusList(cb) {
+function getErasmusList(course_year, cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
     'FROM ERASMUS e ' +
     'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'WHERE e.course_year = ? ' +
     'ORDER BY e.register_date ASC';
-  connection.query(query, cb);
+  connection.query(query, course_year, cb);
 }
 
-function getUnnotifiedErasmusList(cb) {
+function getUnnotifiedErasmusList(course_year, cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
     'FROM ERASMUS e ' +
@@ -66,16 +67,17 @@ function getUnnotifiedErasmusList(cb) {
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'INNER JOIN BUDDY_PAIR bp ON bp.erasmus = e.id ' +
-    'WHERE NOT bp.notified_erasmus ' +
+    'WHERE e.course_year = ? AND NOT bp.notified_erasmus ' +
     'ORDER BY e.register_date ASC';
-  connection.query(query, cb);
+  connection.query(query, course_year, cb);
 }
 
-function getErasmusCount(cb) {
+function getErasmusCount(course_year, cb) {
   var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_erasmus, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_erasmus ' +
     'FROM ERASMUS e ' +
-    'INNER JOIN STUDENT s ON e.erasmus = s.id';
-  connection.query(query, cb);
+    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
+    'WHERE e.course_year = ?';
+  connection.query(query, course_year, cb);
 }
 
 function getErasmus(erasmus_id, cb) {
@@ -89,18 +91,19 @@ function getErasmus(erasmus_id, cb) {
   connection.query(query, erasmus_id, cb);
 }
 
-function getPeerList(cb) {
+function getPeerList(course_year, cb) {
   var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
     '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'WHERE p.course_year = ? ' +
     'ORDER BY p.register_date ASC';
-  connection.query(query, cb);
+  connection.query(query, course_year, cb);
 }
 
-function getUnnotifiedPeersList(cb) {
+function getUnnotifiedPeersList(course_year, cb) {
   var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
     '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
     'FROM PEER p ' +
@@ -108,16 +111,17 @@ function getUnnotifiedPeersList(cb) {
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
     'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'INNER JOIN BUDDY_PAIR bp ON bp.peer = p.id ' +
-    'WHERE NOT bp.notified_peer ' +
+    'WHERE p.course_year = ? AND NOT bp.notified_peer ' +
     'ORDER BY p.register_date ASC';
-  connection.query(query, cb);
+  connection.query(query, course_year, cb);
 }
 
-function getPeerCount(cb) {
+function getPeerCount(course_year, cb) {
   var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_peers, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_peers ' +
     'FROM PEER p ' +
-    'INNER JOIN STUDENT s ON p.peer = s.id';
-  connection.query(query, cb);
+    'INNER JOIN STUDENT s ON p.peer = s.id ' +
+    'WHERE p.course_year = ?';
+  connection.query(query, course_year, cb);
 }
 
 function getPeer(peer_id, cb) {
@@ -194,10 +198,11 @@ exports.facultyList = function(req, res) {
 
 /**
  * Fetches the list of Erasmus students (without data from assigned peers)
+ * @param req.params.course_year the course year
  */
-// TODO: add param for course_year
 exports.erasmusList = function(req, res) {
-  getErasmusList(function(err, list) {
+  var course_year = req.params.course_year;
+  getErasmusList(course_year, function(err, list) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -209,10 +214,11 @@ exports.erasmusList = function(req, res) {
 /**
  * Fetches the list of Erasmus students (without data from assigned peers)
  * from unnotified Erasmus
+ * @param req.params.course_year the course year
  */
-// TODO: add param for course_year
 exports.unnotifiedErasmusList = function(req, res) {
-  getUnnotifiedErasmusList(function(err, list) {
+  var course_year = req.params.course_year;
+  getUnnotifiedErasmusList(course_year, function(err, list) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -223,10 +229,11 @@ exports.unnotifiedErasmusList = function(req, res) {
 
 /**
  * Fetches the number of Erasmus
+ * @param req.params.course_year the course year
  */
-// TODO: add param for course_year
 exports.erasmusCount = function(req, res) {
-  getErasmusCount(function(err, count) {
+  var course_year = req.params.course_year;
+  getErasmusCount(course_year, function(err, count) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -239,7 +246,6 @@ exports.erasmusCount = function(req, res) {
  * Fetches the information of a given Erasmus student (without data from assigned peer)
  * @param req.params.id the Erasmus id
  */
-// TODO: add param for course_year
 exports.erasmus = function(req, res) {
   var erasmus_id = req.params.id;
   getErasmus(erasmus_id, function(err, erasmus) {
@@ -253,10 +259,11 @@ exports.erasmus = function(req, res) {
 
 /**
  * Fetches the list of peer students (without data from assigned Erasmus)
+ * @param req.params.course_year the course year
  */
-// TODO: add param for course_year
 exports.peerList = function(req, res) {
-  getPeerList(function(err, list) {
+  var course_year = req.params.course_year;
+  getPeerList(course_year, function(err, list) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -268,10 +275,11 @@ exports.peerList = function(req, res) {
 /**
  * Fetches the list of peer students (without data from assigned Erasmus)
  * from unnotified students
+ * @param req.params.course_year the course year
  */
-// TODO: add param for course_year
 exports.unnotifiedPeersList = function(req, res) {
-  getUnnotifiedPeersList(function(err, list) {
+  var course_year = req.params.course_year;
+  getUnnotifiedPeersList(course_year, function(err, list) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -282,10 +290,11 @@ exports.unnotifiedPeersList = function(req, res) {
 
 /**
  * Fetches the number of peer students
+ * @param req.params.course_year the course year
  */
-// TODO: add param for course_year
 exports.peerCount = function(req, res) {
-  getPeerCount(function(err, count) {
+  var course_year = req.params.course_year;
+  getPeerCount(course_year, function(err, count) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -604,7 +613,6 @@ function deleteAllAssginedErasmus(peer_id, cb) {
 /**
  * Deletes all the students (Erasmus and peers)
  */
-// TODO: add param for course_year
 exports.deleteAllStudents = function(req, res) {
   deleteAllStudents(function(err) {
     if (err) {

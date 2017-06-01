@@ -50,9 +50,9 @@ app.get(    '/api/countries', api.countryList);
 app.get(    '/api/studies', api.studiesList);
 app.get(    '/api/faculties', api.facultyList);
 
-app.get(    '/api/erasmus', auth.ensureAuthenticated, api.erasmusList);
-app.get(    '/api/erasmus/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
-app.get(    '/api/erasmus/count', api.erasmusCount);
+app.get(    '/api/erasmus/:course_year', auth.ensureAuthenticated, api.erasmusList);
+app.get(    '/api/erasmus/:course_year/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
+app.get(    '/api/erasmus/:course_year/count', api.erasmusCount);
 app.post(   '/api/erasmus', api.addErasmus);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
@@ -62,9 +62,9 @@ app.get(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, 
 app.put(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.addMatch);
 app.delete( '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.removeAssignedPeer);
 
-app.get(    '/api/peers', auth.ensureAuthenticated, api.peerList);
-app.get(    '/api/peers/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
-app.get(    '/api/peers/count', api.peerCount);
+app.get(    '/api/peers/:course_year', auth.ensureAuthenticated, api.peerList);
+app.get(    '/api/peers/:course_year/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
+app.get(    '/api/peers/:course_year/count', api.peerCount);
 app.post(   '/api/peers', api.addPeer);
 
 app.get(    '/api/peer/:id', auth.ensureAuthenticated, api.peer);
@@ -76,7 +76,7 @@ app.delete( '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api
 app.delete( '/api/peer/:peer_id/assigned_erasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);
 
 // TODO: make available only for testing?
-app.delete( '/api/students', auth.ensureAuthenticated, api.deleteAllStudents);
+app.delete( '/api/students/:course_year', auth.ensureAuthenticated, api.deleteAllStudents);
 
 app.get(    '/api/match/:course_year', auth.ensureAuthenticated, api.match);
 

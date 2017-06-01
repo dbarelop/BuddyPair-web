@@ -8,6 +8,8 @@ var request = require('request');
 var app = require('../app');
 var should = chai.should();
 
+var COURSE_YEAR = 2016;
+
 var NUM_STUDIES = 17;
 var NUM_FACULTIES = 10;
 var COUNTRIES = [ 'US', 'CA', 'AF', 'AL', 'DZ', 'DS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ', 'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BV', 'BR', 'IO', 'BN', 'BG', 'BF', 'BI', 'KH', 'CM', 'CV', 'KY', 'CF', 'TD', 'CL', 'CN', 'CX', 'CC', 'CO', 'KM', 'CG', 'CK', 'CR', 'HR', 'CU', 'CY', 'CZ', 'DK', 'DJ', 'DM', 'DO', 'TP', 'EC', 'EG', 'SV', 'GQ', 'ER', 'EE', 'ET', 'FK', 'FO', 'FJ', 'FI', 'FR', 'FX', 'GF', 'PF', 'TF', 'GA', 'GM', 'GE', 'DE', 'GH', 'GI', 'GR', 'GL', 'GD', 'GP', 'GU', 'GT', 'GN', 'GW', 'GY', 'HT', 'HM', 'HN', 'HK', 'HU', 'IS', 'IN', 'ID', 'IR', 'IQ', 'IE', 'IL', 'IT', 'CI', 'JM', 'JP', 'JO', 'KZ', 'KE', 'KI', 'KP', 'KR', 'XK', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU', 'MO', 'MK', 'MG', 'MW', 'MY', 'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU', 'TY', 'MX', 'FM', 'MD', 'MC', 'MN', 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA', 'NR', 'NP', 'NL', 'AN', 'NC', 'NZ', 'NI', 'NE', 'NG', 'NU', 'NF', 'MP', 'NO', 'OM', 'PK', 'PW', 'PA', 'PG', 'PY', 'PE', 'PH', 'PN', 'PL', 'PT', 'PR', 'QA', 'RE', 'RO', 'RU', 'RW', 'KN', 'LC', 'VC', 'WS', 'SM', 'ST', 'SA', 'SN', 'RS', 'SC', 'SL', 'SG', 'SK', 'SI', 'SB', 'SO', 'ZA', 'GS', 'ES', 'LK', 'SH', 'PM', 'SD', 'SR', 'SJ', 'SZ', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TG', 'TK', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 'UG', 'UA', 'AE', 'GB', 'UM', 'UY', 'UZ', 'VU', 'VA', 'VE', 'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'YU', 'ZR', 'ZM', 'ZW' ];
@@ -36,7 +38,7 @@ var getRandomErasmus = function(n, cb) {
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
-        course_year: 2016,
+        course_year: COURSE_YEAR,
         register_date: new Date(new Date().getTime() - Math.floor(Math.random() * 10000000000)),
         gender_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
         language_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
@@ -65,7 +67,7 @@ var getRandomPeer = function(n, cb) {
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
-        course_year: 2016,
+        course_year: COURSE_YEAR,
         register_date: new Date(new Date().getTime() - Math.floor(Math.random() * 10000000000)),
         gender_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
         nationality_preference: Math.random() >= 0.5 ? null : COUNTRIES[getRandomInt(0, COUNTRIES.length)],
@@ -142,7 +144,7 @@ describe('GET faculties', function() {
 
 describe('GET erasmus', function() {
   it('it should get all the Erasmus', function(done) {
-    chai.request(app).get('/api/erasmus').end(function(err, res) {
+    chai.request(app).get('/api/erasmus/' + COURSE_YEAR).end(function(err, res) {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(NUM_ERASMUS);
@@ -153,7 +155,7 @@ describe('GET erasmus', function() {
 
 describe('GET peers', function() {
   it('it should get all the peers', function(done) {
-    chai.request(app).get('/api/peers').end(function(err, res) {
+    chai.request(app).get('/api/peers/' + COURSE_YEAR).end(function(err, res) {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(NUM_PEERS);
@@ -164,21 +166,21 @@ describe('GET peers', function() {
 
 describe('GET unnotified students', function() {
   it('it should get all the unnotified peers', function(done) {
-    chai.request(app).get('/api/peers/unnotified').end(function(err, res) {
+    chai.request(app).get('/api/peers/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(0);
-      chai.request(app).get('/api/erasmus/unnotified').end(function(err, res) {
+      chai.request(app).get('/api/erasmus/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
         res.should.have.status(200);
         res.body.should.be.a('array');
         res.body.length.should.be.eql(0);
-        chai.request(app).get('/api/match/2016').end(function(err, res) {
+        chai.request(app).get('/api/match/' + COURSE_YEAR).end(function(err, res) {
           res.should.have.status(200);
-          chai.request(app).get('/api/peers/unnotified').end(function(err, res) {
+          chai.request(app).get('/api/peers/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
             res.should.have.status(200);
             res.body.should.be.a('array');
             res.body.length.should.be.eql(NUM_PEERS);
-            chai.request(app).get('/api/erasmus/unnotified').end(function(err, res) {
+            chai.request(app).get('/api/erasmus/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
               res.should.have.status(200);
               res.body.should.be.a('array');
               res.body.length.should.be.eql(NUM_ERASMUS);
