@@ -23,8 +23,10 @@ div.container
           div.form-group
             label(for='birthdate').control-label.col-md-2 Birthdate
             div.col-md-10
-              // TODO: error binding date because of format
-              input(type='date' id='birthdate' ng-model='peer.birthdate'  required).form-control
+              div(id='birthdate').input-group.date
+                input(type='text' ng-model='peer.birthdate' required).form-control
+                span.input-group-addon
+                  span.glyphicon.glyphicon-calendar
           div.form-group
             label(for='nationality').control-label.col-md-2 Nationality
             div.col-md-10
@@ -68,7 +70,10 @@ div.container
           div.form-group
             label(for='register_date').control-label.col-md-2 Register date
             div.col-md-10
-              input(type='datetime-local' id='register_date' ng-model='peer.register_date' required).form-control
+              div(id='register_date').input-group.date
+                input(type='text' ng-model='peer.register_date' required).form-control
+                span.input-group-addon
+                  span.glyphicon.glyphicon-calendar
           div.form-group
             label(for='gender_preference').control-label.col-md-2 Gender preference
             div.col-md-10

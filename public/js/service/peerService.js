@@ -146,7 +146,7 @@ angular.module('BuddyPairApp.services')
 
     service.editPeer = function(id, peer) {
       var deferred = $q.defer();
-      $http.put('/api/peer/' + id, { erasmus: peer })
+      $http.put('/api/peer/' + id, { peer: peer })
         .success(function() {
           deferred.resolve();
         })

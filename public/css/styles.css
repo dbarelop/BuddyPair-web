@@ -19,8 +19,3 @@ body {
 .footer p {
     color: #9d9d9d;
 }
-
-.input-group-addon {
-    min-width: 150px;
-    text-align: left;
-}

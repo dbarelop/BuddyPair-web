@@ -11,11 +11,11 @@ div(ng-if='peerList !== null')
           h4 Filters
         form.panel-body
           div.input-group
-            span.input-group-addon Name:
+            span(style='min-width: 150px; text-align: left;').input-group-addon Name:
             input(type='text' ng-model='filters.name').form-control
           br
           div.input-group
-            span.input-group-addon Assigned Erasmus:
+            span(style='min-width: 150px; text-align: left;').input-group-addon Assigned Erasmus:
             div.form-control
               // TODO: implement in a more elegant way...
               label.checkbox-inline

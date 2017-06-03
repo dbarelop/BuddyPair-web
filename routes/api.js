@@ -523,7 +523,7 @@ function updateErasmus(id, erasmus, cb) {
 
 function updatePeer(id, peer, cb) {
   var query = 'UPDATE PEER SET register_date = ?, gender_preference = ?, nationality_preference = ?, erasmus_limit = ?, notes = ?, aegee_member = ?, nia = ?, speaks_english = ? WHERE id = ?';
-  connection.query(query, [peer.register_date, peer.gender_preference, peer.nationality_preference, peer.arrival_date, peer.notes, peer.aegee_member, peer.nia, peer.speaks_english, id], cb);
+  connection.query(query, [peer.register_date, peer.gender_preference, peer.nationality_preference, peer.erasmus_limit, peer.notes, peer.aegee_member, peer.nia, peer.speaks_english, id], cb);
 }
 
 /**
@@ -534,7 +534,6 @@ function updatePeer(id, peer, cb) {
 exports.updateErasmus = function(req, res) {
   var erasmus_id = req.params.id;
   var erasmus = req.body.erasmus;
-  // TODO: id parameter shouldn't be obtained from data
   updateStudent(erasmus.student_id, erasmus, function(err, result) {
     if (err) {
       res.status(503).send(err);
@@ -560,14 +559,13 @@ exports.updateErasmus = function(req, res) {
 exports.updatePeer = function(req, res) {
   var peer_id = req.params.id;
   var peer = req.body.peer;
-  // TODO: id parameter shouldn't be obtained from data
   updateStudent(peer.student_id, peer, function(err, result) {
     if (err) {
       res.status(503).send(err);
     } else if (result.affectedRows === 0) {
       res.sendStatus(404);
     } else {
-      updatePeer(peer, function(err, result) {
+      updatePeer(peer_id, peer, function(err, result) {
         if (err) {
           res.status(503).send(err);
         } else {

@@ -11,11 +11,11 @@ div(ng-if='erasmusList !== null')
           h4 Filters
         form.panel-body
           div.input-group
-            span.input-group-addon Name:
+            span(style='min-width: 150px; text-align: left;').input-group-addon Name:
             input(type='text' ng-model='filters.name').form-control
           br
           div.input-group
-            span.input-group-addon Only with peer:
+            span(style='min-width: 150px; text-align: left;').input-group-addon Only with peer:
             div.form-control
               label.radio-inline
                 input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='all')
