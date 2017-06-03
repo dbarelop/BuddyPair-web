@@ -6,7 +6,7 @@ angular.module('BuddyPairApp.services')
 
     service.getList = function(course_year) {
       var deferred = $q.defer();
-      $http.get('/api/erasmus/' + course_year)
+      $http.get('/api/erasmuses/' + course_year)
         .success(function(data) {
           deferred.resolve(data);
         })
@@ -22,7 +22,7 @@ angular.module('BuddyPairApp.services')
 
     service.getCount = function(course_year) {
       var deferred = $q.defer();
-      $http.get('/api/erasmus/' + course_year + '/count')
+      $http.get('/api/erasmuses/' + course_year + '/count')
         .success(function(data) {
           deferred.resolve(data[0]);
         })

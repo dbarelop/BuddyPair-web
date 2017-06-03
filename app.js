@@ -50,10 +50,10 @@ app.get(    '/api/countries', api.countryList);
 app.get(    '/api/studies', api.studiesList);
 app.get(    '/api/faculties', api.facultyList);
 
-app.get(    '/api/erasmus/:course_year', auth.ensureAuthenticated, api.erasmusList);
-app.get(    '/api/erasmus/:course_year/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
-app.get(    '/api/erasmus/:course_year/count', api.erasmusCount);
-app.post(   '/api/erasmus', api.addErasmus);
+app.get(    '/api/erasmuses/:course_year', auth.ensureAuthenticated, api.erasmusList);
+app.get(    '/api/erasmuses/:course_year/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
+app.get(    '/api/erasmuses/:course_year/count', api.erasmusCount);
+app.post(   '/api/erasmuses', api.addErasmus);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.put(    '/api/erasmus/:id', auth.ensureAuthenticated, api.updateErasmus);

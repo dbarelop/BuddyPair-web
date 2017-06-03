@@ -144,7 +144,7 @@ describe('GET faculties', function() {
 
 describe('GET erasmus', function() {
   it('it should get all the Erasmus', function(done) {
-    chai.request(app).get('/api/erasmus/' + COURSE_YEAR).end(function(err, res) {
+    chai.request(app).get('/api/erasmuses/' + COURSE_YEAR).end(function(err, res) {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(NUM_ERASMUS);
@@ -170,7 +170,7 @@ describe('GET unnotified students', function() {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(0);
-      chai.request(app).get('/api/erasmus/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
+      chai.request(app).get('/api/erasmuses/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
         res.should.have.status(200);
         res.body.should.be.a('array');
         res.body.length.should.be.eql(0);
@@ -180,7 +180,7 @@ describe('GET unnotified students', function() {
             res.should.have.status(200);
             res.body.should.be.a('array');
             res.body.length.should.be.eql(NUM_PEERS);
-            chai.request(app).get('/api/erasmus/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
+            chai.request(app).get('/api/erasmuses/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
               res.should.have.status(200);
               res.body.should.be.a('array');
               res.body.length.should.be.eql(NUM_ERASMUS);
