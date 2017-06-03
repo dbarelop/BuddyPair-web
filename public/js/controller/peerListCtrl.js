@@ -35,10 +35,16 @@ angular.module('BuddyPairApp.controllers')
       });
     };
     
-    $scope.peerList = null;
-    PeerService.getList($scope.selected_course_year).then(function (peerList) {
-      $scope.peerList = peerList;
-    }, function (err) {
-      $scope.error = err.message.code;
+    $scope.loadData = function(course_year) {
+      PeerService.getList(course_year).then(function (peerList) {
+        $scope.peerList = peerList;
+      }, function (err) {
+        $scope.error = err.message.code;
+      });
+    };
+
+    $scope.$watch('selected_course_year.item', function() {
+      $scope.loadData($scope.selected_course_year.item);
     });
+    
   }]);

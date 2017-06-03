@@ -23,10 +23,17 @@ angular.module('BuddyPairApp.controllers')
         $scope.error = err.message.code;
       });
     };
+    
+    $scope.loadData = function(course_year) {
+      ErasmusService.getList(course_year).then(function(data) {
+        $scope.erasmusList = data;
+      }, function(err) {
+        $scope.error = err.message.code;
+      });
+    };
 
-    ErasmusService.getList($scope.selected_course_year).then(function(data) {
-      $scope.erasmusList = data;
-    }, function(err) {
-      $scope.error = err.message.code;
+    $scope.$watch('selected_course_year.item', function() { 
+      $scope.loadData($scope.selected_course_year.item); 
     });
+    
   }]);

@@ -19,7 +19,7 @@ angular.module('BuddyPairApp.controllers')
       $scope.selectedPeer = $scope.erasmus.assignedPeer;
     };
     $scope.availablePeers = null;
-    PeerService.getList($scope.selected_course_year).then(function(peers) { $scope.availablePeers = peers; });
+    PeerService.getList($scope.selected_course_year.item).then(function(peers) { $scope.availablePeers = peers; });
     $scope.updateAssignedPeer = function() {
       if (!$scope.selectedPeer && $scope.erasmus.assignedPeer) {
         // If there's no selected peer and the Erasmus previously had one, delete it
@@ -29,7 +29,7 @@ angular.module('BuddyPairApp.controllers')
         // If there is a new selected peer and the Erasmus didn't have one, add it
         $scope.selectedPeer.num_erasmus++;
         ErasmusService.setAssignedPeer($scope.erasmus.erasmus_id, $scope.selectedPeer.peer_id);
-      } else if ($scope.selectedPeer && $scope.erasmus.assignedPeer && $scope.erasmus.assignedPeer.peer_id != $scope.selectedPeer.peer_id) {
+      } else if ($scope.selectedPeer && $scope.erasmus.assignedPeer && $scope.erasmus.assignedPeer.peer_id !== $scope.selectedPeer.peer_id) {
         // If there is a new selected peer, the Erasmus had already an assigned peer and it's not the same as the selected one, replace it
         $scope.selectedPeer.num_erasmus++;
         $scope.erasmus.assignedPeer.num_erasmus--;
