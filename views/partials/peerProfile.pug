@@ -19,7 +19,7 @@ div(ng-if='peer !== null')
               | {{peer.birthdate}}
             li(ng-if='peer.nationality !== ""')
               b Nationality: 
-              | {{peer.nationality}}
+              | {{(countries | filter : {'country_code': peer.nationality} : true)[0].country_name}}
             li(ng-if='peer.email !== ""')
               b Email: 
               | {{peer.email}}
@@ -34,10 +34,10 @@ div(ng-if='peer !== null')
               | {{peer.nia}}
             li(ng-if='peer.studies_name !== ""')
               b Studies: 
-              | {{peer.studies_name}}
+              | {{(studies | filter : {'id': peer.studies} : true)[0].name}}
             li(ng-if='peer.faculty_name !== ""')
               b Faculty: 
-              | {{peer.faculty_name}}
+              | {{(faculties | filter : {'id': peer.faculty} : true)[0].name}}
             li(ng-if='peer.speaks_english !== ""')
               b Speaks English? 
               | {{peer.speaks_english ? "Yes" : "No"}}

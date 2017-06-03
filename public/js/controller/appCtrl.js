@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('BuddyPairApp.controllers')
-  .controller('AppCtrl', ['$scope', '$route', '$http', '$auth', function($scope, $route, $http, $auth) {
+  .controller('AppCtrl', ['$scope', '$route', '$http', '$auth', 'DatabaseService', function($scope, $route, $http, $auth, DatabaseService) {
     $scope.$route = $route;
     $http.get('/api/me').then(function (data) {
       $scope.user = data.data;
@@ -33,4 +33,11 @@ angular.module('BuddyPairApp.controllers')
     };
     $scope.available_course_years = [2015, 2016, 2017];
     $scope.selected_course_year = {item: $scope.available_course_years[1]};
+
+    $scope.countries = [];
+    $scope.studies = [];
+    $scope.faculties = [];
+    DatabaseService.getCountries().then(function(list) { $scope.countries = list; });
+    DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
+    DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
   }]);

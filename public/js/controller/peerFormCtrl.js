@@ -2,14 +2,6 @@
 
 angular.module('BuddyPairApp.controllers')
   .controller('NewPeerCtrl', ['$scope', '$location', 'PeerService', 'DatabaseService', function($scope, $location, PeerService, DatabaseService) {
-    // TODO: get from database *efficiently*
-    $scope.countries = [];
-    $scope.studies = [];
-    $scope.faculties = [];
-    DatabaseService.getCountries().then(function(list) { $scope.countries = list; });
-    DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
-    DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
-
     $scope.peer = {};
     $scope.peer.erasmus_limit = 1;
 
@@ -36,14 +28,6 @@ angular.module('BuddyPairApp.controllers')
     });
   }])
   .controller('EditPeerCtrl', ['$scope', '$location', '$routeParams', 'PeerService', 'DatabaseService', function($scope, $location, $routeParams, PeerService, DatabaseService) {
-    // TODO: get from database *efficiently*
-    $scope.countries = [];
-    $scope.studies = [];
-    $scope.faculties = [];
-    DatabaseService.getCountries().then(function(list) { $scope.countries = list; });
-    DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
-    DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
-
     PeerService.getById($routeParams.id).then(function(peer) { $scope.peer = peer; });
 
     $scope.submit = function() {

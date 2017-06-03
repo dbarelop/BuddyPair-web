@@ -19,19 +19,19 @@ div(ng-if='erasmus !== null')
               | {{erasmus.birthdate}}
             li(ng-if='erasmus.nationality !== ""')
               b Nationality: 
-              | {{erasmus.nationality}}
+              | {{(countries | filter : {'country_code': erasmus.nationality} : true)[0].country_name}}
             li(ng-if='erasmus.email !== ""')
               b Email: 
               | {{erasmus.email}}
             li(ng-if='erasmus.phone !== ""')
-              b Phone: 
+              b Phone:
               | {{erasmus.phone}}
             li(ng-if='erasmus.studies_name !== ""')
               b Studies: 
-              | {{erasmus.studies_name}}
+              | {{(studies | filter : {'id': erasmus.studies} : true)[0].name}}
             li(ng-if='erasmus.faculty_name !== ""')
               b Faculty: 
-              | {{erasmus.faculty_name}}
+              | {{(faculties | filter : {'id': erasmus.faculty} : true)[0].name}}
       div.panel.panel-default
         div.panel-heading
           h4 Buddy Pair information
