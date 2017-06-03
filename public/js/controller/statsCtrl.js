@@ -180,8 +180,8 @@ angular.module('BuddyPairApp.controllers')
       });
     };
 
-    $scope.$watch('selected_semester_id.item', function() {
-      $scope.loadData($scope.selected_semester_id.item);
+    $scope.$watch('selected_semester.value.id', function() {
+      $scope.loadData($scope.selected_semester.value.id);
     });
     
   }]);

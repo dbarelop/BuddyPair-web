@@ -35,14 +35,13 @@ angular.module('BuddyPairApp.controllers')
     $scope.countries = [];
     $scope.studies = [];
     $scope.faculties = [];
-    /*$scope.semesters = [{id: 1, name: 'first'}, {id: 2, name: 'second'}];
-    $scope.selected_semester_id = {item: 1};*/
+    $scope.semesters = [];
+    $scope.selected_semester = {item: ''};
     DatabaseService.getCountries().then(function(list) { $scope.countries = list; });
     DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
     DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
     DatabaseService.getSemesters().then(function(list) {
       $scope.semesters = list;
-      $scope.selected_semester_id.item = $scope.semesters[0].id;
-      $('#semester_picker').selectpicker('refresh');
+      $scope.selected_semester.value = $scope.semesters[0];
     });
   }]);

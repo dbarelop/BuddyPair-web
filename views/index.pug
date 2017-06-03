@@ -46,4 +46,8 @@ block body
       div.container
         p.navbar-text Developed by #[a(href='https://github.com/dbarelop') Daniel Barea] for #[a(href='http://aegee-zaragoza.org') AEGEE-Zaragoza]
         div(ng-if='isAuthenticated()').navbar-form.navbar-right
-          select(id='semester_picker' ng-model='selected_semester_id.item' ng-options='s.id as s.name for s in semesters').selectpicker
+          ui-select(ng-model='selected_semester.value')
+            ui-select-match
+              span(ng-bind='$select.selected.name')
+            ui-select-choices(repeat='s in (semesters | filter: $select.search) track by s.id')
+              span(ng-bind='s.name')
