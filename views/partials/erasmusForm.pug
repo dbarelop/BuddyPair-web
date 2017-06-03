@@ -30,9 +30,8 @@ div.container
           div.form-group
             label(for='nationality').control-label.col-md-2 Nationality
             div.col-md-10
-              select(id='nationality' ng-model='erasmus.nationality_name' required).form-control
+              select(id='nationality' ng-model='erasmus.nationality' ng-options='c.country_code as c.country_name for c in countries' required).form-control
                 option(value='' disabled='disabled')
-                option(ng-repeat='c in countries') {{c.country_name}}
           div.form-group
             label(for='email').control-label.col-md-2 Email
             div.col-md-10
@@ -44,15 +43,11 @@ div.container
           div.form-group
             label(for='studies').control-label.col-md-2 Studies
             div.col-md-10
-              select(id='studies' ng-model='erasmus.studies_name').form-control
-                //option(ng-repeat='s in studies' ng-value='s.id') {{s.name}}
-                option(ng-repeat='s in studies') {{s.name}}
+              select(id='studies' ng-model='erasmus.studies' ng-options='s.id as s.name for s in studies').form-control
           div.form-group
             label(for='faculty').control-label.col-md-2 Faculty
             div.col-md-10
-              select(id='faculty' ng-model='erasmus.faculty_name').form-control
-                //option(ng-repeat='f in faculties' ng-value='f.id') {{f.name}}
-                option(ng-repeat='f in faculties') {{f.name}}
+              select(id='faculty' ng-model='erasmus.faculty' ng-options='f.id as f.name for f in faculties').form-control
       div.panel.panel-default
         div.panel-heading
           h4 Erasmus information

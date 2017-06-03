@@ -46,12 +46,12 @@ angular.module('BuddyPairApp.controllers')
     $scope.countries = [];
     $scope.studies = [];
     $scope.faculties = [];
-    DatabaseService.getCountries().then(function(list) { $scope.countries = list; });
-    DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
-    DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
+    DatabaseService.getCountries().then(function(list) { $scope.countries = list; console.log(list); });
+    DatabaseService.getStudies().then(function(list) { $scope.studies = list; console.log(list); });
+    DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; console.log(list); });
 
     //$scope.erasmus = {};
-    ErasmusService.getById($routeParams.id).then(function(erasmus) { $scope.erasmus = erasmus; });
+    ErasmusService.getById($routeParams.id).then(function(erasmus) { $scope.erasmus = erasmus; console.log(erasmus); });
 
     $scope.submit = function() {
       ErasmusService.editErasmus($scope.erasmus.erasmus_id, $scope.erasmus).then(function() {
