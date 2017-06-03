@@ -46,4 +46,4 @@ block body
       div.container
         p.navbar-text Developed by #[a(href='https://github.com/dbarelop') Daniel Barea] for #[a(href='http://aegee-zaragoza.org') AEGEE-Zaragoza]
         div(ng-if='isAuthenticated()').navbar-form.navbar-right
-          select(ng-model='selected_course_year.item' ng-options='opt as opt for opt in available_course_years').selectpicker
+          select(id='semester_picker' ng-model='selected_semester_id.item' ng-options='s.id as s.name for s in semesters').selectpicker

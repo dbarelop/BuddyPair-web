@@ -52,5 +52,21 @@ angular.module('BuddyPairApp.services')
       return deferred.promise;
     };
 
+    service.getSemesters = function() {
+      var deferred = $q.defer();
+      $http.get('/api/semesters')
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(msg, code) {
+          deferred.reject({
+            code: code,
+            message: msg
+          });
+          console.log(msg);
+        });
+      return deferred.promise;
+    };
+
     return service;
   });

@@ -49,10 +49,11 @@ app.get(    '/api/me', auth.ensureAuthenticated, auth.findUser);
 app.get(    '/api/countries', api.countryList);
 app.get(    '/api/studies', api.studiesList);
 app.get(    '/api/faculties', api.facultyList);
+app.get(    '/api/semesters', api.semesterList);
 
-app.get(    '/api/erasmuses/:course_year', auth.ensureAuthenticated, api.erasmusList);
-app.get(    '/api/erasmuses/:course_year/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
-app.get(    '/api/erasmuses/:course_year/count', api.erasmusCount);
+app.get(    '/api/erasmuses/:semester_id', auth.ensureAuthenticated, api.erasmusList);
+app.get(    '/api/erasmuses/:semester_id/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
+app.get(    '/api/erasmuses/:semester_id/count', api.erasmusCount);
 app.post(   '/api/erasmuses', api.addErasmus);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
@@ -62,9 +63,9 @@ app.get(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, 
 app.put(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.addMatch);
 app.delete( '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.removeAssignedPeer);
 
-app.get(    '/api/peers/:course_year', auth.ensureAuthenticated, api.peerList);
-app.get(    '/api/peers/:course_year/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
-app.get(    '/api/peers/:course_year/count', api.peerCount);
+app.get(    '/api/peers/:semester_id', auth.ensureAuthenticated, api.peerList);
+app.get(    '/api/peers/:semester_id/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
+app.get(    '/api/peers/:semester_id/count', api.peerCount);
 app.post(   '/api/peers', api.addPeer);
 
 app.get(    '/api/peer/:id', auth.ensureAuthenticated, api.peer);
@@ -76,9 +77,9 @@ app.delete( '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api
 app.delete( '/api/peer/:peer_id/assigned_erasmus/:erasmus_id', auth.ensureAuthenticated, api.removeAssignedErasmus);
 
 // TODO: make available only for testing?
-app.delete( '/api/students/:course_year', auth.ensureAuthenticated, api.deleteAllStudents);
+app.delete( '/api/students', auth.ensureAuthenticated, api.deleteAllStudents);
 
-app.get(    '/api/match/:course_year', auth.ensureAuthenticated, api.match);
+app.get(    '/api/match/:semester_id', auth.ensureAuthenticated, api.match);
 
 // redirect all others to the index (HTML5 history)
 app.get(    '*', routes.index);

@@ -31,13 +31,18 @@ angular.module('BuddyPairApp.controllers')
         console.log('Logged out');
       });
     };
-    $scope.available_course_years = [2015, 2016, 2017];
-    $scope.selected_course_year = {item: $scope.available_course_years[1]};
 
     $scope.countries = [];
     $scope.studies = [];
     $scope.faculties = [];
+    /*$scope.semesters = [{id: 1, name: 'first'}, {id: 2, name: 'second'}];
+    $scope.selected_semester_id = {item: 1};*/
     DatabaseService.getCountries().then(function(list) { $scope.countries = list; });
     DatabaseService.getStudies().then(function(list) { $scope.studies = list; });
     DatabaseService.getFaculties().then(function(list) { $scope.faculties = list; });
+    DatabaseService.getSemesters().then(function(list) {
+      $scope.semesters = list;
+      $scope.selected_semester_id.item = $scope.semesters[0].id;
+      $('#semester_picker').selectpicker('refresh');
+    });
   }]);

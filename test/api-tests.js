@@ -8,7 +8,7 @@ var request = require('request');
 var app = require('../app');
 var should = chai.should();
 
-var COURSE_YEAR = 2016;
+var SEMESTER_ID = 201601;
 
 var NUM_STUDIES = 17;
 var NUM_FACULTIES = 10;
@@ -38,7 +38,7 @@ var getRandomErasmus = function(n, cb) {
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
-        course_year: COURSE_YEAR,
+        semester_id: SEMESTER_ID,
         register_date: new Date(new Date().getTime() - Math.floor(Math.random() * 10000000000)),
         gender_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
         language_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
@@ -67,7 +67,7 @@ var getRandomPeer = function(n, cb) {
         phone: p.cell,
         studies: getRandomInt(1, NUM_STUDIES + 1),
         faculty: getRandomInt(1, NUM_FACULTIES + 1),
-        course_year: COURSE_YEAR,
+        semester_id: SEMESTER_ID,
         register_date: new Date(new Date().getTime() - Math.floor(Math.random() * 10000000000)),
         gender_preference: Math.random() >= 0.5 ? null : Math.random() >= 0.5,
         nationality_preference: Math.random() >= 0.5 ? null : COUNTRIES[getRandomInt(0, COUNTRIES.length)],
@@ -91,7 +91,7 @@ before(function(done) {
       getRandomPeer(NUM_PEERS, function(peers) {
         var inserted = 0;
         erasmus.forEach(function(e) {
-          chai.request(app).post('/api/erasmus').send({ erasmus: e }).end(function() {
+          chai.request(app).post('/api/erasmuses').send({ erasmus: e }).end(function() {
             if (++inserted === erasmus.length + peers.length) {
               done();
             }
@@ -144,7 +144,7 @@ describe('GET faculties', function() {
 
 describe('GET erasmus', function() {
   it('it should get all the Erasmus', function(done) {
-    chai.request(app).get('/api/erasmuses/' + COURSE_YEAR).end(function(err, res) {
+    chai.request(app).get('/api/erasmuses/' + SEMESTER_ID).end(function(err, res) {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(NUM_ERASMUS);
@@ -155,7 +155,7 @@ describe('GET erasmus', function() {
 
 describe('GET peers', function() {
   it('it should get all the peers', function(done) {
-    chai.request(app).get('/api/peers/' + COURSE_YEAR).end(function(err, res) {
+    chai.request(app).get('/api/peers/' + SEMESTER_ID).end(function(err, res) {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(NUM_PEERS);
@@ -166,21 +166,21 @@ describe('GET peers', function() {
 
 describe('GET unnotified students', function() {
   it('it should get all the unnotified peers', function(done) {
-    chai.request(app).get('/api/peers/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
+    chai.request(app).get('/api/peers/' + SEMESTER_ID + '/unnotified').end(function(err, res) {
       res.should.have.status(200);
       res.body.should.be.a('array');
       res.body.length.should.be.eql(0);
-      chai.request(app).get('/api/erasmuses/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
+      chai.request(app).get('/api/erasmuses/' + SEMESTER_ID + '/unnotified').end(function(err, res) {
         res.should.have.status(200);
         res.body.should.be.a('array');
         res.body.length.should.be.eql(0);
-        chai.request(app).get('/api/match/' + COURSE_YEAR).end(function(err, res) {
+        chai.request(app).get('/api/match/' + SEMESTER_ID).end(function(err, res) {
           res.should.have.status(200);
-          chai.request(app).get('/api/peers/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
+          chai.request(app).get('/api/peers/' + SEMESTER_ID + '/unnotified').end(function(err, res) {
             res.should.have.status(200);
             res.body.should.be.a('array');
             res.body.length.should.be.eql(NUM_PEERS);
-            chai.request(app).get('/api/erasmuses/' + COURSE_YEAR + '/unnotified').end(function(err, res) {
+            chai.request(app).get('/api/erasmuses/' + SEMESTER_ID + '/unnotified').end(function(err, res) {
               res.should.have.status(200);
               res.body.should.be.a('array');
               res.body.length.should.be.eql(NUM_ERASMUS);

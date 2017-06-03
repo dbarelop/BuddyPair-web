@@ -9,7 +9,7 @@ angular.module('BuddyPairApp.controllers')
     PeerService.getById($routeParams.id).then(function(peer) {
       $scope.peer = peer;
       $scope.selectedErasmus = peer.assignedErasmus.slice();
-      ErasmusService.getList($scope.selected_course_year.item).then(function(erasmusList) {
+      ErasmusService.getList($scope.selected_semester_id.item).then(function(erasmusList) {
         $scope.availableErasmus = erasmusList.filter(function(e1) {
           var isAssigned = false;
           peer.assignedErasmus.forEach(function(e2) { isAssigned |= e1.erasmus_id === e2.erasmus_id; });

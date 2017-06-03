@@ -24,16 +24,16 @@ angular.module('BuddyPairApp.controllers')
       });
     };
     
-    $scope.loadData = function(course_year) {
-      ErasmusService.getList(course_year).then(function(data) {
+    $scope.loadData = function(semester_id) {
+      ErasmusService.getList(semester_id).then(function(data) {
         $scope.erasmusList = data;
       }, function(err) {
         $scope.error = err.message.code;
       });
     };
 
-    $scope.$watch('selected_course_year.item', function() { 
-      $scope.loadData($scope.selected_course_year.item); 
+    $scope.$watch('selected_semester_id.item', function() { 
+      $scope.loadData($scope.selected_semester_id.item); 
     });
     
   }]);
