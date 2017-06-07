@@ -58,6 +58,7 @@ app.post(   '/api/erasmuses', auth.ensureAuthenticated, api.addErasmus);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.put(    '/api/erasmus/:id', auth.ensureAuthenticated, api.updateErasmus);
+app.put(    '/api/erasmus/:id/notify', auth.ensureAuthenticated, api.notifyErasmus);
 app.delete( '/api/erasmus/:id', auth.ensureAuthenticated, api.deleteErasmus);
 app.get(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.assignedPeer);
 app.put(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.addMatch);
@@ -70,6 +71,7 @@ app.post(   '/api/peers', auth.ensureAuthenticated, api.addPeer);
 
 app.get(    '/api/peer/:id', auth.ensureAuthenticated, api.peer);
 app.put(    '/api/peer/:id', auth.ensureAuthenticated, api.updatePeer);
+app.put(    '/api/peer/:id/notify', auth.ensureAuthenticated, api.notifyPeer);
 app.delete( '/api/peer/:id', auth.ensureAuthenticated, api.deletePeer);
 app.get(    '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.assignedErasmus);
 app.put(    '/api/peer/:peer_id/assigned_erasmus', auth.ensureAuthenticated, api.addMatch);

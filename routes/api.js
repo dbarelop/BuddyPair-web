@@ -544,6 +544,16 @@ function updatePeer(id, peer, cb) {
   connection.query(query, [peer.register_date, peer.gender_preference, peer.nationality_preference, peer.erasmus_limit, peer.notes, peer.aegee_member, peer.nia, peer.speaks_english, id], cb);
 }
 
+function setErasmusNotified(id, cb) {
+  var query = 'UPDATE BUDDY_PAIR SET notified_erasmus = true WHERE erasmus = ?';
+  connection.query(query, id, cb);
+}
+
+function setPeerNotified(id, cb) {
+  var query = 'UPDATE BUDDY_PAIR SET notified_peer = true WHERE peer = ?';
+  connection.query(query, id, cb);
+}
+
 /**
  * Updates an Erasmus with the new information (the id isn't modified)
  * @param req.params.id the Erasmus' id
@@ -570,8 +580,23 @@ exports.updateErasmus = function(req, res) {
 };
 
 /**
+ * Updates an Erasmus student's status as notified
+ * @param req.params.id the Erasmus' id
+ */
+exports.notifyErasmus = function(req, res) {
+  var erasmus_id = req.params.id;
+  setErasmusNotified(erasmus_id, function(err, result) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.sendStatus(result.affectedRows === 0 ? 404 : 204);
+    }
+  });
+};
+
+/**
  * Updates a peer student with the new information (the id isn't modified)
- * @param req.params.id the peer's id
+ * @param req.params.peer_id the peer's id
  * @param res.body.peer the peer's new information
  */
 exports.updatePeer = function(req, res) {
@@ -590,6 +615,21 @@ exports.updatePeer = function(req, res) {
           res.sendStatus(result.affectedRows === 0 ? 404 : 204);
         }
       });
+    }
+  });
+};
+
+/**
+ * Updates a peer student's status as notified
+ * @param req.params.id the peer's id
+ */
+exports.notifyPeer = function(req, res) {
+  var peer_id = req.params.id;
+  setPeerNotified(peer_id, function(err, result) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.sendStatus(result.affectedRows === 0 ? 404 : 204);
     }
   });
 };
