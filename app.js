@@ -54,7 +54,7 @@ app.get(    '/api/semesters', api.semesterList);
 app.get(    '/api/erasmuses/:semester_id', auth.ensureAuthenticated, api.erasmusList);
 app.get(    '/api/erasmuses/:semester_id/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
 app.get(    '/api/erasmuses/:semester_id/count', api.erasmusCount);
-app.post(   '/api/erasmuses', api.addErasmus);
+app.post(   '/api/erasmuses', auth.ensureAuthenticated, api.addErasmus);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
 app.put(    '/api/erasmus/:id', auth.ensureAuthenticated, api.updateErasmus);
@@ -66,7 +66,7 @@ app.delete( '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, 
 app.get(    '/api/peers/:semester_id', auth.ensureAuthenticated, api.peerList);
 app.get(    '/api/peers/:semester_id/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
 app.get(    '/api/peers/:semester_id/count', api.peerCount);
-app.post(   '/api/peers', api.addPeer);
+app.post(   '/api/peers', auth.ensureAuthenticated, api.addPeer);
 
 app.get(    '/api/peer/:id', auth.ensureAuthenticated, api.peer);
 app.put(    '/api/peer/:id', auth.ensureAuthenticated, api.updatePeer);
@@ -91,13 +91,3 @@ app.get(    '*', routes.index);
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-/*var privateKey = fs.readFileSync('./sslcert/server.key', 'utf8');
- var certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
- var credentials = {
- key: privateKey,
- cert: certificate
- };
- https.createServer(credentials, app).listen(app.get('sport'), function() {
- console.log('Secure Express server listening on port ' + app.get('sport'));
- });*/

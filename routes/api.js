@@ -48,7 +48,7 @@ function getFacultyList(cb) {
 }
 
 function getSemesterList(cb) {
-  var query = 'SELECT * FROM SEMESTER';
+  var query = 'SELECT * FROM SEMESTER ORDER BY id DESC';
   connection.query(query, cb);
 }
 
