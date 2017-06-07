@@ -63,16 +63,12 @@ exports.googleAuth = function(req, res) {
 exports.ensureAuthenticated = function(req, res, next) {
   if (DEBUG) {
     next();
-  } else {
-    if (!req.headers.authorization) {
-      return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
-    }
-
+  } else if (!req.headers.authorization) {
+    return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
+  } else if (req.headers.authorization === new Buffer(TOKEN_SECRET).toString('base64')) {
     // Static authentication implementation
-    if (req.headers.authorization === TOKEN_SECRET) {
-      next();
-    }
-
+    next();
+  } else {
     var token = req.headers.authorization.split(' ')[1];
 
     var payload = null;
