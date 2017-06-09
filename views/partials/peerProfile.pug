@@ -52,6 +52,9 @@ div(ng-if='peer !== null')
             li(ng-if='peer.gender_preference !== null')
               b Gender preference: 
               | {{peer.gender_preference ? "Male" : "Female"}}
+            li(ng-if='peer.nationality_preference !== null')
+              b Nationality preference:
+              | {{(countries | filter : {'country_code': peer.nationality_preference} : true)[0].country_name}}
             li(ng-if='peer.erasmus_limit !== ""')
               b Erasmus limit: 
               | {{peer.erasmus_limit}}
