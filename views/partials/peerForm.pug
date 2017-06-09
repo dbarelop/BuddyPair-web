@@ -82,7 +82,7 @@ div.container
           div.form-group
             label(for='nationality_preference').control-label.col-md-2 Nationality preference
             div.col-md-10
-              select(id='nationality_preference' ng-model='peer.nationality_preference_name').form-control
+              select(id='nationality_preference' ng-model='peer.nationality_preference' ng-options='c.country_code as c.country_name for c in countries' required).form-control
                 option(ng-repeat='c in countries') {{c.country_name}}
           div.form-group
             label(for='erasmus_limit').control-label.col-md-2 Limit of Erasmus
