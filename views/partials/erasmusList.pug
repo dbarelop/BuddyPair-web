@@ -50,9 +50,9 @@ div(ng-if='erasmusList !== null')
             td {{e.id}}
             td {{e.register_date}}
             td {{e.name}} {{e.surname}}
-            td {{e.nationality}}
-            td {{e.studies_name}}
-            td {{e.faculty_name}}
+            td {{(countries | filter : {'country_code': e.nationality} : true)[0].country_name}}
+            td {{(studies | filter : {'id': e.studies} : true)[0].name}}
+            td {{(faculties | filter : {'id': e.faculty} : true)[0].name}}
             td {{e.has_peer ? "Yes" : "No"}}
       div(ng-if='erasmusList == null').text-center
         img(src='/img/giphy.gif')

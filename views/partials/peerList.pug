@@ -54,9 +54,9 @@ div(ng-if='peerList !== null')
             td {{p.id}}
             td {{p.register_date}}
             td {{p.name}} {{p.surname}}
-            td {{p.nationality}}
-            td {{p.studies_name}}
-            td {{p.faculty_name}}
+            td {{(countries | filter : {'country_code': p.nationality} : true)[0].country_name}}
+            td {{(studies | filter : {'id': p.studies} : true)[0].name}}
+            td {{(faculties | filter : {'id': p.faculty} : true)[0].name}}
             td {{p.num_erasmus}}
       div(ng-if='peerList == null').text-center
         img(src='/img/giphy.gif')
