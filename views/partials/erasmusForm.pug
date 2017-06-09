@@ -88,5 +88,5 @@ div.container
             label(for='notes').control-label.col-md-2 Notes
             div.col-md-10
               textarea(rows='5' id='notes' ng-model='erasmus.notes').form-control
-      button(type='button' style='margin-right: 5px;').btn.btn-default Cancel
+      a(href='/erasmus/{{erasmus.erasmus_id}}' style='margin-right: 5px;').btn.btn-default Cancel
       button(type='submit').btn.btn-primary Submit
