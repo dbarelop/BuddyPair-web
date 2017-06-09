@@ -92,5 +92,5 @@ div.container
             label(for='notes').control-label.col-md-2 Notes
             div.col-md-10
               textarea(rows='5' id='notes' ng-model='peer.notes').form-control
-      a(href='/peer/{{peer.peer_id}}' style='margin-right: 5px;').btn.btn-default Cancel
+      a(href="{{peer.peer_id ? '/peer/' + peer.peer_id : '/peers'}}" style='margin-right: 5px;').btn.btn-default Cancel
       button(type='submit').btn.btn-primary Submit
