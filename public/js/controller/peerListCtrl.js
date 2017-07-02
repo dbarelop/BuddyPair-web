@@ -27,8 +27,8 @@ angular.module('BuddyPairApp.controllers')
       return nameFilter && assignedErasmusFilter;
     };
 
-    $scope.match_students = function() {
-      StudentService.matchStudents().then(function() {
+    $scope.match_students = function(semester_id) {
+      StudentService.matchStudents(semester_id).then(function() {
         $route.reload();
       }, function(err) {
         $scope.error = err.message.code;

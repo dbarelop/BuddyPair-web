@@ -31,7 +31,7 @@ div(ng-if='erasmusList !== null')
         div.panel-heading
           h4 Actions
         div.panel-body
-          button(type='button' ng-click='match_students()').list-group-item Match
+          button(type='button' ng-click='match_students(selected_semester.value.id)').list-group-item Match
           a(href='/erasmus/new').list-group-item Add Erasmus
   div.row
     div.col-md-12.visible-lg.visible-md.hidden-sm.hidden-xs

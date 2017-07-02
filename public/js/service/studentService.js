@@ -4,9 +4,9 @@ angular.module('BuddyPairApp.services')
   .service('StudentService', function($q, $http) {
     var service = {};
 
-    service.matchStudents = function() {
+    service.matchStudents = function(semester_id) {
       var deferred = $q.defer();
-      $http.get('/api/match')
+      $http.get('/api/match/' + semester_id)
         .success(function() {
           deferred.resolve();
         })
