@@ -15,6 +15,29 @@ div(ng-if='erasmusList !== null')
             input(type='text' ng-model='filters.name').form-control
           br
           div.input-group
+            span(style='min-width: 150px; text-align: left;').input-group-addon Gender:
+            div.form-control
+              label.radio-inline
+                input(name='male' type='radio' ng-model='filters.gender' value='all')
+                | All
+              label.radio-inline
+                input(name='male' type='radio' ng-model='filters.gender' value='m')
+                | Male
+              label.radio-inline
+                input(name='female' type='radio' ng-model='filters.gender' value='f')
+                | Female
+          br
+          div.input-group
+            span(style='min-width: 150px; text-align: left;').input-group-addon Nationality:
+            // TODO: fix alignment of suggestions
+            // TODO: add 'any country' selection
+            ui-select(ng-model='filters.nationality')
+              ui-select-match
+                span(ng-bind='$select.selected.country_name')
+              ui-select-choices(repeat='c in (countries | filter: $select.search) track by c.country_code')
+                span(ng-bind='c.country_name')
+          br
+          div.input-group
             span(style='min-width: 150px; text-align: left;').input-group-addon Only with peer:
             div.form-control
               label.radio-inline
