@@ -65,15 +65,25 @@ function getErasmusList(semester_id, cb) {
 }
 
 function getUnnotifiedErasmusList(semester_id, cb) {
-  var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
-    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
+  var query =
+    'SELECT ' +
+    '  e.id                  AS erasmus_id, ' +
+    '  erasmus_student.email AS erasmus_email, ' +
+    '  peer_student.name     AS peer_name, ' +
+    '  peer_student.surname  AS peer_surname, ' +
+    '  fac.name              AS peer_faculty, ' +
+    '  std.name              AS peer_studies, ' +
+    '  peer_student.email    AS peer_email, ' +
+    '  e.id                  AS erasmus_id ' +
     'FROM ERASMUS e ' +
-    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'INNER JOIN BUDDY_PAIR bp ON bp.erasmus = e.id ' +
+    '  INNER JOIN STUDENT erasmus_student ON e.erasmus = erasmus_student.id ' +
+    '  INNER JOIN BUDDY_PAIR bp ON bp.erasmus = e.id ' +
+    '  INNER JOIN PEER p ON p.id = bp.peer ' +
+    '  INNER JOIN STUDENT peer_student ON p.peer = peer_student.id ' +
+    '  LEFT JOIN STUDIES std ON peer_student.studies = std.id ' +
+    '  LEFT JOIN FACULTY fac ON peer_student.faculty = fac.id ' +
     'WHERE e.semester_id = ? AND NOT bp.notified_erasmus ' +
-    'ORDER BY e.register_date ASC';
+    'ORDER BY e.register_date ASC ';
   connection.query(query, semester_id, cb);
 }
 
@@ -109,15 +119,26 @@ function getPeerList(semester_id, cb) {
 }
 
 function getUnnotifiedPeersList(semester_id, cb) {
-  var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
-    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
-    'FROM PEER p ' +
-    'INNER JOIN STUDENT s ON p.peer = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'INNER JOIN BUDDY_PAIR bp ON bp.peer = p.id ' +
+  var query =
+    'SELECT ' +
+    '  p.id                    AS peer_id, ' +
+    '  peer_student.email      AS peer_email, ' +
+    '  erasmus_student.name    AS erasmus_name, ' +
+    '  erasmus_student.surname AS erasmus_surname, ' +
+    '  cntr.country_name       AS erasmus_nationality, ' +
+    '  fac.name                AS erasmus_faculty, ' +
+    '  std.name                AS erasmus_studies, ' +
+    '  erasmus_student.email   AS erasmus_email, ' +
+    '  peer_student.email      AS peer_email ' +
+    'FROM PEER p INNER JOIN STUDENT peer_student ON p.peer = peer_student.id ' +
+    '  INNER JOIN BUDDY_PAIR bp ON bp.peer = p.id ' +
+    '  INNER JOIN ERASMUS e ON bp.erasmus = e.id ' +
+    '  INNER JOIN STUDENT erasmus_student ON e.erasmus = erasmus_student.id ' +
+    '  LEFT JOIN STUDIES std ON erasmus_student.studies = std.id ' +
+    '  LEFT JOIN FACULTY fac ON erasmus_student.faculty = fac.id ' +
+    '  INNER JOIN COUNTRY cntr ON erasmus_student.nationality = cntr.country_code ' +
     'WHERE p.semester_id = ? AND NOT bp.notified_peer ' +
-    'ORDER BY p.register_date ASC';
+    'ORDER BY p.register_date ASC ';
   connection.query(query, semester_id, cb);
 }
 
