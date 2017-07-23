@@ -114,7 +114,7 @@ angular.module('BuddyPairApp.services')
 
     service.addErasmus = function(erasmus) {
       var deferred = $q.defer();
-      $http.post('/api/erasmus', { erasmus: erasmus })
+      $http.post('/api/erasmuses', { erasmus: erasmus })
         .success(function(data, status, headers, config) {
           deferred.resolve(headers('Location'));
         })
