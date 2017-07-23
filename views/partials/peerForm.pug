@@ -1,5 +1,9 @@
 div.container
   div.col-md-offset-2.col-md-8
+    div(ng-show='error').alert.alert-danger.fade.in
+      a(href='#' data-dismiss='alert').close &times;
+      strong Error inserting the Erasmus
+      |  {{error}}
     form(data-toggle='validator' role='form' ng-submit='submit()').form-horizontal
       div.panel.panel-default
         div.panel-heading
@@ -42,7 +46,7 @@ div.container
           div.form-group
             label(for='aegee_member').control-label.col-md-2 AEGEE member?
             div.col-md-10
-              input(type='checkbox' id='aegee_member' ng-model='peer.aegee_member' ng-true-value='1' ng-false-value='0').form-control
+              input(type='checkbox' id='aegee_member' ng-model='peer.aegee_member' ng-true-value='1' ng-false-value='0' ng-init='peer.aegee_member = false').form-control
           div.form-group
             label(for='nia').control-label.col-md-2 NIA
             div.col-md-10
@@ -50,7 +54,7 @@ div.container
           div.form-group
             label(for='speaks_english').control-label.col-md-2 Speaks English?
             div.col-md-10
-              input(type='checkbox' id='speaks_english' ng-model='peer.speaks_english' ng-true-value='1' ng-false-value='0').form-control
+              input(type='checkbox' id='speaks_english' ng-model='peer.speaks_english' ng-true-value='1' ng-false-value='0' ng-init='peer.speaks_english = false').form-control
           div.form-group
             label(for='studies').control-label.col-md-2 Studies
             div.col-md-10

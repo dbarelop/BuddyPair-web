@@ -6,8 +6,11 @@ angular.module('BuddyPairApp.controllers')
     $scope.peer.erasmus_limit = 1;
 
     $scope.submit = function() {
+      $scope.peer.semester_id = $scope.selected_semester.value.id;
       PeerService.addPeer($scope.peer).then(function(location) {
         $location.path(location);
+      }, function(error) {
+        $scope.error = error.message;
       });
     };
 
@@ -23,7 +26,7 @@ angular.module('BuddyPairApp.controllers')
         sideBySide: true
       });
       $('#register_date').on('dp.change', function() {
-        $scope.peer.birthdate = $('#register_date > input').val();
+        $scope.peer.register_date = $('#register_date > input').val();
       });
     });
   }])
@@ -33,6 +36,8 @@ angular.module('BuddyPairApp.controllers')
     $scope.submit = function() {
       PeerService.editPeer($scope.peer.peer_id, $scope.peer).then(function(location) {
         $location.path('/peer/' + $scope.peer.peer_id);
+      }, function(error) {
+        $scope.error = error.message;
       });
     };
 

@@ -1,6 +1,10 @@
 div.container
   div.col-md-offset-2.col-md-8
-    form(data-toggle='validator' role='form' ng-submit='submit()').form-horizontal
+    div(ng-show='error').alert.alert-danger.fade.in
+      a(href='#' data-dismiss='alert').close &times;
+      strong Error inserting the Erasmus
+      |  {{error}}
+    form(data-toggle='validator' ng-submit='submit()').form-horizontal
       div.panel.panel-default
         div.panel-heading
           h4 Student information

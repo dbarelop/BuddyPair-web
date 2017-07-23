@@ -5,8 +5,11 @@ angular.module('BuddyPairApp.controllers')
     $scope.erasmus = {};
 
     $scope.submit = function() {
+      $scope.erasmus.semester_id = $scope.selected_semester.value.id;
       ErasmusService.addErasmus($scope.erasmus).then(function(location) {
         $location.path(location);
+      }, function(error) {
+        $scope.error = error.message;
       });
     };
 
@@ -22,14 +25,14 @@ angular.module('BuddyPairApp.controllers')
         sideBySide: true
       });
       $('#register_date').on('dp.change', function() {
-        $scope.erasmus.birthdate = $('#register_date > input').val();
+        $scope.erasmus.register_date = $('#register_date > input').val();
       });
       $('#arrival_date').datetimepicker({
         format: 'YYYY-MM-DD HH:mm:ss',
         sideBySide: true
       });
       $('#arrival_date').on('dp.change', function() {
-        $scope.erasmus.birthdate = $('#arrival_date > input').val();
+        $scope.erasmus.arrival_date = $('#arrival_date > input').val();
       });
     });
   }])
@@ -40,6 +43,8 @@ angular.module('BuddyPairApp.controllers')
     $scope.submit = function() {
       ErasmusService.editErasmus($scope.erasmus.erasmus_id, $scope.erasmus).then(function() {
         $location.path('/erasmus/' + $scope.erasmus.erasmus_id);
+      }, function(error) {
+        $scope.error = error.message;
       });
     };
 

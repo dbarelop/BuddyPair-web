@@ -481,12 +481,12 @@ exports.addErasmus = function(req, res) {
   var erasmus = req.body.erasmus;
   insertStudent(erasmus, function(err, student_id) {
     if (err) {
-      res.status(503).send(err);
+      res.status(503).send(err.message);
     } else {
       erasmus.student_id = student_id;
       insertErasmus(erasmus, function(err, erasmus_id) {
         if (err) {
-          res.status(503).send(err);
+          res.status(503).send(err.message);
         } else {
           res.location('/erasmus/' + erasmus_id).sendStatus(201);
         }
@@ -503,12 +503,12 @@ exports.addPeer = function(req, res) {
   var peer = req.body.peer;
   insertStudent(peer, function(err, student_id) {
     if (err) {
-      res.status(503).send(err);
+      res.status(503).send(err.message);
     } else {
       peer.student_id = student_id;
       insertPeer(peer, function(err, peer_id) {
         if (err) {
-          res.status(503).send(err);
+          res.status(503).send(err.message);
         } else {
           res.location('/peer/' + peer_id).sendStatus(201);
         }
