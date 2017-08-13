@@ -69,7 +69,7 @@ div(ng-if='erasmusList !== null')
             th Faculty
             th Assigned peer
         tbody
-          tr(ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-click='$location.url("/erasmus/" + e.erasmus_id)' ng-class="{'danger': !e.has_peer}" style='cursor: pointer')
+          tr(ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-click='$location.url("/erasmus/" + e.erasmus_id)' ng-class="{'danger': !e.has_peer, 'warning': e.has_peer && !e.notified_erasmus}" style='cursor: pointer')
             td {{e.erasmus_id}}
             td {{e.register_date}}
             td {{e.name}} {{e.surname}}
@@ -82,5 +82,5 @@ div(ng-if='erasmusList !== null')
     div.col-md-12.hidden-lg.hidden-md.visible-sm.visible-xs
       div.panel.panel-default
         ul.list-group
-          a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer}").list-group-item {{e.name}} {{e.surname}}
+          a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer, 'list-group-item-warning': e.has_peer && !e.notified_erasmus}").list-group-item {{e.name}} {{e.surname}}
             | {{e.has_peer ? '' : ' (no assigned peer)'}}

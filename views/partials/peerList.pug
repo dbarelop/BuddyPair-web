@@ -50,7 +50,7 @@ div(ng-if='peerList !== null')
             th Faculty
             th Assigned Erasmus
         tbody
-          tr(ng-repeat='p in peerList.filter(filter_peers)' ng-click='$location.url("/peer/" + p.peer_id)' ng-class="{'danger': p.num_erasmus == 0 || p.num_erasmus > 3}" style='cursor: pointer')
+          tr(ng-repeat='p in peerList.filter(filter_peers)' ng-click='$location.url("/peer/" + p.peer_id)' ng-class="{'danger': p.num_erasmus == 0 || p.num_erasmus > 3, 'warning': p.num_erasmus > 0 && p.num_erasmus <= 3 && !p.notified_peer}" style='cursor: pointer')
             td {{p.peer_id}}
             td {{p.register_date}}
             td {{p.name}} {{p.surname}}
@@ -63,5 +63,5 @@ div(ng-if='peerList !== null')
     div.col-md-12.hidden-lg.hidden-md.visible-sm.visible-xs
       div.panel.panel-default
         ul.list-group
-          a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3}").list-group-item {{p.name}} {{p.surname}}
+          a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3, 'list-group-item-warning': p.num_erasmus > 0 && p.num_erasmus <= 3 && !p.notified_peer}").list-group-item {{p.name}} {{p.surname}}
             | {{' (' + p.num_erasmus + ' Erasmus)'}}

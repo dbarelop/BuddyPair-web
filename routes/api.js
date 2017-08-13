@@ -54,7 +54,8 @@ function getSemesterList(cb) {
 
 function getErasmusList(semester_id, cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
-    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
+    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer, ' +
+    '  (SELECT notified_erasmus FROM BUDDY_PAIR WHERE erasmus = e.id) AS notified_erasmus ' +
     'FROM ERASMUS e ' +
     'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
@@ -97,7 +98,8 @@ function getErasmusCount(semester_id, cb) {
 
 function getErasmus(erasmus_id, cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
-    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer ' +
+    '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer, ' +
+    '  (SELECT notified_erasmus FROM BUDDY_PAIR WHERE erasmus = e.id) AS notified_erasmus ' +
     'FROM ERASMUS e ' +
     'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
@@ -108,7 +110,8 @@ function getErasmus(erasmus_id, cb) {
 
 function getPeerList(semester_id, cb) {
   var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
-    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
+    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus, ' +
+    '  (SELECT BIT_AND(notified_peer) FROM BUDDY_PAIR WHERE peer = p.id) AS notified_peer ' +
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
@@ -152,7 +155,8 @@ function getPeerCount(semester_id, cb) {
 
 function getPeer(peer_id, cb) {
   var query = 'SELECT p.id AS peer_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, p.*, s.*, ' +
-    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus ' +
+    '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus, ' +
+    '  (SELECT BIT_AND(notified_peer) FROM BUDDY_PAIR WHERE peer = p.id) AS notified_peer ' +
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
     'LEFT JOIN STUDIES st ON s.studies = st.id ' +
