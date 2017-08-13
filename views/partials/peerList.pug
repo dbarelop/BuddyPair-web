@@ -51,7 +51,7 @@ div(ng-if='peerList !== null')
             th Assigned Erasmus
         tbody
           tr(ng-repeat='p in peerList.filter(filter_peers)' ng-click='$location.url("/peer/" + p.peer_id)' ng-class="{'danger': p.num_erasmus == 0 || p.num_erasmus > 3}" style='cursor: pointer')
-            td {{p.id}}
+            td {{p.peer_id}}
             td {{p.register_date}}
             td {{p.name}} {{p.surname}}
             td {{(countries | filter : {'country_code': p.nationality} : true)[0].country_name}}
