@@ -25,8 +25,9 @@ body {
     min-width: 266.938px;
 }
 
-.ui-select-bootstrap>.ui-select-choices {
+.input-group>.ui-select-bootstrap>.ui-select-choices {
     /* TODO: workaround */
     min-width: 266.938px;
     width: auto;
+    margin-left: 150px;
 }
