@@ -30,7 +30,7 @@ block body
               a(href='/profile') My profile
             li
               div.btn-nav
-                button(ng-click='logout()').btn.btn-primary.btn-small.navbar-btn Logout
+                button(style='margin-left: 10px;' ng-click='logout()').btn.btn-primary.btn-small.navbar-btn Logout
       script.
         $(document).ready(function() {
           $('.navbar-collapse a').click(function () {
@@ -43,8 +43,8 @@ block body
       h3 Login to start using the application
 
     footer.footer
-      div.container
-        p.navbar-text Developed by #[a(href='https://github.com/dbarelop') Daniel Barea] for #[a(href='http://aegee-zaragoza.org') AEGEE-Zaragoza]
+      div(style='background-color: #222;').container
+        p.navbar-text.navbar-left Developed by #[a(href='https://github.com/dbarelop') Daniel Barea] for #[a(href='http://aegee-zaragoza.org') AEGEE-Zaragoza]
         div(ng-if='isAuthenticated()').navbar-form.navbar-right
           ui-select(ng-model='selected_semester.value')
             ui-select-match

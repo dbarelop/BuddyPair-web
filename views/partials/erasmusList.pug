@@ -11,11 +11,11 @@ div(ng-if='erasmusList !== null')
           h4 Filters
         form.panel-body
           div.input-group
-            span(style='min-width: 150px; text-align: left;').input-group-addon Name:
+            span(style='min-width: 120px; text-align: left;').input-group-addon Name:
             input(type='text' ng-model='filters.name').form-control
           br
           div.input-group
-            span(style='min-width: 150px; text-align: left;').input-group-addon Gender:
+            span(style='min-width: 120px; text-align: left;').input-group-addon Gender:
             div.form-control
               label.radio-inline
                 input(name='male' type='radio' ng-model='filters.gender' value='all')
@@ -28,7 +28,7 @@ div(ng-if='erasmusList !== null')
                 | Female
           br
           div.input-group
-            span(style='min-width: 150px; text-align: left;').input-group-addon Nationality:
+            span(style='min-width: 120px; text-align: left;').input-group-addon Nationality:
             // TODO: add 'any country' selection
             ui-select(ng-model='filters.nationality')
               ui-select-match
@@ -37,7 +37,7 @@ div(ng-if='erasmusList !== null')
                 span(ng-bind='c.country_name')
           br
           div.input-group
-            span(style='min-width: 150px; text-align: left;').input-group-addon Only with peer:
+            span(style='min-width: 120px; text-align: left;').input-group-addon Only with peer:
             div.form-control
               label.radio-inline
                 input(name='radio_with_peer' type='radio' ng-model='filters.withPeer' value='all')
