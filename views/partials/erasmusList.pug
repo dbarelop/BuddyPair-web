@@ -68,7 +68,7 @@ div(ng-if='erasmusList !== null')
             th Faculty
             th Assigned peer
         tbody
-          tr(ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-click='$location.url("/erasmus/" + e.erasmus_id)' ng-class="{'danger': !e.has_peer, 'warning': e.has_peer && !e.notified_erasmus}" style='cursor: pointer')
+          tr(ng-repeat='e in erasmusList.filter(filter_erasmus) | orderBy: "-register_date"' ng-click='$location.url("/erasmus/" + e.erasmus_id)' ng-class="{'danger': !e.has_peer, 'warning': e.has_peer && !e.notified_erasmus}" style='cursor: pointer')
             td {{e.erasmus_id}}
             td {{e.register_date}}
             td {{e.name}} {{e.surname}}

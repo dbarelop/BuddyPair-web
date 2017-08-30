@@ -50,7 +50,7 @@ div(ng-if='peerList !== null')
             th Faculty
             th Assigned Erasmus
         tbody
-          tr(ng-repeat='p in peerList.filter(filter_peers)' ng-click='$location.url("/peer/" + p.peer_id)' ng-class="{'danger': p.num_erasmus == 0 || p.num_erasmus > 3, 'warning': p.num_erasmus > 0 && p.num_erasmus <= 3 && !p.notified_peer}" style='cursor: pointer')
+          tr(ng-repeat='p in peerList.filter(filter_peers) | orderBy: "-register_date"' ng-click='$location.url("/peer/" + p.peer_id)' ng-class="{'danger': p.num_erasmus == 0 || p.num_erasmus > 3, 'warning': p.num_erasmus > 0 && p.num_erasmus <= 3 && !p.notified_peer}" style='cursor: pointer')
             td {{p.peer_id}}
             td {{p.register_date}}
             td {{p.name}} {{p.surname}}
