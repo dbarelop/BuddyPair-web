@@ -105,6 +105,32 @@ angular.module('BuddyPairApp.controllers')
         }
       };
 
+      // https://github.com/markmarkoh/datamaps/blob/master/src/examples/highmaps_world.html
+      $scope.mapObject = {
+        scope: 'world',
+        options: {
+          legendHeight: 60
+        },
+        geographyConfig: {
+          hightlightBorderColor: '#EAA9A8',
+          highlightBorderWidth: 2
+        },
+        fills: {
+          'HIGH': '#CC4731',
+          'MEDIUM': '#306596',
+          'LOW': '#667FAF',
+          'defaultFill': '#DDDDDD'
+        },
+        data: {
+          'BLR': {
+            'fillKey': 'MEDIUM'
+          },
+          'BLZ': {
+            'fillKey': 'HIGH'
+          }
+        }
+      };
+
       ErasmusService.getCount(semester_id).then(function (count) {
         $scope.male_erasmus = count.male_erasmus;
         $scope.female_erasmus = count.female_erasmus;
