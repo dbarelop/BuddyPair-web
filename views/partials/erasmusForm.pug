@@ -4,7 +4,7 @@ div.container
       a(href='#' data-dismiss='alert').close &times;
       strong Error inserting the Erasmus
       |  {{error}}
-    form(data-toggle='validator' ng-submit='submit()').form-horizontal
+    form(ng-submit='erasmusForm.$valid && submit()' name='erasmusForm' novalidate).form-horizontal
       div.panel.panel-default
         div.panel-heading
           h4 Student information
@@ -12,11 +12,15 @@ div.container
           div.form-group
             label(for='name').control-label.col-md-2 Name
             div.col-md-10
-              input(type='text' placeholder='Name' id='name' ng-model='erasmus.name' required).form-control
+              input(type='text' placeholder='Name' id='name' name='fname' ng-model='erasmus.name' required).form-control
+              span(style='color: #c00000; float: right;' ng-show='erasmusForm.$submitted && erasmusForm.fname.$invalid')
+                span(ng-show='erasmusForm.fname.$error.required') The name is required
           div.form-group
             label(for='surname').control-label.col-md-2 Surname
             div.col-md-10
-              input(type='text' placeholder='Surname' id='surname' ng-model='erasmus.surname' required).form-control
+              input(type='text' placeholder='Surname' id='surname' name='surname' ng-model='erasmus.surname' required).form-control
+              span(style='color: #c00000; float: right;' ng-show='erasmusForm.$submitted && erasmusForm.surname.$invalid')
+                span(ng-show='erasmusForm.surname.$error.required') The surname is required
           div.form-group
             label(for='gender').control-label.col-md-2 Gender
             div.col-md-10
@@ -24,22 +28,33 @@ div.container
                 label #[input(type='radio' name='gender' id='gender' ng-model='erasmus.gender' ng-value='true' required)] Male
               div.radio
                 label #[input(type='radio' name='gender' ng-model='erasmus.gender' ng-value='false' required)] Female
+              span(style='color: #c00000; float: right;' ng-show='erasmusForm.$submitted && erasmusForm.gender.$invalid')
+                span(ng-show='erasmusForm.gender.$error.required') The gender is required
           div.form-group
-            label(for='birthdate').control-label.col-md-2 Birthdate
+            label(for='birthdate').control-label.col-md-2 Birth date
             div.col-md-10
               div(id='birthdate').input-group.date
-                input(type='text' ng-model='erasmus.birthdate' required).form-control
+                input(type='text' placeholder='Birth date' name='birthdate' ng-model='erasmus.birthdate' required).form-control
                 span.input-group-addon
                   span.glyphicon.glyphicon-calendar
+              span(style='color: #c00000; float: right;' ng-show='erasmusForm.$submitted && erasmusForm.birthdate.$invalid')
+                span(ng-show='erasmusForm.birthdate.$error.required') The birth date is required
           div.form-group
             label(for='nationality').control-label.col-md-2 Nationality
             div.col-md-10
-              select(id='nationality' ng-model='erasmus.nationality' ng-options='c.country_code as c.country_name for c in countries' required).form-control
-                option(value='' disabled='disabled')
+              ui-select(id='nationality' name='nationality' ng-model='erasmus.nationality' required)
+                ui-select-match(placeholder='Select a nationality')
+                  span(ng-bind='$select.selected.country_name')
+                ui-select-choices(repeat='c.country_code as c in (countries | filter: $select.search) track by c.country_code')
+                  span(ng-bind='c.country_name')
+              span(style='color: #c00000; float: right;' ng-show='erasmusForm.$submitted && erasmusForm.nationality.$invalid')
+                span(ng-show='erasmusForm.nationality.$error.required') The nationality is required
           div.form-group
             label(for='email').control-label.col-md-2 Email
             div.col-md-10
-              input(type='email' id='email' placeholder='Email' ng-model='erasmus.email' required).form-control
+              input(type='email' id='email' name='email' placeholder='Email' ng-model='erasmus.email' required).form-control
+              span(style='color: #c00000; float: right;' ng-show='erasmusForm.$submitted && erasmusForm.email.$invalid')
+                span(ng-show='erasmusForm.email.$error.required') The email is required
           div.form-group
             label(for='phone').control-label.col-md-2 Phone number
             div.col-md-10
@@ -47,11 +62,21 @@ div.container
           div.form-group
             label(for='studies').control-label.col-md-2 Studies
             div.col-md-10
-              select(id='studies' ng-model='erasmus.studies' ng-options='s.id as s.name for s in studies').form-control
+              // TODO: enable empty selection
+              ui-select(id='studies' ng-model='erasmus.studies')
+                ui-select-match(placeholder='Select studies')
+                  span(ng-bind='$select.selected.name')
+                ui-select-choices(repeat='s.id as s in (studies | filter: $select.search) track by s.id')
+                  span(ng-bind='s.name')
           div.form-group
             label(for='faculty').control-label.col-md-2 Faculty
             div.col-md-10
-              select(id='faculty' ng-model='erasmus.faculty' ng-options='f.id as f.name for f in faculties').form-control
+              // TODO: enable empty selection
+              ui-select(id='faculty' ng-model='erasmus.faculty')
+                ui-select-match(placeholder='Select a faculty')
+                  span(ng-bind='$select.selected.name')
+                ui-select-choices(repeat='f.id as f in (faculties | filter: $select.search) track by f.id')
+                  span(ng-bind='f.name')
       div.panel.panel-default
         div.panel-heading
           h4 Erasmus information
@@ -60,9 +85,11 @@ div.container
             label(for='register_date').control-label.col-md-2 Register date
             div.col-md-10
               div(id='register_date').input-group.date
-                input(type='text' ng-model='erasmus.register_date' required).form-control
+                input(type='text' placeholder='Register date' ng-model='erasmus.register_date' name='register_date' required).form-control
                 span.input-group-addon
                   span.glyphicon.glyphicon-calendar
+              span(style='color: #c00000; float: right;' ng-show='erasmusForm.$submitted && erasmusForm.register_date.$invalid')
+                span(ng-show='erasmusForm.register_date.$error.required') The register date is required
           div.form-group
             label(for='gender_preference').control-label.col-md-2 Gender preference
             div.col-md-10
@@ -85,7 +112,7 @@ div.container
             label(for='arrival_date').control-label.col-md-2 Arrival date
             div.col-md-10
               div(id='arrival_date').input-group.date
-                input(type='text' ng-model='erasmus.arrival_date').form-control
+                input(type='text' placeholder='Arrival date' ng-model='erasmus.arrival_date').form-control
                 span.input-group-addon
                   span.glyphicon.glyphicon-calendar
           div.form-group

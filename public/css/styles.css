@@ -30,3 +30,15 @@ body {
     width: calc(100% - 120px);
     margin-left: 120px;
 }
+
+.ng-submitted input.ng-invalid {
+    border-right: 4px solid #c00000;
+}
+
+.ng-submitted .ng-invalid span.btn.ui-select-toggle {
+    border-right: 4px solid #c00000;
+}
+
+.text-muted {
+    color: #999;
+}
