@@ -2,7 +2,7 @@ div.container
   div.col-md-offset-2.col-md-8
     div(ng-show='error').alert.alert-danger.fade.in
       a(href='#' data-dismiss='alert').close &times;
-      strong Error inserting the Erasmus
+      strong Error inserting the peer
       |  {{error}}
     form(ng-submit='peerForm.$valid && submit()' name='peerForm' novalidate).form-horizontal
       div.panel.panel-default
