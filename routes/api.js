@@ -96,6 +96,16 @@ function getErasmusCount(semester_id, cb) {
   connection.query(query, semester_id, cb);
 }
 
+function getErasmusCountByCountry(semester_id, cb) {
+  var query = 'SELECT c.country_code, c.country_code_iso3166_1, COUNT(*) AS num_erasmus, COUNT(*) / (SELECT COUNT(*) FROM ERASMUS WHERE semester_id = ?) percentage_erasmus ' +
+    'FROM ERASMUS e ' +
+    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
+    'INNER JOIN COUNTRY c ON s.nationality = c.country_code ' +
+    'WHERE e.semester_id = ? ' +
+    'GROUP BY c.country_code, c.country_code_iso3166_1';
+  connection.query(query, [semester_id, semester_id], cb);
+}
+
 function getErasmus(erasmus_id, cb) {
   var query = 'SELECT e.id AS erasmus_id, s.id AS student_id, st.name AS studies_name, f.name AS faculty_name, e.*, s.*, ' +
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer, ' +
@@ -149,7 +159,7 @@ function getPeerCount(semester_id, cb) {
   var query = 'SELECT COUNT(CASE s.gender WHEN TRUE THEN 1 ELSE NULL END) AS male_peers, COUNT(CASE s.gender WHEN FALSE THEN 1 ELSE NULL END) AS female_peers ' +
     'FROM PEER p ' +
     'INNER JOIN STUDENT s ON p.peer = s.id ' +
-    'WHERE p.semester_id = ?';
+    'WHERE p.semester_id = ? ';
   connection.query(query, semester_id, cb);
 }
 
@@ -241,7 +251,7 @@ exports.semesterList = function(req, res) {
 
 /**
  * Fetches the list of Erasmus students (without data from assigned peers)
- * @param req.params.semester_id the course year
+ * @param req.params.semester_id the course semester
  */
 exports.erasmusList = function(req, res) {
   var semester_id = req.params.semester_id;
@@ -257,7 +267,7 @@ exports.erasmusList = function(req, res) {
 /**
  * Fetches the list of Erasmus students (without data from assigned peers)
  * from unnotified Erasmus
- * @param req.params.semester_id the course year
+ * @param req.params.semester_id the course semester
  */
 exports.unnotifiedErasmusList = function(req, res) {
   var semester_id = req.params.semester_id;
@@ -272,11 +282,26 @@ exports.unnotifiedErasmusList = function(req, res) {
 
 /**
  * Fetches the number of Erasmus
- * @param req.params.semester_id the course year
+ * @param req.params.semester_id the course semester
  */
 exports.erasmusCount = function(req, res) {
   var semester_id = req.params.semester_id;
   getErasmusCount(semester_id, function(err, count) {
+    if (err) {
+      res.status(503).send(err);
+    } else {
+      res.json(count);
+    }
+  });
+};
+
+/**
+ * Fetches the number of Erasmus students grouped by country
+ * @param req.params.semester_id the course semester
+ */
+exports.erasmusCountByCountry = function(req, res) {
+  var semester_id = req.params.semester_id;
+  getErasmusCountByCountry(semester_id, function(err, count) {
     if (err) {
       res.status(503).send(err);
     } else {
@@ -302,7 +327,7 @@ exports.erasmus = function(req, res) {
 
 /**
  * Fetches the list of peer students (without data from assigned Erasmus)
- * @param req.params.semester_id the course year
+ * @param req.params.semester_id the course semester
  */
 exports.peerList = function(req, res) {
   var semester_id = req.params.semester_id;
@@ -318,7 +343,7 @@ exports.peerList = function(req, res) {
 /**
  * Fetches the list of peer students (without data from assigned Erasmus)
  * from unnotified students
- * @param req.params.semester_id the course year
+ * @param req.params.semester_id the course semester
  */
 exports.unnotifiedPeersList = function(req, res) {
   var semester_id = req.params.semester_id;
@@ -333,7 +358,7 @@ exports.unnotifiedPeersList = function(req, res) {
 
 /**
  * Fetches the number of peer students
- * @param req.params.semester_id the course year
+ * @param req.params.semester_id the course semester
  */
 exports.peerCount = function(req, res) {
   var semester_id = req.params.semester_id;

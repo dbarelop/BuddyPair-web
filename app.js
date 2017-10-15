@@ -54,6 +54,7 @@ app.get(    '/api/semesters', api.semesterList);
 app.get(    '/api/erasmuses/:semester_id', auth.ensureAuthenticated, api.erasmusList);
 app.get(    '/api/erasmuses/:semester_id/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
 app.get(    '/api/erasmuses/:semester_id/count', api.erasmusCount);
+app.get(    '/api/erasmuses/:semester_id/count_by_country', api.erasmusCountByCountry);
 app.post(   '/api/erasmuses', auth.ensureAuthenticated, api.addErasmus);
 
 app.get(    '/api/erasmus/:id', auth.ensureAuthenticated, api.erasmus);
