@@ -105,7 +105,6 @@ angular.module('BuddyPairApp.controllers')
         }
       };
 
-      // https://github.com/markmarkoh/datamaps/blob/master/src/examples/highmaps_world.html
       $scope.mapObject = {
         scope: 'world',
         options: {
@@ -116,19 +115,9 @@ angular.module('BuddyPairApp.controllers')
           highlightBorderWidth: 2
         },
         fills: {
-          'HIGH': '#CC4731',
-          'MEDIUM': '#306596',
-          'LOW': '#667FAF',
           'defaultFill': '#DDDDDD'
         },
-        data: {
-          'BLR': {
-            'fillKey': 'MEDIUM'
-          },
-          'BLZ': {
-            'fillKey': 'HIGH'
-          }
-        }
+        data: {}
       };
 
       ErasmusService.getCount(semester_id).then(function(count) {
@@ -143,7 +132,35 @@ angular.module('BuddyPairApp.controllers')
       });
       
       ErasmusService.getCountByCountry(semester_id).then(function(data) {
-        console.log(data);
+        var dataset = {};
+        var paletteScale = d3.scale.linear().domain([0, Math.max.apply(Math, data.map(function(e) { return e.num_erasmus }))]).range(['#EFEFFF', '#02386F']);
+        data.forEach(function(e) {
+          dataset[e.country_code_iso3166_1] = { numberOfErasmus: e.num_erasmus, fillColor: paletteScale(e.num_erasmus) };
+        });
+
+        $scope.mapObject = {
+          scope: 'world',
+          options: {
+            legendHeight: 60
+          },
+          geographyConfig: {
+            hightlightBorderColor: '#EAA9A8',
+            highlightBorderWidth: 2,
+            highlightFillColor: function(geo) { return geo['fillColor'] || '#DDDDDD' },
+            popupTemplate: function(geo, data) {
+              if (data) {
+                return ['<div class="hoverinfo">',
+                          '<strong>', geo.properties.name, '</strong>',
+                            '<br>Number of Erasmus: <strong>', data.numberOfErasmus, '</strong>',
+                        '</div>'].join('');
+              }
+            }
+          },
+          fills: {
+            'defaultFill': '#DDDDDD'
+          },
+          data: dataset
+        };
       }, function(err) {
         $scope.error = err.message.code;
       });
