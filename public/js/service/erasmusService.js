@@ -36,6 +36,22 @@ angular.module('BuddyPairApp.services')
       return deferred.promise;
     };
 
+    service.getCountByCountry = function(semester_id) {
+      var deferred = $q.defer();
+      $http.get('/api/erasmuses/' + semester_id + '/count_by_country')
+        .success(function(data) {
+          deferred.resolve(data);
+        })
+        .error(function(msg, code) {
+          deferred.reject({
+            code: code,
+            message: msg
+          });
+          console.log(msg);
+        });
+      return deferred.promise;
+    };
+
     service.getById = function(id) {
       var deferred = $q.defer();
       $http.get('/api/erasmus/' + id)

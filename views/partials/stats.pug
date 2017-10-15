@@ -32,4 +32,8 @@ div
         div.col-md-6
           label(for='registeredStudentsCumChart') Total registered students
           canvas(id='registeredStudentsCumChart' chart-data='registeredStudentsCum.data' chart-series='registeredStudentsCum.series' chart-options='registeredStudentsCum.options').chart.chart-line
-          
+      br
+      div
+        div.col-md-12
+          // TODO: adapt height
+          datamap(map='mapObject' style='width: 100%; height: 500px;')
