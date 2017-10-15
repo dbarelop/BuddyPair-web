@@ -81,5 +81,5 @@ div(ng-if='erasmusList !== null')
     div.col-md-12.hidden-lg.hidden-md.visible-sm.visible-xs
       div.panel.panel-default
         ul.list-group
-          a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus)' ng-class="{'list-group-item-danger': !e.has_peer, 'list-group-item-warning': e.has_peer && !e.notified_erasmus}").list-group-item {{e.name}} {{e.surname}}
+          a(href='/erasmus/{{e.erasmus_id}}' ng-repeat='e in erasmusList.filter(filter_erasmus) | orderBy: "-register_date"' ng-class="{'list-group-item-danger': !e.has_peer, 'list-group-item-warning': e.has_peer && !e.notified_erasmus}").list-group-item {{e.name}} {{e.surname}}
             | {{e.has_peer ? '' : ' (no assigned peer)'}}

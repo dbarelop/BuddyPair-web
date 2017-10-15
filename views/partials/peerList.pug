@@ -63,5 +63,5 @@ div(ng-if='peerList !== null')
     div.col-md-12.hidden-lg.hidden-md.visible-sm.visible-xs
       div.panel.panel-default
         ul.list-group
-          a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers)' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3, 'list-group-item-warning': p.num_erasmus > 0 && p.num_erasmus <= 3 && !p.notified_peer}").list-group-item {{p.name}} {{p.surname}}
+          a(href='/peer/{{p.peer_id}}' ng-repeat='p in peerList.filter(filter_peers) | orderBy: "-register_date"' ng-class="{'list-group-item-danger': p.num_erasmus == 0 || p.num_erasmus > 3, 'list-group-item-warning': p.num_erasmus > 0 && p.num_erasmus <= 3 && !p.notified_peer}").list-group-item {{p.name}} {{p.surname}}
             | {{' (' + p.num_erasmus + ' Erasmus)'}}
