@@ -4,19 +4,23 @@ div.container
       a(href='#' data-dismiss='alert').close &times;
       strong Error inserting the Erasmus
       |  {{error}}
-    form(data-toggle='validator' role='form' ng-submit='submit()').form-horizontal
+    form(ng-submit='peerForm.$valid && submit()' name='peerForm' novalidate).form-horizontal
       div.panel.panel-default
         div.panel-heading
-          h4 Student information
+          h4 Student information {{peerForm.$valid}}
         div.panel-body
           div.form-group
             label(for='name').control-label.col-md-2 Name
             div.col-md-10
-              input(type='text' placeholder='Name' id='name' ng-model='peer.name' required).form-control
+              input(type='text' placeholder='Name' id='name' name='fname' ng-model='peer.name' required).form-control
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.fname.$invalid')
+                span(ng-show='peerForm.fname.$error.required') The name is required
           div.form-group
             label(for='surname').control-label.col-md-2 Surname
             div.col-md-10
-              input(type='text' placeholder='Surname' id='surname' ng-model='peer.surname' required).form-control
+              input(type='text' placeholder='Surname' id='surname' name='surname' ng-model='peer.surname' required).form-control
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.surname.$invalid')
+                span(ng-show='peerForm.surname.$error.required') The surname is required
           div.form-group
             label(for='gender').control-label.col-md-2 Gender
             div.col-md-10
@@ -24,21 +28,33 @@ div.container
                 label #[input(type='radio' name='gender' id='gender' ng-model='peer.gender' ng-value='true' required)] Male
               div.radio
                 label #[input(type='radio' name='gender' ng-model='peer.gender' ng-value='false' required)] Female
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.gender.$invalid')
+                span(ng-show='peerForm.gender.$error.required') The gender is required
           div.form-group
-            label(for='birthdate').control-label.col-md-2 Birthdate
+            label(for='birthdate').control-label.col-md-2 Birth date
             div.col-md-10
               div(id='birthdate').input-group.date
-                input(type='text' ng-model='peer.birthdate' required).form-control
+                input(type='text' placeholder='Birth date' name='birthdate' ng-model='peer.birthdate' required).form-control
                 span.input-group-addon
                   span.glyphicon.glyphicon-calendar
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.birthdate.$invalid')
+                span(ng-show='peerForm.birthdate.$error.required') The birth date is required
           div.form-group
             label(for='nationality').control-label.col-md-2 Nationality
             div.col-md-10
-              select(id='nationality' ng-model='peer.nationality' ng-options='c.country_code as c.country_name for c in countries' required).form-control
+              ui-select(id='nationality' name='nationality' ng-model='peer.nationality' required)
+                ui-select-match(placeholder='Select a nationality')
+                  span(ng-bind='$select.selected.country_name')
+                ui-select-choices(repeat='c.country_code as c in (countries | filter: $select.search) track by c.country_code')
+                  span(ng-bind='c.country_name')
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.nationality.$invalid')
+                span(ng-show='peerForm.nationality.$error.required') The nationality is required
           div.form-group
             label(for='email').control-label.col-md-2 Email
             div.col-md-10
-              input(type='email' id='email' placeholder='Email' ng-model='peer.email' required).form-control
+              input(type='email' id='email' name='email' placeholder='Email' ng-model='peer.email' required).form-control
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.email.$invalid')
+                span(ng-show='peerForm.email.$error.required') The email is required
           div.form-group
             label(for='phone').control-label.col-md-2 Phone number
             div.col-md-10
@@ -58,11 +74,21 @@ div.container
           div.form-group
             label(for='studies').control-label.col-md-2 Studies
             div.col-md-10
-              select(id='studies' ng-model='peer.studies' ng-options='s.id as s.name for s in studies').form-control
+              // TODO: enable empty selection
+              ui-select(id='studies' ng-model='peer.studies')
+                ui-select-match(placeholder='Select studies')
+                  span(ng-bind='$select.selected.name')
+                ui-select-choices(repeat='s.id as s in (studies | filter: $select.search) track by s.id')
+                  span(ng-bind='s.name')
           div.form-group
             label(for='faculty').control-label.col-md-2 Faculty
             div.col-md-10
-              select(id='faculty' ng-model='peer.faculty' ng-options='f.id as f.name for f in faculties').form-control
+              // TODO: enable empty selection
+              ui-select(id='faculty' ng-model='peer.faculty')
+                ui-select-match(placeholder='Select a faculty')
+                  span(ng-bind='$select.selected.name')
+                ui-select-choices(repeat='f.id as f in (faculties | filter: $select.search) track by f.id')
+                  span(ng-bind='f.name')
       div.panel.panel-default
         div.panel-heading
           h4 Erasmus information
@@ -71,9 +97,11 @@ div.container
             label(for='register_date').control-label.col-md-2 Register date
             div.col-md-10
               div(id='register_date').input-group.date
-                input(type='text' ng-model='peer.register_date' required).form-control
+                input(type='text' placeholder='Register date' ng-model='peer.register_date' name='register_date' required).form-control
                 span.input-group-addon
                   span.glyphicon.glyphicon-calendar
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.register_date.$invalid')
+                span(ng-show='peerForm.register_date.$error.required') The register date is required
           div.form-group
             label(for='gender_preference').control-label.col-md-2 Gender preference
             div.col-md-10
@@ -86,8 +114,12 @@ div.container
           div.form-group
             label(for='nationality_preference').control-label.col-md-2 Nationality preference
             div.col-md-10
-              select(id='nationality_preference' ng-model='peer.nationality_preference' ng-options='c.country_code as c.country_name for c in countries' required).form-control
-                option(ng-repeat='c in countries') {{c.country_name}}
+              // TODO: allow empty selection
+              ui-select(id='nationality_preference' name='nationality_preference' ng-model='peer.nationality_preference' required)
+                ui-select-match(placeholder='Select a nationality')
+                  span(ng-bind='$select.selected.country_name')
+                ui-select-choices(repeat='c.country_code as c in (countries | filter: $select.search) track by c.country_code')
+                  span(ng-bind='c.country_name')
           div.form-group
             label(for='erasmus_limit').control-label.col-md-2 Limit of Erasmus
             div.col-md-10
