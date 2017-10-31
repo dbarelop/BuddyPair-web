@@ -34,6 +34,12 @@ angular.module('BuddyPairApp.controllers')
         $scope.error = err.message.code;
       });
     };
+
+    $scope.export_peers = function(semester_id) {
+      var content = PeerService.exportToCSV($scope.peerList);
+      var blob = new Blob([content], { type: 'text/plain' });
+      $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
+    };
     
     $scope.loadData = function(semester_id) {
       PeerService.getList(semester_id).then(function (peerList) {

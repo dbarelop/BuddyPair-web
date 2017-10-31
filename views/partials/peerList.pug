@@ -37,6 +37,7 @@ div(ng-if='peerList !== null')
         div.panel-body
           button(type='button' ng-click='match_students(selected_semester.value.id)').list-group-item Match
           a(href='/peers/new').list-group-item Add peer
+          a(ng-href='{{url}}' ng-click='export_peers(selected_semester.value.id)' download='peers.csv').list-group-item Export peer list
   div.row
     div.col-md-12.visible-lg.visible-md.hidden-sm.hidden-xs
       table(id='peersTable' ng-if='peerList').table.table-hover.table-bordered.table-striped

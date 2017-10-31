@@ -160,5 +160,15 @@ angular.module('BuddyPairApp.services')
       return deferred.promise;
     };
 
+    service.exportToCSV = function(peer_list) {
+      var result = 'Name;Surname;Email;NIA';
+      peer_list.forEach(function(p) {
+        if (p.num_erasmus > 0) {
+          result += '\n' + p.name + ';' + p.surname + ';' + p.email + ';' + p.nia;
+        }
+      });
+      return result;
+    };
+
     return service;
   });
