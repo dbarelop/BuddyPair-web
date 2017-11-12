@@ -117,7 +117,8 @@ angular.module('BuddyPairApp.controllers')
         fills: {
           'defaultFill': '#DDDDDD'
         },
-        data: {}
+        data: {},
+        responsive: true
       };
 
       ErasmusService.getCount(semester_id).then(function(count) {
@@ -159,7 +160,8 @@ angular.module('BuddyPairApp.controllers')
           fills: {
             'defaultFill': '#DDDDDD'
           },
-          data: dataset
+          data: dataset,
+          responsive: true
         };
       }, function(err) {
         $scope.error = err.message.code;
