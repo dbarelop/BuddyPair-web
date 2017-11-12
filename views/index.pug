@@ -46,7 +46,7 @@ block body
       div(style='background-color: #222;').container
         p.navbar-text.navbar-left Developed by #[a(href='https://github.com/dbarelop') Daniel Barea] for #[a(href='http://aegee-zaragoza.org') AEGEE-Zaragoza]
         div(ng-if='isAuthenticated()').navbar-form.navbar-right
-          ui-select(ng-model='selected_semester.value')
+          ui-select(ng-model='selected_semester.value' id='semester_selector')
             ui-select-match
               span(ng-bind='$select.selected.name')
             ui-select-choices(repeat='s in (semesters | filter: $select.search) track by s.id')

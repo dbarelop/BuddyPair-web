@@ -20,7 +20,7 @@ body {
     color: #9d9d9d;
 }
 
-.ui-select-search, .ui-select-toggle {
+#semester_selector .ui-select-search, #semester_selector .ui-select-match .ui-select-toggle {
     min-width: 280px;
     max-width: 100%;
 }
