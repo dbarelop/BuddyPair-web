@@ -62,7 +62,7 @@ function getErasmusList(semester_id, cb) {
     '  LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'WHERE (? IS NOT NULL AND e.semester_id = ?) OR e.semester_id = (SELECT MAX(id) FROM SEMESTER) ' +
     'ORDER BY e.register_date ASC';
-  connection.query(query, semester_id, semester_id, cb);
+  connection.query(query, [semester_id, semester_id], cb);
 }
 
 function getUnnotifiedErasmusList(semester_id, cb) {
@@ -85,7 +85,7 @@ function getUnnotifiedErasmusList(semester_id, cb) {
     '  LEFT JOIN FACULTY fac ON peer_student.faculty = fac.id ' +
     'WHERE ((? IS NOT NULL AND e.semester_id = ?) OR e.semester_id = (SELECT MAX(id) FROM SEMESTER)) AND NOT bp.notified_erasmus ' +
     'ORDER BY e.register_date ASC ';
-  connection.query(query, semester_id, cb);
+  connection.query(query, [semester_id, semester_id], cb);
 }
 
 function getErasmusCount(semester_id, cb) {
@@ -128,7 +128,7 @@ function getPeerList(semester_id, cb) {
     '  LEFT JOIN FACULTY f ON s.faculty = f.id ' +
     'WHERE (? IS NOT NULL AND p.semester_id = ?) OR p.semester_id = (SELECT MAX(id) FROM SEMESTER) ' +
     'ORDER BY p.register_date ASC';
-  connection.query(query, semester_id, cb);
+  connection.query(query, [semester_id, semester_id], cb);
 }
 
 function getUnnotifiedPeersList(semester_id, cb) {
@@ -152,7 +152,7 @@ function getUnnotifiedPeersList(semester_id, cb) {
     '  INNER JOIN COUNTRY cntr ON erasmus_student.nationality = cntr.country_code ' +
     'WHERE ((? IS NOT NULL AND p.semester_id = ?) OR p.semester_id = (SELECT MAX(id) FROM SEMESTER)) AND NOT bp.notified_peer ' +
     'ORDER BY p.register_date ASC ';
-  connection.query(query, semester_id, cb);
+  connection.query(query, [semester_id, semester_id], cb);
 }
 
 function getPeerCount(semester_id, cb) {
