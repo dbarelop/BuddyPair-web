@@ -57,12 +57,12 @@ function getErasmusList(semester_id, cb) {
     '  EXISTS(SELECT * FROM BUDDY_PAIR WHERE erasmus = e.id) AS has_peer, ' +
     '  (SELECT notified_erasmus FROM BUDDY_PAIR WHERE erasmus = e.id) AS notified_erasmus ' +
     'FROM ERASMUS e ' +
-    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'WHERE e.semester_id = ? ' +
+    '  INNER JOIN STUDENT s ON e.erasmus = s.id ' +
+    '  LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    '  LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'WHERE (? IS NOT NULL AND e.semester_id = ?) OR e.semester_id = (SELECT MAX(id) FROM SEMESTER) ' +
     'ORDER BY e.register_date ASC';
-  connection.query(query, semester_id, cb);
+  connection.query(query, semester_id, semester_id, cb);
 }
 
 function getUnnotifiedErasmusList(semester_id, cb) {
@@ -83,7 +83,7 @@ function getUnnotifiedErasmusList(semester_id, cb) {
     '  INNER JOIN STUDENT peer_student ON p.peer = peer_student.id ' +
     '  LEFT JOIN STUDIES std ON peer_student.studies = std.id ' +
     '  LEFT JOIN FACULTY fac ON peer_student.faculty = fac.id ' +
-    'WHERE e.semester_id = ? AND NOT bp.notified_erasmus ' +
+    'WHERE ((? IS NOT NULL AND e.semester_id = ?) OR e.semester_id = (SELECT MAX(id) FROM SEMESTER)) AND NOT bp.notified_erasmus ' +
     'ORDER BY e.register_date ASC ';
   connection.query(query, semester_id, cb);
 }
@@ -99,8 +99,8 @@ function getErasmusCount(semester_id, cb) {
 function getErasmusCountByCountry(semester_id, cb) {
   var query = 'SELECT c.country_code, c.country_code_iso3166_1, COUNT(*) AS num_erasmus, COUNT(*) / (SELECT COUNT(*) FROM ERASMUS WHERE semester_id = ?) percentage_erasmus ' +
     'FROM ERASMUS e ' +
-    'INNER JOIN STUDENT s ON e.erasmus = s.id ' +
-    'INNER JOIN COUNTRY c ON s.nationality = c.country_code ' +
+    '  INNER JOIN STUDENT s ON e.erasmus = s.id ' +
+    '  INNER JOIN COUNTRY c ON s.nationality = c.country_code ' +
     'WHERE e.semester_id = ? ' +
     'GROUP BY c.country_code, c.country_code_iso3166_1';
   connection.query(query, [semester_id, semester_id], cb);
@@ -123,10 +123,10 @@ function getPeerList(semester_id, cb) {
     '  (SELECT COUNT(*) FROM BUDDY_PAIR WHERE peer = p.id) AS num_erasmus, ' +
     '  (SELECT BIT_AND(notified_peer) FROM BUDDY_PAIR WHERE peer = p.id) AS notified_peer ' +
     'FROM PEER p ' +
-    'INNER JOIN STUDENT s ON p.peer = s.id ' +
-    'LEFT JOIN STUDIES st ON s.studies = st.id ' +
-    'LEFT JOIN FACULTY f ON s.faculty = f.id ' +
-    'WHERE p.semester_id = ? ' +
+    '  INNER JOIN STUDENT s ON p.peer = s.id ' +
+    '  LEFT JOIN STUDIES st ON s.studies = st.id ' +
+    '  LEFT JOIN FACULTY f ON s.faculty = f.id ' +
+    'WHERE (? IS NOT NULL AND p.semester_id = ?) OR p.semester_id = (SELECT MAX(id) FROM SEMESTER) ' +
     'ORDER BY p.register_date ASC';
   connection.query(query, semester_id, cb);
 }
@@ -150,7 +150,7 @@ function getUnnotifiedPeersList(semester_id, cb) {
     '  LEFT JOIN STUDIES std ON erasmus_student.studies = std.id ' +
     '  LEFT JOIN FACULTY fac ON erasmus_student.faculty = fac.id ' +
     '  INNER JOIN COUNTRY cntr ON erasmus_student.nationality = cntr.country_code ' +
-    'WHERE p.semester_id = ? AND NOT bp.notified_peer ' +
+    'WHERE ((? IS NOT NULL AND p.semester_id = ?) OR p.semester_id = (SELECT MAX(id) FROM SEMESTER)) AND NOT bp.notified_peer ' +
     'ORDER BY p.register_date ASC ';
   connection.query(query, semester_id, cb);
 }
@@ -449,8 +449,8 @@ function insertStudent(student, cb) {
 function insertErasmus(erasmus, cb) {
   var moment = require('moment');
   var query = 'INSERT INTO ERASMUS (semester_id, register_date, erasmus, gender_preference, language_preference, arrival_date, notes) ' +
-    'VALUES (?, ?, ?, ?, ?, ?, ?)';
-  var values = [erasmus.semester_id, moment(erasmus.register_date).format('YYYY-MM-DD HH:mm:ss'), erasmus.student_id, erasmus.gender_preference, erasmus.language_preference, moment(erasmus.arrival_date).format('YYYY-MM-DD HH:mm:ss'), erasmus.notes];
+    'VALUES ((CASE WHEN ? IS NULL THEN (SELECT MAX(id) FROM SEMESTER) ELSE ? END), ?, ?, ?, ?, ?, ?)';
+  var values = [erasmus.semester_id, erasmus.semester_id, moment(erasmus.register_date).format('YYYY-MM-DD HH:mm:ss'), erasmus.student_id, erasmus.gender_preference, erasmus.language_preference, moment(erasmus.arrival_date).format('YYYY-MM-DD HH:mm:ss'), erasmus.notes];
   connection.query(query, values, function(err, result) {
     if (err && err.errno === 1062) {
       // If the Erasmus already exists, fetch their ID and pass it to the callback function
@@ -473,10 +473,10 @@ function insertErasmus(erasmus, cb) {
 function insertPeer(peer, cb) {
   var moment = require('moment');
   var query = 'INSERT INTO PEER (semester_id, register_date, peer, gender_preference, nationality_preference, erasmus_limit, notes, aegee_member, nia, speaks_english) ';
-  query += 'VALUES (?, ?, ?, ?, ';
+  query += 'VALUES ((CASE WHEN ? IS NULL THEN (SELECT MAX(id) FROM SEMESTER) ELSE ? END), ?, ?, ?, ';
   query += peer.nationality_preference ? '?, ' : '(SELECT country_code FROM COUNTRY WHERE country_name = ?), ';
   query += '?, ?, ?, ?, ?)';
-  var values = [peer.semester_id, moment(peer.register_date).format('YYYY-MM-DD HH:mm:ss'), peer.student_id, peer.gender_preference, peer.nationality_preference ? peer.nationality_preference : peer.nationality_preference_name, 
+  var values = [peer.semester_id, peer.semester_id, moment(peer.register_date).format('YYYY-MM-DD HH:mm:ss'), peer.student_id, peer.gender_preference, peer.nationality_preference ? peer.nationality_preference : peer.nationality_preference_name,
     peer.erasmus_limit, peer.notes, peer.aegee_member, peer.nia, peer.speaks_english];
   connection.query(query, values, function(err, result) {
     if (err && err.errno === 1062) {

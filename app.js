@@ -51,6 +51,8 @@ app.get(    '/api/studies', api.studiesList);
 app.get(    '/api/faculties', api.facultyList);
 app.get(    '/api/semesters', api.semesterList);
 
+app.get(    '/api/erasmuses', auth.ensureAuthenticated, api.erasmusList);
+app.get(    '/api/erasmuses/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
 app.get(    '/api/erasmuses/:semester_id', auth.ensureAuthenticated, api.erasmusList);
 app.get(    '/api/erasmuses/:semester_id/unnotified', auth.ensureAuthenticated, api.unnotifiedErasmusList);
 app.get(    '/api/erasmuses/:semester_id/count', api.erasmusCount);
@@ -65,6 +67,8 @@ app.get(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, 
 app.put(    '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.addMatch);
 app.delete( '/api/erasmus/:erasmus_id/assigned_peer', auth.ensureAuthenticated, api.removeAssignedPeer);
 
+app.get(    '/api/peers', auth.ensureAuthenticated, api.peerList);
+app.get(    '/api/peers/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
 app.get(    '/api/peers/:semester_id', auth.ensureAuthenticated, api.peerList);
 app.get(    '/api/peers/:semester_id/unnotified', auth.ensureAuthenticated, api.unnotifiedPeersList);
 app.get(    '/api/peers/:semester_id/count', api.peerCount);
