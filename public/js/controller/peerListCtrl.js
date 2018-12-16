@@ -43,6 +43,7 @@ angular.module('BuddyPairApp.controllers')
 
     $scope.copy_emails_to_clipboard = function() {
       var emails = $scope.peerList.filter(function(p) { return p.notifications; }).map(function(p) { return p.email; }).join(' ');
+      emails = emails === '' ? ' ' : emails;
 
       var dummyElem = document.createElement('textarea');
       dummyElem.value = emails;
