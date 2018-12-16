@@ -26,6 +26,20 @@ angular.module('BuddyPairApp.controllers')
         $scope.error = err.message.code;
       });
     };
+
+    $scope.copy_emails_to_clipboard = function() {
+      var emails = $scope.erasmusList.filter(function(e) { return e.notifications; }).map(function(e) { return e.email; }).join(' ');
+
+      var dummyElem = document.createElement('textarea');
+      dummyElem.value = emails;
+      dummyElem.setAttribute('readonly', '');
+      dummyElem.style = { visibility: 'hidden' };
+      document.body.appendChild(dummyElem);
+      dummyElem.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummyElem);
+      $scope.infomsg = 'Emails copied to clipboard';
+    };
     
     $scope.loadData = function(semester_id) {
       ErasmusService.getList(semester_id).then(function(data) {

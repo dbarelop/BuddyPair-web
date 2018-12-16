@@ -2,6 +2,9 @@ div(ng-show='error').alert.alert-danger.fade.in
   a(href='#' data-dismiss='alert').close &times;
   strong Error!
   |  {{error}}
+div(ng-show='infomsg').alert.alert-success.fade.in
+  a(href='#' ng-click='infomsg = undefined').close &times;
+  | {{infomsg}}
 div(ng-if='erasmusList !== null')
   h3 There are currently {{erasmusList.length}} Erasmus students in the system:
   div.row
@@ -55,6 +58,7 @@ div(ng-if='erasmusList !== null')
         div.panel-body
           button(type='button' ng-click='match_students(selected_semester.value.id)').list-group-item Match
           a(href='/erasmus/new').list-group-item Add Erasmus
+          button(type='button' ng-click='copy_emails_to_clipboard()').list-group-item Copy notification emails to clipboard
   div.row
     div.col-md-12.visible-lg.visible-md.hidden-sm.hidden-xs
       table(id='erasmusTable' ng-if='erasmusList').table.table-hover.table-bordered.table-striped

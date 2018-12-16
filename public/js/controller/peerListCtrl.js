@@ -40,6 +40,20 @@ angular.module('BuddyPairApp.controllers')
       var blob = new Blob([content], { type: 'text/plain' });
       $scope.url = (window.URL || window.webkitURL).createObjectURL(blob);
     };
+
+    $scope.copy_emails_to_clipboard = function() {
+      var emails = $scope.peerList.filter(function(p) { return p.notifications; }).map(function(p) { return p.email; }).join(' ');
+
+      var dummyElem = document.createElement('textarea');
+      dummyElem.value = emails;
+      dummyElem.setAttribute('readonly', '');
+      dummyElem.style = { visibility: 'hidden' };
+      document.body.appendChild(dummyElem);
+      dummyElem.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummyElem);
+      $scope.infomsg = 'Emails copied to clipboard';
+    };
     
     $scope.loadData = function(semester_id) {
       PeerService.getList(semester_id).then(function (peerList) {
