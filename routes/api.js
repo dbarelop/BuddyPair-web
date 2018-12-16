@@ -582,8 +582,8 @@ exports.addMatch = function(req, res) {
 /* MODIFICATIONS */
 
 function updateStudent(id, student, cb) {
-  var query = 'UPDATE STUDENT SET name = ?, surname = ?, gender = ?, birthdate = ?, nationality = ?, email = ?, phone = ?, studies = ?, faculty = ? WHERE id = ?';
-  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nationality, student.email, student.phone, student.studies, student.faculty, id], cb);
+  var query = 'UPDATE STUDENT SET name = ?, surname = ?, gender = ?, birthdate = ?, nationality = ?, email = ?, phone = ?, studies = ?, faculty = ?, notifications = ? WHERE id = ?';
+  connection.query(query, [student.name, student.surname, student.gender, student.birthdate, student.nationality, student.email, student.phone, student.studies, student.faculty, student.notifications, id], cb);
 }
 
 function updateErasmus(id, erasmus, cb) {

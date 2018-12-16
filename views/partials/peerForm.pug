@@ -89,9 +89,18 @@ div.container
                   span(ng-bind='$select.selected.name')
                 ui-select-choices(repeat='f.id as f in (faculties | filter: $select.search) track by f.id')
                   span(ng-bind='f.name')
+          div.form-group
+            label(for='notifications').control-label.col-md-2 Email notifications
+            div.col-md-10
+              div.radio
+                label #[input(type='radio' name='notifications' ng-model='peer.notifications' ng-value='true' required)] Allow
+              div.radio
+                label #[input(type='radio' name='notifications' ng-model='peer.notifications' ng-value='false' required)] Do not allow
+              span(style='color: #c00000; float: right;' ng-show='peerForm.$submitted && peerForm.notifications.$invalid')
+                span(ng-show='peerForm.notifications.$error.required') This field is required
       div.panel.panel-default
         div.panel-heading
-          h4 Erasmus information
+          h4 Peer information
         div.panel-body
           div.form-group
             label(for='register_date').control-label.col-md-2 Register date
